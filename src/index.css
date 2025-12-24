@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Roboto', sans-serif;
+    @apply antialiased;
+    color: #EAEAEA;
+    background-color: #0D0B21;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Poppins', sans-serif;
+    @apply text-primary font-bold;
+}
+
+/* Custom Base Styles */
+.btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-300;
+}
+
+.btn-primary {
+    @apply bg-secondary text-white hover:bg-blue-700 hover:-translate-y-0.5 shadow-md;
+}
+
+.btn-secondary {
+    @apply bg-primary text-white hover:bg-blue-900 shadow-md;
+}
+
+.btn-outline {
+    @apply border-2 border-secondary text-secondary bg-transparent hover:bg-secondary hover:text-white;
+}
+
+.btn-glass {
+    @apply bg-white/20 backdrop-blur-md border border-white/30 text-white transition-all duration-300 shadow-lg;
+}
+
+.btn-glass:hover {
+    @apply bg-white/30;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+/* Global animation helpers */
+.page-animate {
+    animation: pageFade 1s ease-out;
+}
+
+.section-fade {
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards;
+}
+
+.float-soft {
+    animation: floatSoft 6s ease-in-out infinite;
+}
+
+.glow-ring {
+    box-shadow: 0 0 0 0 rgba(93, 92, 222, 0.35);
+    animation: pulseGlow 2.8s infinite;
+}
+
+/* Marquee for hero services */
+.marquee-wrapper {
+    position: relative;
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+}
+
+.marquee-track {
+    display: flex;
+    gap: 2.5rem;
+    width: max-content;
+    animation: marquee 18s linear infinite;
+}
+
+.marquee-item {
+    color: #EAEAEA;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.marquee-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #5D5CDE, #4175FC);
+    box-shadow: 0 0 12px rgba(93, 92, 222, 0.45);
+}
+
+/* Service card hover emphasis */
+.service-card {
+    position: relative;
+    isolation: isolate;
+    transition: transform 0.5s ease, box-shadow 0.5s ease, border-color 0.4s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.service-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top, rgba(93, 92, 222, 0.18), transparent 40%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 0;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(192, 183, 232, 0.5);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.service-card:hover::after {
+    opacity: 1;
+}
+
+.service-title {
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.service-card:hover .service-title {
+    color: #ffffff;
+    text-shadow: 0 0 18px rgba(192, 183, 232, 0.6);
+}
+
+.service-desc {
+    transition: color 0.3s ease;
+}
+
+.service-card:hover .service-desc {
+    color: #e5e7ff;
+}
+
+/* Scroll reveal */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+.animate-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pageFade {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatSoft {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 0 0 rgba(93, 92, 222, 0.35); }
+    70% { box-shadow: 0 0 0 18px rgba(93, 92, 222, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(93, 92, 222, 0); }
+}
+
+@keyframes gradient-x {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-x {
+    background-size: 200% auto;
+    animation: gradient-x 15s ease infinite;
+}
