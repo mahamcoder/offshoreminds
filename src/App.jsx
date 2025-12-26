@@ -1,25 +1,41 @@
 import { createBrowserRouter, RouterProvider, ScrollRestoration, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { lazy, Suspense } from 'react';
 import Layout from './components/Layout';
-import Home from './pages/Home';
-import About from './pages/About';
-import Contact from './pages/Contact';
-import Services from './pages/Services';
-import ServiceDetail from './pages/ServiceDetail';
-import CaseStudies from './pages/CaseStudies';
-import Blogs from './pages/Blogs';
-import Careers from './pages/Careers';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import Terms from './pages/Terms';import Disclaimers from './pages/Disclaimers';
-import Login from './pages/admin/Login';
-import Dashboard from './pages/admin/Dashboard';
 import ProtectedRoute from './components/admin/ProtectedRoute';
-import BlogDetail from './pages/BlogDetail';
+
+// Lazy Load Pages
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Services = lazy(() => import('./pages/Services'));
+const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
+const CaseStudies = lazy(() => import('./pages/CaseStudies'));
+const Blogs = lazy(() => import('./pages/Blogs'));
+const BlogDetail = lazy(() => import('./pages/BlogDetail'));
+const Careers = lazy(() => import('./pages/Careers'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const Terms = lazy(() => import('./pages/Terms'));
+const Disclaimers = lazy(() => import('./pages/Disclaimers'));
+const Login = lazy(() => import('./pages/admin/Login'));
+const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
+
+// Loading Component - Matches index.html styling exactly
+const PageLoader = () => (
+  <div className="min-h-screen bg-bloom-dark flex items-center justify-center">
+    <div className="w-12 h-12 border-4 border-bloom-primary/30 border-t-bloom-primary rounded-full animate-spin"></div>
+  </div>
+);
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <><ScrollRestoration /><Layout /></>,
+    element: (
+      <Suspense fallback={<PageLoader />}>
+        <ScrollRestoration />
+        <Layout />
+      </Suspense>
+    ),
     children: [
       { index: true, element: <Home /> },
       { path: "about", element: <About /> },
@@ -34,12 +50,11 @@ const router = createBrowserRouter([
         path: "admin",
         element: <ProtectedRoute />,
         children: [
-            { index: true, element: <Navigate to="dashboard" replace /> },
-            { path: "dashboard", element: <Dashboard /> },
+          { index: true, element: <Navigate to="dashboard" replace /> },
+          { path: "dashboard", element: <Dashboard /> },
         ]
       },
       { path: "admin/login", element: <Login /> },
-      { path: "careers", element: <Careers /> },
       { path: "privacy-policy", element: <PrivacyPolicy /> },
       { path: "terms-and-conditions", element: <Terms /> },
       { path: "disclaimers", element: <Disclaimers /> },

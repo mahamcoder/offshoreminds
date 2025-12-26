@@ -84,13 +84,13 @@ const PrivacyPolicy = () => {
                         </Reveal>
 
                         {/* 3. How We Use Your Data */}
-                        <Reveal>
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10">
+                        <Reveal width="100%">
+                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 w-full">
                                 <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-bloom-primary/20 flex items-center justify-center text-bloom-primary text-sm">03</span>
                                     How We Use Your Data
                                 </h2>
-                                <ul className="grid md:grid-cols-1 gap-4">
+                                <ul className="space-y-4">
                                     {[
                                         "Provide and improve our services and website",
                                         "Communicate about quotes, projects, or support",
@@ -100,7 +100,7 @@ const PrivacyPolicy = () => {
                                     ].map((item, i) => (
                                         <li key={i} className="flex gap-3 text-gray-300">
                                             <div className="w-1.5 h-1.5 rounded-full bg-bloom-primary mt-2 flex-shrink-0"></div>
-                                            {item}
+                                            <span>{item}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -108,8 +108,8 @@ const PrivacyPolicy = () => {
                         </Reveal>
 
                         {/* 4. Sharing Your Data */}
-                        <Reveal>
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10">
+                        <Reveal width="100%">
+                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 w-full">
                                 <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-bloom-primary/20 flex items-center justify-center text-bloom-primary text-sm">04</span>
                                     Sharing Your Data
@@ -126,8 +126,8 @@ const PrivacyPolicy = () => {
                         </Reveal>
 
                         {/* 5. International Transfers */}
-                        <Reveal>
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10">
+                        <Reveal width="100%">
+                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 w-full">
                                 <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-bloom-primary/20 flex items-center justify-center text-bloom-primary text-sm">05</span>
                                     International Transfers
@@ -139,8 +139,8 @@ const PrivacyPolicy = () => {
                         </Reveal>
 
                         {/* 6. Security & Retention */}
-                        <Reveal>
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10">
+                        <Reveal width="100%">
+                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 w-full">
                                 <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-bloom-primary/20 flex items-center justify-center text-bloom-primary text-sm">06</span>
                                     Security & Retention
@@ -152,8 +152,8 @@ const PrivacyPolicy = () => {
                         </Reveal>
 
                         {/* 7. Your Choices & Rights */}
-                        <Reveal>
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10">
+                        <Reveal width="100%">
+                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 w-full">
                                 <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-bloom-primary/20 flex items-center justify-center text-bloom-primary text-sm">07</span>
                                     Your Choices & Rights
@@ -169,8 +169,8 @@ const PrivacyPolicy = () => {
                         </Reveal>
 
                         {/* 8. Cookies & Analytics */}
-                        <Reveal>
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10">
+                        <Reveal width="100%">
+                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 w-full">
                                 <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-bloom-primary/20 flex items-center justify-center text-bloom-primary text-sm">08</span>
                                     Cookies & Analytics
@@ -183,8 +183,8 @@ const PrivacyPolicy = () => {
 
 
                         {/* 9. Contact Us */}
-                        <Reveal>
-                            <div className="bg-gradient-to-br from-bloom-primary/20 to-transparent p-8 rounded-3xl border border-bloom-primary/30 text-center">
+                        <Reveal width="100%">
+                            <div className="bg-gradient-to-br from-bloom-primary/20 to-transparent p-8 rounded-3xl border border-bloom-primary/30 text-center w-full">
                                 <h2 className="text-2xl font-bold text-white mb-6">Contact Us</h2>
                                 <p className="text-gray-300 mb-2">Questions or requests?</p>
                                 <a href="mailto:info@offshoreminds.com" className="text-bloom-blue hover:text-white transition-colors text-lg font-bold block mb-4">info@offshoreminds.com</a>

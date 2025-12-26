@@ -33,7 +33,7 @@ const TeamSection = () => {
             name: "Gyanasarathi Pradhan",
             role: "Partner, COO",
             image: gayana,
-            linkedin: "#",
+            linkedin: "https://www.linkedin.com/in/gyanasarathi/",
             bio: "GP is a real estate investment professional with 7+ years of experience across all major asset classes, including multifamily, commercial, hospitality, and renewable energy. As Partner & COO at Offshore Minds, he leads outsourcing and advisory services for real estate and finance firms globally. With strong expertise in investment analysis, financial modeling, deal structuring, and capital markets, and an MBA in Finance & Business Analytics, GP specializes in transforming complex financial data into clear, strategic insights that help clients scale confidently."
         },
         {

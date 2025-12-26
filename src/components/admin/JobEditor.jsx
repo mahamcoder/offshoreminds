@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
 import { collection, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { ArrowLeft, Save, X, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, Save, X, Plus, Trash2, Briefcase, MapPin, Clock, Layout } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 const JobEditor = ({ existingJob = null, onClose = null }) => {
@@ -87,7 +87,6 @@ const JobEditor = ({ existingJob = null, onClose = null }) => {
                 await addDoc(collection(db, "jobs"), jobData);
                 toast.success("Job posted successfully!");
                 if (onClose) onClose();
-                 // If not using modal in future, allow navigate
             }
         } catch (error) {
             console.error("Error saving job:", error);
@@ -98,174 +97,221 @@ const JobEditor = ({ existingJob = null, onClose = null }) => {
     };
 
     return (
-        <div className="bg-bloom-dark min-h-screen text-white p-6 md:p-12">
-            <div className="max-w-4xl mx-auto">
-                 {!onClose && (
-                    <button onClick={() => navigate('/admin/dashboard')} className="flex items-center gap-2 text-bloom-text-muted hover:text-white mb-8 transition-colors">
-                        <ArrowLeft size={20} /> Back to Dashboard
+        <div className="bg-bloom-dark min-h-screen text-white pt-28 pb-12 px-6 md:px-12 font-sans overflow-x-hidden">
+            <div className="max-w-5xl mx-auto">
+                {!onClose && (
+                    <button
+                        onClick={() => navigate('/admin/dashboard')}
+                        className="flex items-center gap-2 text-bloom-text-muted hover:text-white mb-8 transition-colors group"
+                    >
+                        <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" /> Back to Dashboard
                     </button>
                 )}
 
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-md">
-                    <div className="flex justify-between items-center mb-8">
-                        <h1 className="text-3xl font-bold">{existingJob ? 'Edit Job' : 'Post New Job'}</h1>
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-8 md:p-10 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+                    {/* Decorative background glow */}
+                    <div className="absolute -top-20 -right-20 w-64 h-64 bg-bloom-primary/20 rounded-full blur-[100px] pointer-events-none"></div>
+                    <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-bloom-secondary/20 rounded-full blur-[100px] pointer-events-none"></div>
+
+                    <div className="flex justify-between items-center mb-10 relative z-10">
+                        <div>
+                            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                                {existingJob ? 'Edit Job Posting' : 'Create New Job'}
+                            </h1>
+                            <p className="text-bloom-text-muted mt-2">Fill in the details below to post a new opening.</p>
+                        </div>
                         {onClose && (
-                            <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+                            <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors text-bloom-text-muted hover:text-white">
                                 <X size={24} />
                             </button>
                         )}
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Basic Info */}
-                        <div className="grid md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-semibold mb-2 text-bloom-blue">Job Title</label>
-                                <input
-                                    type="text"
-                                    name="title"
-                                    value={formData.title}
-                                    onChange={handleChange}
-                                    className="w-full bg-bloom-dark/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-bloom-primary transition-colors"
-                                    placeholder="e.g. Senior Financial Analyst"
-                                    required
-                                />
+                    <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
+                        {/* Section: Basic Details */}
+                        <div className="bg-white/5 rounded-xl p-6 border border-white/5 space-y-6">
+                            <h3 className="text-lg font-semibold text-bloom-blue flex items-center gap-2">
+                                <Layout size={18} /> Basic Details
+                            </h3>
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-300">Job Title</label>
+                                    <div className="relative">
+                                        <Briefcase size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                                        <input
+                                            type="text"
+                                            name="title"
+                                            value={formData.title}
+                                            onChange={handleChange}
+                                            className="w-full bg-bloom-dark/80 border border-white/10 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:border-bloom-primary/50 focus:ring-1 focus:ring-bloom-primary/50 transition-all text-white placeholder-gray-600"
+                                            placeholder="e.g. Senior Financial Analyst"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-300">Experience Level</label>
+                                    <div className="relative">
+                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-bloom-secondary"></div>
+                                        <select
+                                            name="level"
+                                            value={formData.level}
+                                            onChange={handleChange}
+                                            className="w-full bg-bloom-dark/80 border border-white/10 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:border-bloom-primary/50 focus:ring-1 focus:ring-bloom-primary/50 transition-all text-white appearance-none cursor-pointer"
+                                        >
+                                            <option value="Entry Level">Entry Level</option>
+                                            <option value="Associate / Mid">Associate / Mid</option>
+                                            <option value="Senior Level">Senior Level</option>
+                                            <option value="Management">Management</option>
+                                            <option value="Executive">Executive</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                             <div>
-                                <label className="block text-sm font-semibold mb-2 text-bloom-blue">Level</label>
-                                <select
-                                    name="level"
-                                    value={formData.level}
-                                    onChange={handleChange}
-                                    className="w-full bg-bloom-dark/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-bloom-primary transition-colors text-white"
-                                >
-                                    <option value="Entry Level">Entry Level</option>
-                                    <option value="Associate / Mid">Associate / Mid</option>
-                                    <option value="Senior Level">Senior Level</option>
-                                    <option value="Management">Management</option>
-                                    <option value="Executive">Executive</option>
-                                </select>
+
+                            <div className="grid md:grid-cols-3 gap-6">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-300">Years of Experience</label>
+                                    <input
+                                        type="text"
+                                        name="experience"
+                                        value={formData.experience}
+                                        onChange={handleChange}
+                                        className="w-full bg-bloom-dark/80 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-bloom-primary/50 focus:ring-1 focus:ring-bloom-primary/50 transition-all text-white placeholder-gray-600"
+                                        placeholder="e.g. 3-5 Years"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-300">Location</label>
+                                    <div className="relative">
+                                        <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                                        <input
+                                            type="text"
+                                            name="location"
+                                            value={formData.location}
+                                            onChange={handleChange}
+                                            className="w-full bg-bloom-dark/80 border border-white/10 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:border-bloom-primary/50 focus:ring-1 focus:ring-bloom-primary/50 transition-all text-white placeholder-gray-600"
+                                            placeholder="e.g. Remote"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-300">Employment Type</label>
+                                    <div className="relative">
+                                        <Clock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                                        <select
+                                            name="type"
+                                            value={formData.type}
+                                            onChange={handleChange}
+                                            className="w-full bg-bloom-dark/80 border border-white/10 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:border-bloom-primary/50 focus:ring-1 focus:ring-bloom-primary/50 transition-all text-white appearance-none cursor-pointer"
+                                        >
+                                            <option value="Full-Time">Full-Time</option>
+                                            <option value="Part-Time">Part-Time</option>
+                                            <option value="Contract">Contract</option>
+                                            <option value="Internship">Internship</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div className="grid md:grid-cols-3 gap-6">
-                             <div>
-                                <label className="block text-sm font-semibold mb-2 text-bloom-blue">Experience</label>
-                                <input
-                                    type="text"
-                                    name="experience"
-                                    value={formData.experience}
-                                    onChange={handleChange}
-                                    className="w-full bg-bloom-dark/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-bloom-primary transition-colors"
-                                    placeholder="e.g. 3-5 Years"
-                                />
-                            </div>
-                             <div>
-                                <label className="block text-sm font-semibold mb-2 text-bloom-blue">Location</label>
-                                <input
-                                    type="text"
-                                    name="location"
-                                    value={formData.location}
-                                    onChange={handleChange}
-                                    className="w-full bg-bloom-dark/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-bloom-primary transition-colors"
-                                    placeholder="e.g. Remote"
-                                />
-                            </div>
-                             <div>
-                                <label className="block text-sm font-semibold mb-2 text-bloom-blue">Type</label>
-                                <select
-                                    name="type"
-                                    value={formData.type}
-                                    onChange={handleChange}
-                                    className="w-full bg-bloom-dark/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-bloom-primary transition-colors text-white"
-                                >
-                                    <option value="Full-Time">Full-Time</option>
-                                    <option value="Part-Time">Part-Time</option>
-                                    <option value="Contract">Contract</option>
-                                    <option value="Internship">Internship</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        {/* Description */}
-                        <div>
-                            <label className="block text-sm font-semibold mb-2 text-bloom-blue">Job Description</label>
+                        {/* Section: Job Description */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-300">Job Description & Overview</label>
                             <textarea
                                 name="description"
                                 value={formData.description}
                                 onChange={handleChange}
                                 rows="6"
-                                className="w-full bg-bloom-dark/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-bloom-primary transition-colors"
-                                placeholder="Overview of the role and company..."
+                                className="w-full bg-bloom-dark/80 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-bloom-primary/50 focus:ring-1 focus:ring-bloom-primary/50 transition-all text-white placeholder-gray-600 resize-y"
+                                placeholder="Describe the role, company culture, and main objectives..."
                                 required
                             ></textarea>
                         </div>
 
-                        {/* Responsibilities */}
-                        <div>
-                            <div className="flex justify-between items-center mb-2">
-                                <label className="block text-sm font-semibold text-bloom-blue">Key Responsibilities</label>
-                                <button type="button" onClick={() => addArrayItem('responsibilities')} className="text-xs flex items-center gap-1 text-bloom-primary hover:text-white transition-colors">
+                        {/* Section: Responsibilities */}
+                        <div className="bg-white/5 rounded-xl p-6 border border-white/5 space-y-4">
+                            <div className="flex justify-between items-center">
+                                <label className="text-lg font-semibold text-bloom-blue">Key Responsibilities</label>
+                                <button type="button" onClick={() => addArrayItem('responsibilities')} className="text-xs flex items-center gap-2 bg-bloom-primary/10 text-bloom-primary px-3 py-1.5 rounded-lg hover:bg-bloom-primary hover:text-white transition-all">
                                     <Plus size={14} /> Add Item
                                 </button>
                             </div>
                             <div className="space-y-3">
                                 {formData.responsibilities.map((item, index) => (
-                                    <div key={index} className="flex gap-2">
+                                    <div key={index} className="flex gap-3 group">
+                                        <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-xs text-gray-500 shrink-0 mt-1">
+                                            {index + 1}
+                                        </div>
                                         <textarea
                                             rows="2"
                                             value={item}
                                             onChange={(e) => handleArrayChange('responsibilities', index, e.target.value)}
-                                            className="w-full bg-bloom-dark/50 border border-white/10 rounded-xl px-4 py-2 focus:outline-none focus:border-bloom-primary transition-colors text-sm"
-                                            placeholder={`Responsibility ${index + 1}`}
+                                            className="w-full bg-bloom-dark/80 border border-white/10 rounded-xl px-4 py-2 focus:outline-none focus:border-bloom-primary/50 transition-all text-sm text-gray-300"
+                                            placeholder="Enter a responsibility..."
                                         />
-                                        <button type="button" onClick={() => removeArrayItem('responsibilities', index)} className="p-2 text-red-400 hover:bg-red-400/10 rounded-lg transition-colors h-fit mt-1">
-                                            <Trash2 size={16} />
+                                        <button type="button" onClick={() => removeArrayItem('responsibilities', index)} className="p-2 text-gray-600 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors h-fit mt-1 opacity-0 group-hover:opacity-100">
+                                            <Trash2 size={18} />
                                         </button>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                         {/* Requirements */}
-                        <div>
-                            <div className="flex justify-between items-center mb-2">
-                                <label className="block text-sm font-semibold text-bloom-blue">Requirements</label>
-                                <button type="button" onClick={() => addArrayItem('requirements')} className="text-xs flex items-center gap-1 text-bloom-primary hover:text-white transition-colors">
+                        {/* Section: Requirements */}
+                        <div className="bg-white/5 rounded-xl p-6 border border-white/5 space-y-4">
+                            <div className="flex justify-between items-center">
+                                <label className="text-lg font-semibold text-bloom-blue">Requirements & Qualifications</label>
+                                <button type="button" onClick={() => addArrayItem('requirements')} className="text-xs flex items-center gap-2 bg-bloom-primary/10 text-bloom-primary px-3 py-1.5 rounded-lg hover:bg-bloom-primary hover:text-white transition-all">
                                     <Plus size={14} /> Add Item
                                 </button>
                             </div>
                             <div className="space-y-3">
                                 {formData.requirements.map((item, index) => (
-                                    <div key={index} className="flex gap-2">
+                                    <div key={index} className="flex gap-3 group">
+                                        <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-xs text-gray-500 shrink-0 mt-1">
+                                            {index + 1}
+                                        </div>
                                         <textarea
                                             rows="2"
                                             value={item}
                                             onChange={(e) => handleArrayChange('requirements', index, e.target.value)}
-                                            className="w-full bg-bloom-dark/50 border border-white/10 rounded-xl px-4 py-2 focus:outline-none focus:border-bloom-primary transition-colors text-sm"
-                                            placeholder={`Requirement ${index + 1}`}
+                                            className="w-full bg-bloom-dark/80 border border-white/10 rounded-xl px-4 py-2 focus:outline-none focus:border-bloom-primary/50 transition-all text-sm text-gray-300"
+                                            placeholder="Enter a requirement..."
                                         />
-                                        <button type="button" onClick={() => removeArrayItem('requirements', index)} className="p-2 text-red-400 hover:bg-red-400/10 rounded-lg transition-colors h-fit mt-1">
-                                            <Trash2 size={16} />
+                                        <button type="button" onClick={() => removeArrayItem('requirements', index)} className="p-2 text-gray-600 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors h-fit mt-1 opacity-0 group-hover:opacity-100">
+                                            <Trash2 size={18} />
                                         </button>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        {/* Submit */}
-                        <div className="pt-4">
+                        {/* Submit Action */}
+                        <div className="pt-6 border-t border-white/10 flex justify-end gap-4">
+                            {onClose && (
+                                <button
+                                    type="button"
+                                    onClick={onClose}
+                                    className="px-6 py-3 rounded-xl border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 transition-all font-semibold"
+                                >
+                                    Cancel
+                                </button>
+                            )}
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-bloom-primary text-bloom-dark font-bold py-4 rounded-xl hover:bg-white hover:scale-[1.01] transition-all duration-300 flex items-center justify-center gap-2"
+                                className="px-10 py-3 rounded-xl bg-gradient-to-r from-bloom-primary to-bloom-blue text-white font-bold hover:shadow-lg hover:shadow-bloom-primary/25 hover:scale-[1.02] transition-all duration-300 flex items-center gap-2"
                             >
                                 {loading ? (
-                                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-bloom-dark"></div>
+                                    <>
+                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                                        Saving...
+                                    </>
                                 ) : (
                                     <>
                                         <Save size={20} />
-                                        {existingJob ? 'Update Job' : 'Post Job'}
+                                        {existingJob ? 'Update Job Posting' : 'Publish Job Posting'}
                                     </>
                                 )}
                             </button>

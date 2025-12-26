@@ -17,10 +17,10 @@ const Footer = () => {
             </Link>
             <p className="text-bloom-text-muted text-sm mb-6">Offshore Minds Pvt Ltd.</p>
             <div className="flex gap-4">
-              <a href="#" className="bg-white/5 p-2 rounded hover:bg-bloom-primary hover:text-white transition-colors"><Linkedin size={20} /></a>
-              <a href="#" className="bg-white/5 p-2 rounded hover:bg-bloom-primary hover:text-white transition-colors"><X size={20} /></a>
-              <a href="#" className="bg-white/5 p-2 rounded hover:bg-bloom-primary hover:text-white transition-colors"><Instagram size={20} /></a>
-              <a href="#" className="bg-white/5 p-2 rounded hover:bg-bloom-primary hover:text-white transition-colors"><Facebook size={20} /></a>
+              <a href="https://linkedin.com/company/offshore-minds" className="bg-white/5 p-2 rounded hover:bg-bloom-primary hover:text-white transition-colors"><Linkedin size={20} /></a>
+              <a href="https://x.com/Offshore_Minds?t=eUSUE7KF8oeYvHy-00Y5rA&s=09" className="bg-white/5 p-2 rounded hover:bg-bloom-primary hover:text-white transition-colors"><X size={20} /></a>
+              <a href="https://www.instagram.com/offshoreminds" className="bg-white/5 p-2 rounded hover:bg-bloom-primary hover:text-white transition-colors"><Instagram size={20} /></a>
+              <a href="https://www.facebook.com/profile.php?id=61563836794375" className="bg-white/5 p-2 rounded hover:bg-bloom-primary hover:text-white transition-colors"><Facebook size={20} /></a>
               <a href="#" className="bg-white/5 p-2 rounded hover:bg-bloom-primary hover:text-white transition-colors font-bold flex items-center justify-center w-9 h-9">G</a>
             </div>
           </div>
@@ -78,7 +78,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-xs text-center md:text-left">
-          <p>&copy; {new Date().getFullYear()} Offshore Minds Pvt Ltd.</p>
+          <p>&copy; 2026 Offshore Minds Pvt Ltd.</p>
           <p>Powered by Offshore Minds</p>
         </div>
       </div>

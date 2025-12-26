@@ -4,8 +4,8 @@ import CountUp from '../common/CountUp';
 const BenefitsSection = () => {
     const stats = [
         {
-            value: 15000,
-            suffix: "+",
+            value: 15,
+            suffix: "k+",
             label: "Assets Analyzed",
 
         },

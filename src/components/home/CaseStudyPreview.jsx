@@ -31,9 +31,9 @@ const CaseStudyPreview = () => {
                         </Reveal>
 
                         <Reveal delay={300}>
-                            <Link to="/case-studies" className="btn-glass px-8 py-3 rounded-full font-medium inline-block">
+                            <a href="https://drive.google.com/file/d/1htOX7kre5haD6BD3FvwIJP52lNPWrgxY/view" target="_blank" rel="noopener noreferrer" className="btn-glass px-8 py-3 rounded-full font-medium inline-block">
                                 Read More
-                            </Link>
+                            </a>
                         </Reveal>
                     </div>
                 </div>

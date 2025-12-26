@@ -110,9 +110,9 @@ const Services = () => {
                         <p className="text-bloom-text-muted mb-10 text-xl font-light">We understand every real estate firm is unique. Let's discuss a tailored engagement model that fits your needs.</p>
                     </Reveal>
                     <Reveal delay={300}>
-                        <Link to="/contact" className="inline-flex items-center gap-2 bg-bloom-primary text-white font-bold py-4 px-10 rounded-full hover:bg-white hover:text-bloom-dark transition-all duration-300 shadow-[0_0_20px_rgba(93,92,222,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">
+                        <a href="https://calendly.com/gyan-offshoreminds/30min?month=2025-12" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-bloom-primary text-white font-bold py-4 px-10 rounded-full hover:bg-white hover:text-bloom-dark transition-all duration-300 shadow-[0_0_20px_rgba(93,92,222,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">
                             Schedule a Call <ArrowRight size={18} />
-                        </Link>
+                        </a>
                     </Reveal>
                 </div>
             </section>

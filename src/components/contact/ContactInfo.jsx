@@ -1,4 +1,4 @@
-import { Phone, MapPin, Mail, Clock, Linkedin, Facebook, Instagram, Twitter } from 'lucide-react';
+import { Phone, MapPin, Mail, Clock, Linkedin, Facebook, Instagram, X } from 'lucide-react';
 
 const ContactInfo = () => {
     return (
@@ -54,11 +54,18 @@ const ContactInfo = () => {
             <div className="mt-12 pt-8 border-t border-white/10">
                 <h4 className="font-bold text-white mb-6">Follow Us</h4>
                 <div className="flex gap-4">
-                    {[Linkedin, Facebook, Instagram, Twitter].map((Icon, i) => (
-                        <a key={i} href="#" className="w-10 h-10 bg-white/5 text-white rounded-xl flex items-center justify-center hover:bg-bloom-primary hover:-translate-y-1 transition-all duration-300 border border-white/10 hover:border-bloom-primary">
-                            <Icon size={18} />
-                        </a>
-                    ))}
+                    <a href="https://linkedin.com/company/offshore-minds" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 text-white rounded-xl flex items-center justify-center hover:bg-bloom-primary hover:-translate-y-1 transition-all duration-300 border border-white/10 hover:border-bloom-primary">
+                        <Linkedin size={18} />
+                    </a>
+                    <a href="https://x.com/Offshore_Minds?t=eUSUE7KF8oeYvHy-00Y5rA&s=09" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 text-white rounded-xl flex items-center justify-center hover:bg-bloom-primary hover:-translate-y-1 transition-all duration-300 border border-white/10 hover:border-bloom-primary">
+                        <X size={18} />
+                    </a>
+                    <a href="https://www.instagram.com/offshoreminds" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 text-white rounded-xl flex items-center justify-center hover:bg-bloom-primary hover:-translate-y-1 transition-all duration-300 border border-white/10 hover:border-bloom-primary">
+                        <Instagram size={18} />
+                    </a>
+                    <a href="https://www.facebook.com/profile.php?id=61563836794375" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 text-white rounded-xl flex items-center justify-center hover:bg-bloom-primary hover:-translate-y-1 transition-all duration-300 border border-white/10 hover:border-bloom-primary">
+                        <Facebook size={18} />
+                    </a>
                 </div>
             </div>
         </div>

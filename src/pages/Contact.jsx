@@ -1,9 +1,38 @@
+import { useState } from 'react';
 import ContactInfo from '../components/contact/ContactInfo';
 import FAQ from '../components/contact/FAQ';
 import { Send } from 'lucide-react';
 import Reveal from '../components/common/Reveal';
 
 const Contact = () => {
+    const [result, setResult] = useState("");
+
+    const onSubmit = async (event) => {
+        event.preventDefault();
+        setResult("Sending...");
+
+        const formData = new FormData(event.target);
+        formData.append("access_key", "b224d594-f4b3-4fa6-b8ce-363802a1b882");
+
+        try {
+            const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setResult("Message sent successfully!");
+                event.target.reset();
+            } else {
+                setResult("Error: " + data.message);
+            }
+        } catch (error) {
+            setResult("Error sending message. Please try again.");
+        }
+    };
+
     return (
         <div className="bg-bloom-dark min-h-screen text-white">
             {/* Bloom Theme Hero & Form Section */}
@@ -28,10 +57,10 @@ const Contact = () => {
                         </Reveal>
                     </div>
 
-                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-stretch">
 
                         {/* Left: Decorative Vertical Image/Card */}
-                        <div className="hidden lg:block relative h-[800px] rounded-3xl overflow-hidden shadow-2xl border border-white/10 group">
+                        <div className="hidden lg:flex relative min-h-[700px] rounded-3xl overflow-hidden shadow-2xl border border-white/10 group">
                             <img
                                 src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
                                 alt="Skyscraper"
@@ -49,21 +78,26 @@ const Contact = () => {
                         </div>
 
                         {/* Right: Form + Info Stack */}
-                        <div className="space-y-12">
+                        <div className="space-y-8 flex flex-col">
                             {/* Contact Form Card */}
                             <Reveal delay={200}>
                                 <div className="bg-white/5 backdrop-blur-md p-8 lg:p-10 rounded-3xl shadow-xl border border-white/10 hover:border-bloom-primary/30 transition-all duration-300">
                                     <h2 className="text-3xl font-bold text-white mb-6 font-heading">Send Us A Message</h2>
-                                    <form className="space-y-6">
+                                    <form className="space-y-6" onSubmit={onSubmit}>
                                         <div className="grid md:grid-cols-2 gap-6">
-                                            <input type="text" placeholder="Name" className="w-full p-4 bg-white/5 rounded-xl border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-bloom-primary focus:bg-white/10 transition-all duration-300" />
-                                            <input type="email" placeholder="Email" className="w-full p-4 bg-white/5 rounded-xl border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-bloom-primary focus:bg-white/10 transition-all duration-300" />
+                                            <input type="text" name="name" placeholder="Name" required className="w-full p-4 bg-white/5 rounded-xl border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-bloom-primary focus:bg-white/10 transition-all duration-300" />
+                                            <input type="email" name="email" placeholder="Email" required className="w-full p-4 bg-white/5 rounded-xl border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-bloom-primary focus:bg-white/10 transition-all duration-300" />
                                         </div>
-                                        <input type="text" placeholder="Subject" className="w-full p-4 bg-white/5 rounded-xl border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-bloom-primary focus:bg-white/10 transition-all duration-300" />
-                                        <textarea rows="4" placeholder="Message" className="w-full p-4 bg-white/5 rounded-xl border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-bloom-primary focus:bg-white/10 transition-all duration-300"></textarea>
-                                        <button className="bg-bloom-primary text-white font-bold py-4 px-8 rounded-xl hover:bg-white hover:text-bloom-dark transition-all duration-300 w-full flex items-center justify-center gap-2 transform hover:-translate-y-1 shadow-lg shadow-bloom-primary/20">
+                                        <input type="text" name="subject" placeholder="Subject" className="w-full p-4 bg-white/5 rounded-xl border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-bloom-primary focus:bg-white/10 transition-all duration-300" />
+                                        <textarea rows="4" name="message" placeholder="Message" required className="w-full p-4 bg-white/5 rounded-xl border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-bloom-primary focus:bg-white/10 transition-all duration-300"></textarea>
+                                        <button type="submit" className="bg-bloom-primary text-white font-bold py-4 px-8 rounded-xl hover:bg-white hover:text-bloom-dark transition-all duration-300 w-full flex items-center justify-center gap-2 transform hover:-translate-y-1 shadow-lg shadow-bloom-primary/20">
                                             Send Message <Send size={18} />
                                         </button>
+                                        {result && (
+                                            <p className={`text-center font-medium ${result.includes("Error") || result.includes("Sending") ? "text-bloom-text-muted" : "text-bloom-secondary"}`}>
+                                                {result}
+                                            </p>
+                                        )}
                                     </form>
                                 </div>
                             </Reveal>
