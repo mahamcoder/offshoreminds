@@ -15,12 +15,12 @@ const Careers = () => {
                 const q = query(collection(db, "jobs"), orderBy("createdAt", "desc"));
                 const querySnapshot = await getDocs(q);
                 const jobsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                
+
                 if (jobsList.length > 0) {
                     setJobs(jobsList);
                 } else {
                     // Fallback to static data if DB is empty to show something
-                    setJobs(jobsData); 
+                    setJobs(jobsData);
                 }
             } catch (error) {
                 console.error("Error fetching jobs:", error);
@@ -110,7 +110,7 @@ const Careers = () => {
 
                     <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm">
                         {loading ? (
-                             <div className="flex justify-center p-12">
+                            <div className="flex justify-center p-12">
                                 <div className="w-8 h-8 border-4 border-bloom-primary border-t-transparent rounded-full animate-spin"></div>
                             </div>
                         ) : (
@@ -227,7 +227,9 @@ const Careers = () => {
                                         <p className="text-sm text-gray-400">Send your resume and cover letter to our recruitment team.</p>
                                     </div>
                                     <a
-                                        href={`mailto:careers@offshoreminds.co?subject=Application for ${selectedJob.title}`}
+                                        href={selectedJob.applyLink || `mailto:careers@offshoreminds.co?subject=Application for ${selectedJob.title}`}
+                                        target={selectedJob.applyLink ? "_blank" : "_self"}
+                                        rel={selectedJob.applyLink ? "noopener noreferrer" : ""}
                                         className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-bloom-primary text-white rounded-xl font-bold hover:bg-bloom-secondary transition-all"
                                     >
                                         Apply Now <ArrowRight size={18} />

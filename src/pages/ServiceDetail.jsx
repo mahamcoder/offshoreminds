@@ -34,22 +34,20 @@ const ServiceDetail = () => {
           <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-bloom-blue/10 rounded-full blur-[100px] pointer-events-none"></div>
         </div>
 
-        <div className="container mx-auto px-4 relative z-10 flex flex-col items-start">
-          <Link to="/services" className="inline-flex items-center gap-2 text-bloom-text-muted hover:text-white mb-6 transition-colors">
-            <ArrowLeft size={16} /> Back to Services
-          </Link>
+        <div className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center">
+
 
           <div className="max-w-4xl">
-            <Reveal>
+            <Reveal width="100%">
               <span className="text-bloom-blue font-semibold tracking-wider uppercase text-sm mb-2 block">Our Expertise</span>
             </Reveal>
-            <Reveal delay={100}>
+            <Reveal delay={100} width="100%">
               <h1 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-bloom-blue mb-6 leading-tight">
                 {service.title}
               </h1>
             </Reveal>
-            <Reveal delay={200}>
-              <p className="text-xl text-bloom-text-muted font-light leading-relaxed max-w-2xl">
+            <Reveal delay={200} width="100%">
+              <p className="text-xl text-bloom-text-muted font-light leading-relaxed max-w-2xl mx-auto">
                 {service.shortDescription}
               </p>
             </Reveal>

@@ -8,7 +8,7 @@ const TechStack = ({ toolLogos }) => {
             <div className="container mx-auto px-4">
                 <Reveal width="100%">
                     <div className="text-center">
-                        <h2 className="text-bloom-blue text-2xl md:text-3xl font-bold uppercase tracking-[0.2em] mb-12">Role Specific Tools & Technologies</h2>
+                        <h2 className="text-transparent bg-clip-text bg-gradient-to-r from-white to-bloom-blue text-2xl md:text-3xl font-bold uppercase tracking-[0.2em] mb-12">Role Specific Tools & Technologies</h2>
 
                         <div className="marquee-wrapper">
                             <div className="marquee-track py-4">
@@ -17,11 +17,11 @@ const TechStack = ({ toolLogos }) => {
 
                                     if (isImage) {
                                         return (
-                                            <div key={index} className="flex items-center justify-center w-56 h-24 cursor-default group shrink-0 mx-4">
+                                            <div key={index} className="flex items-center justify-center w-32 h-16 cursor-default group shrink-0 mx-6">
                                                 <img
                                                     src={tool.logo}
                                                     alt={tool.name}
-                                                    className="max-h-full max-w-full object-contain transition-all duration-300 opacity-85 group-hover:opacity-100 scale-110"
+                                                    className="max-h-full max-w-full object-contain transition-all duration-300 opacity-85 group-hover:opacity-100 group-hover:scale-110"
                                                 />
                                             </div>
                                         );

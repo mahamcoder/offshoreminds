@@ -18,7 +18,8 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
         image: null, // File object
         imageUrl: '', // URL string
         author: existingBlog ? existingBlog.author : (auth.currentUser?.displayName || 'Admin'),
-        keywords: ''
+        keywords: '',
+        externalLink: ''
     });
 
     useEffect(() => {
@@ -31,7 +32,8 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                 image: null,
                 imageUrl: existingBlog.image || '',
                 author: existingBlog.author || '',
-                keywords: existingBlog.keywords ? existingBlog.keywords.join(', ') : ''
+                keywords: existingBlog.keywords ? existingBlog.keywords.join(', ') : '',
+                externalLink: existingBlog.externalLink || ''
             });
         }
     }, [existingBlog]);
@@ -66,6 +68,7 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                 image: imageUrl,
                 author: formData.author,
                 keywords: formData.keywords.split(',').map(k => k.trim()).filter(k => k),
+                externalLink: formData.externalLink,
                 updatedAt: serverTimestamp()
             };
 
@@ -77,7 +80,7 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                 blogData.createdAt = serverTimestamp();
                 // For sorting reasons we might want a simple date string too, but timestamp is better
                 blogData.date = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                
+
                 await addDoc(collection(db, "blogs"), blogData);
                 toast.success("Blog created successfully!");
                 navigate('/blogs');
@@ -182,8 +185,22 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                             ></textarea>
                         </div>
 
-                        {/* Content */}
+                        {/* External Link */}
                         <div>
+                            <label className="block text-sm font-semibold mb-2 text-bloom-blue">linked URL</label>
+                            <input
+                                type="url"
+                                name="externalLink"
+                                value={formData.externalLink}
+                                onChange={handleChange}
+                                className="w-full bg-bloom-dark/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-bloom-primary transition-colors"
+                                placeholder="https://example.com/full-article"
+                            />
+                            <p className="text-xs text-bloom-text-muted mt-2">If provided, the 'Read More' button will redirect here instead of the internal blog page.</p>
+                        </div>
+
+                        {/* Content */}
+                        {/* <div>
                             <label className="block text-sm font-semibold mb-2 text-bloom-blue">Content</label>
                             <textarea
                                 name="content"
@@ -195,7 +212,7 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                                 required
                             ></textarea>
                             <p className="text-xs text-bloom-text-muted mt-2">Basic support for entering text. For more complex formatting, HTML can be pasted here if rendering allows.</p>
-                        </div>
+                        </div> */}
 
                         {/* Keywords */}
                         <div>

@@ -1,30 +1,5 @@
 import { BadgeDollarSign, Calculator, LineChart, TrendingUp, Building2, Megaphone } from 'lucide-react';
-import argusLogo from '../assets/argus (1).png';
-import costarLogo from '../assets/logo-costar-png-900px.png';
-import excelLogo from '../assets/excel.webp';
-import yardiLogo from '../assets/yardi.png';
-import xeroLogo from '../assets/xero.png';
-import zoho from '../assets/zoha.png';
-import quickbooksLogo from '../assets/Quickbooks-Logo.png';
-import appfolioLogo from '../assets/appfolio.png';
-import googlesheetLogo from '../assets/googlesheet.png';
-import copilotLogo from '../assets/copilot.png';
-import openaiLogo from '../assets/openai.png';
-import vbaLogo from '../assets/vba.png';
-import pythonLogo from '../assets/python.png';
-import powerbiLogo from '../assets/powerbi.png';
-import zillow from '../assets/zillow.png';
-import replace from '../assets/replace.png';
-import loopnet from '../assets/loopnet.png';
-import cashflow from '../assets/cashflow.webp';
-import freshbook from '../assets/freeshbook.webp';
-import googleStudio from '../assets/googlestudio.png';
-import tableau from '../assets/tablue.png';
-import rent from '../assets/rent.webp';
-import ps from '../assets/ps.png';
-import ai from '../assets/ai.png';
-import canva from '../assets/canva.jpg';
-import cd from '../assets/Cd.png';
+
 import image1 from '../assets/Picture 1.png';
 import image2 from '../assets/Picture 2.png';
 import image3 from '../assets/Picture 3.png';
@@ -39,6 +14,80 @@ import image10 from '../assets/Picture 10.png';
 import image11 from '../assets/Picture 11.png';
 import image12 from '../assets/Picture 12.png';
 
+// logos
+import Ac1 from '../assets/AC/Ac 1.png';
+import Ac2 from '../assets/AC/Ac 2.png';
+import Ac3 from '../assets/AC/Ac 3.png';
+import Ac4 from '../assets/AC/Ac 4.png';
+import Ac5 from '../assets/AC/Ac 5.png';
+import Ac6 from '../assets/AC/Ac 6.png';
+import Ac7 from '../assets/AC/Ac 7.png';
+import Ac8 from '../assets/AC/Ac 8.png';
+import Ac9 from '../assets/AC/Ac 9.png';
+import Ac10 from '../assets/AC/Ac 10.png';
+
+import Ams1 from '../assets/AC/Ams 1.png';
+import Ams2 from '../assets/AC/Ams 2.png';
+import Ams3 from '../assets/AC/Ams 3.png';
+import Ams4 from '../assets/AC/Asm 4.png';
+import Ams5 from '../assets/AC/Asm 5.png';
+import Ams6 from '../assets/AC/Asm 6.png';
+import Ams7 from '../assets/AC/Asm 7.png';
+import Ams8 from '../assets/AC/Asm 8.png';
+import Ams9 from '../assets/AC/Asm 9.png';
+import Ams10 from '../assets/AC/Asm 10.png';
+
+import fms from '../assets/AC/Fms 1.png';
+import fms2 from '../assets/AC/Fms 2.png';
+import fms3 from '../assets/AC/Fms 3.png';
+import fms4 from '../assets/AC/Fms 4.png';
+import fms5 from '../assets/AC/Fms 5.png';
+import fms6 from '../assets/AC/Fms 6.png';
+
+import Rem1 from '../assets/AC/Rem 1.png';
+import Rem2 from '../assets/AC/REm 2.png';
+import Rem3 from '../assets/AC/Rem 3.png';
+import Rem4 from '../assets/AC/REm 4.png';
+import Rem5 from '../assets/AC/Rem 5.png';
+import Rem6 from '../assets/AC/REm 6.png';
+import Rem7 from '../assets/AC/Rem 7.png';
+import Rem8 from '../assets/AC/Rem 8.png';
+
+import RSE1 from '../assets/AC/RSE 1.png';
+import RSE2 from '../assets/AC/Rse 2.png';
+import RSE3 from '../assets/AC/Rse 3.png';
+import RSE4 from '../assets/AC/Rse 4.png';
+import RSE5 from '../assets/AC/Rse 5.png';
+import RSE6 from '../assets/AC/Rse 6.png';
+import RSE7 from '../assets/AC/Rse 7.png';
+import RSE8 from '../assets/AC/Rse 8.png';
+import RSE9 from '../assets/AC/Rse 9.png';
+import RSE10 from '../assets/AC/Rse 10.png';
+import RSE11 from '../assets/AC/Rse 11.png';
+import RSE12 from '../assets/AC/Rse 12.png';
+
+import Rsf1 from '../assets/AC/Rsf 1.png';
+import Rsf2 from '../assets/AC/Rsf 2.png';
+import Rsf3 from '../assets/AC/Rsf 3.png';
+import Rsf4 from '../assets/AC/Rsf 4.png';
+import Rsf5 from '../assets/AC/Rsf 5.png';
+import Rsf6 from '../assets/AC/Rsf 6.png';
+import Rsf7 from '../assets/AC/Rsf 7.png';
+import Rsf8 from '../assets/AC/Rsf 8.png';
+import Rsf9 from '../assets/AC/Rsf 9.png';
+import Rsf10 from '../assets/AC/Rsf 10.png';
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -47,18 +96,23 @@ export const servicesData = [
         id: "financial-services",
         title: "Real Estate Financial Services",
         icon: BadgeDollarSign,
+        teamHeading: "Real Estate Financial Experts",
+        teamDescription: "Our team comprises highly skilled professionals from India’s top universities, including individuals with CPA certifications, Master’s degrees, and MBAs. With over four years of experience, we ensure that only the best experts join our ranks, offering unparalleled expertise to address all your real estate needs. We are well-versed in providing solutions for various real estate financial challenges across different asset classes",
         shortDescription: "Enhance your deal flow with our comprehensive Financial Analysis Services, which encompass DCF modeling, Underwriting Services, Market Research, and precise Asset Valuations.",
         overview: "Achieve faster CRE underwriting turnarounds with our deep domain expertise, market intelligence, and efficient processes. We provide end-to-end underwriting support, from sizing and valuation to due diligence, enabling clients to close deals faster in competitive markets. Our scalable, knowledge-driven team leverages industry-leading tools and strong lease analysis expertise to ensure accurate, high-quality deliverables, allowing underwriters to focus on value-add activities while managing volume spikes with ease.",
         fullDescription: "Our comprehensive services encompass due diligence support relating to underwriting from sizing through valuation and underwriting, enabling clients to close deals efficiently in a competitive environment. Our knowledge-based team abreast with market trends, and adept in use of market and client provided property valuation software and models ensures delivery of high-calibre deals enabling underwriters to focus on value-add activities. Leveraging our scalable team provides an edge to clients to manage volume spikes during sizing phase ensuring quicker turnaround increasing client’s feasibility to close.",
         toolLogos: [
-            { name: "Excel", logo: excelLogo },
-            { name: "zillow", logo: zillow },
-            { name: "Argus", logo: argusLogo },
-            { name: "CoStar", logo: costarLogo },
-            { name: "replace", logo: replace },
-            { name: "yardi", logo: yardiLogo }
-            ,
-            { name: "loopnet", logo: loopnet }
+            { name: "Rsf1", logo: Rsf1 },
+            { name: "Rsf2", logo: Rsf2 },
+            { name: "Rsf3", logo: Rsf3 },
+            { name: "Rsf4", logo: Rsf4 },
+            { name: "Rsf5", logo: Rsf5 },
+            { name: "Rsf6", logo: Rsf6 },
+            { name: "Rsf7", logo: Rsf7 },
+            { name: "Rsf8", logo: Rsf8 },
+            { name: "Rsf9", logo: Rsf9 },
+            { name: "Rsf10", logo: Rsf10 },
+
         ],
         subServices: [
             {
@@ -148,18 +202,22 @@ export const servicesData = [
         id: "accounting-services",
         title: "Accounting Services",
         icon: Calculator,
+        teamHeading: "Accounting Services Team",
+        teamDescription: "Our expert team specializes in managing the complex financials of real estate investments in the USA, offering tailored accounting and bookkeeping services. We ensure precise records and insights for investment firms, while our experienced accountants and bookkeepers provide the necessary support for sound business decisions. Committed to personalized service, we cater to the unique financial needs of your business with our comprehensive expertise.",
         shortDescription: "Devising Digital Outcomes by Leveraging Data-driven Decision making to Accelerate Business Grow. Scale and streamline your accounting systems and ensure financial accuracy, timeliness and compliance with our accounting professionals.",
         overview: "Offshore Mind’s Real Estate Accounting Service provides cost-effective and efficient solutions to help clients scale their internal accounting teams. Our dedicated real estate accountants in India collaborate closely with owners, operators, developers, fund managers, brokers, and property managers. By seamlessly integrating our experts into your team, we streamline and enhance existing processes while maintaining quality and integrity. Trust us to maximize your output and free up time for your core operations.",
         fullDescription: "Our expert team specializes in managing the complex financials of real estate investments in the USA, offering tailored accounting and bookkeeping services. We ensure precise records and insights for investment firms, while our experienced accountants and bookkeepers provide the necessary support for sound business decisions.",
         toolLogos: [
-            { name: "Yardi", logo: yardiLogo },
-            { name: "excel", logo: excelLogo },
-            { name: "Xero", logo: xeroLogo },
-            { name: "zoha", logo: zoho },
-            { name: "cashflow-manager", logo: cashflow },
-            { name: "freshbook", logo: freshbook },
-            { name: "QuickBooks", logo: quickbooksLogo },
-            { name: "rent", logo: rent }
+            { name: "Ac1", logo: Ac1 },
+            { name: "Ac2", logo: Ac2 },
+            { name: "Ac3", logo: Ac3 },
+            { name: "Ac4", logo: Ac4 },
+            { name: "Ac5", logo: Ac5 },
+            { name: "Ac6", logo: Ac6 },
+            { name: "Ac7", logo: Ac7 },
+            { name: "Ac8", logo: Ac8 },
+            { name: "Ac9", logo: Ac9 },
+            { name: "Ac10", logo: Ac10 },
 
         ],
         subServices: [
@@ -242,17 +300,25 @@ export const servicesData = [
         id: "analytics-services",
         title: "Real Estate Analytics Services",
         icon: LineChart,
+        teamHeading: "Real Estate Analytics Services Team",
+        teamDescription: "Our team combines real estate analysts, data scientists, and research experts.We specialize in market research, demographic analysis, and data visualization.Using platforms like CoStar, Yardi Matrix, and RealPage, we turn raw data into insights.Our analytics help clients make smarter, data-driven real estate decisions",
         shortDescription: "Data-Driven Insights for Confident Real Estate Decision-Making",
         overview: "Make smarter real estate investment and asset management decisions with our data-driven analytics services. We empower investors, sponsors, lenders, and brokers with actionable insights by combining market intelligence, demographic trends, financial data, and property-level metrics into clear, decision-ready outputs.",
         fullDescription: "Our analytics services cover the full lifecycle of real estate assets, from market selection and site analysis to performance tracking and portfolio optimization. By leveraging advanced tools and data platforms such as CoStar, Yardi Matrix, RealPage, and proprietary client data, our team delivers tailored insights aligned with your strategic goals.",
         toolLogos: [
-            { name: "Excel", logo: excelLogo },
-            { name: "googlesheet", logo: googlesheetLogo },
-            { name: "openai", logo: openaiLogo },
-            { name: "copilot", logo: copilotLogo },
-            { name: "googlestudio", logo: googleStudio },
-            { name: "PowerBI", logo: excelLogo },
-            { name: "Tableau", logo: tableau },
+            { name: "RSE1", logo: RSE1 },
+            { name: "RSE2", logo: RSE2 },
+            { name: "RSE3", logo: RSE3 },
+            { name: "RSE4", logo: RSE4 },
+            { name: "RSE5", logo: RSE5 },
+            { name: "RSE6", logo: RSE6 },
+            { name: "RSE7", logo: RSE7 },
+            { name: "RSE8", logo: RSE8 },
+            { name: "RSE9", logo: RSE9 },
+            { name: "RSE10", logo: RSE10 },
+            { name: "RSE11", logo: RSE11 },
+            { name: "RSE12", logo: RSE12 },
+
 
         ],
         subServices: [
@@ -316,15 +382,22 @@ export const servicesData = [
         id: "asset-management",
         title: "Asset Management Services",
         icon: Building2,
+        teamHeading: "Asset Management Services Team",
+        teamDescription: "Our asset management professionals come with diverse experience across real estate operations, finance, and leasing strategy. Many hold MBAs, CA, or CPA qualifications and have worked with institutional portfolios across asset classes. With a hands-on approach and sharp attention to detail, our team ensures seamless execution, proactive performance tracking, and value-driven reporting that align with your business goals.",
         shortDescription: "Maximizing Performance Across the U.S. Real Estate Lifecycle",
         overview: "Maximize returns and operational efficiency with our comprehensive Asset Management Services designed for real estate investors, sponsors, and portfolio managers. We provide end-to-end support that enables proactive decision-making, performance optimization, and long-term value creation across all asset classes.",
         fullDescription: "Our team acts as an extension of your internal asset management function, overseeing financial performance, capital planning, budgeting, leasing strategy, and operational KPIs. From tracking NOI and occupancy metrics to managing CapEx schedules and lender reporting, we ensure your assets perform in line with business plans and market expectations. We leverage data from rent rolls, operating statements, market comps, and third-party platforms to deliver timely, insightful dashboards and reports.",
         toolLogos: [
-            { name: "Excel", logo: excelLogo },
-            { name: "Yardi", logo: yardiLogo },
-            { name: "rent", logo: rent },
-            { name: "quickbook", logo: quickbooksLogo },
-            { name: "appfolio", logo: appfolioLogo },
+            { name: "Ams1", logo: Ams1 },
+            { name: "Ams2", logo: Ams2 },
+            { name: "Ams3", logo: Ams3 },
+            { name: "Ams4", logo: Ams4 },
+            { name: "Ams5", logo: Ams5 },
+            { name: "Ams6", logo: Ams6 },
+            { name: "Ams7", logo: Ams7 },
+            { name: "Ams8", logo: Ams8 },
+            { name: "Ams9", logo: Ams9 },
+            { name: "Ams10", logo: Ams10 },
 
         ],
         subServices: [
@@ -408,9 +481,21 @@ export const servicesData = [
         id: "financial-modeling",
         title: "Financial Modeling Services",
         icon: TrendingUp,
+        teamHeading: "Financial Modeling Services Team",
+        teamDescription: "Our financial modeling experts bring strong technical expertise and advanced credentials to deliver accurate, flexible models for real estate and project finance, with precision across acquisitions and energy projects.",
         shortDescription: "Robust, Industry-Specific Models for Real Estate, Infrastructure & Renewable Energy Projects",
         overview: "We provide specialized financial modeling services to support real estate, infrastructure, and renewable energy investments with precision and clarity. Our models are built to reflect complex deal structures, financing mechanisms, and regulatory frameworks, enabling clients to make informed decisions with confidence. From underwriting real estate acquisitions and developments to structuring infrastructure project finance and renewable energy models, our team delivers tailored, audit-ready models aligned with industry best practices.",
         fullDescription: "Our financial modeling experts are equipped with strong technical backgrounds and academic credentials, including MBAs, Chartered Accountants, and infrastructure finance specialists. With years of experience in building complex real estate and project finance models, our team ensures accuracy, flexibility, and clarity. Whether modeling real estate acquisitions or renewable energy projects, we bring precision and deep domain understanding to every assignment.",
+        toolLogos: [
+            { name: "fms", logo: fms },
+            { name: "fms2", logo: fms2 },
+            { name: "fms3", logo: fms3 },
+            { name: "fms4", logo: fms4 },
+            { name: "fms5", logo: fms5 },
+            { name: "fms6", logo: fms6 },
+
+
+        ],
 
         subServices: [
             {
@@ -456,14 +541,20 @@ export const servicesData = [
         id: "marketing",
         title: "Real Estate Marketing Services",
         icon: Megaphone,
+        teamHeading: "Real Estate Marketing Services Team",
+        teamDescription: "Our marketing team blends creative design talent with real estate know-how, including professionals with experience in branding, investor communications, and design strategy. With backgrounds in real estate, finance, and visual communication, we craft compelling marketing materials that resonate with investors, tenants, and stakeholders. Our team ensures every deliverable meets both aesthetic and strategic standards—helping your offerings stand out in a competitive market.",
         shortDescription: "Custom Marketing Support for U.S. Investors, Sponsors, Lenders, and Brokers",
         overview: "Enhance your brand presence and accelerate deal flow with high-impact marketing materials tailored for the real estate industry. We support investors, sponsors, brokers, and developers with professionally designed pitch decks, offering memorandums, investor presentations, brochures, and digital assets that effectively communicate your value proposition.",
         fullDescription: "Our marketing team blends creative design talent with real estate know-how, including professionals with experience in branding, investor communications, and design strategy. With backgrounds in real estate, finance, and visual communication, we craft compelling marketing materials that resonate with investors, tenants, and stakeholders.",
         toolLogos: [
-            { name: "ps", logo: ps },
-            { name: "canva", logo: canva },
-            { name: "ai", logo: ai },
-            { name: "cd", logo: cd },
+            { name: "Rem1", logo: Rem1 },
+            { name: "Rem2", logo: Rem2 },
+            { name: "Rem3", logo: Rem3 },
+            { name: "Rem4", logo: Rem4 },
+            { name: "Rem5", logo: Rem5 },
+            { name: "Rem6", logo: Rem6 },
+            { name: "Rem7", logo: Rem7 },
+            { name: "Rem8", logo: Rem8 },
 
 
         ],

@@ -4,13 +4,31 @@ import Reveal from '../common/Reveal';
 import CountUp from '../common/CountUp';
 import { servicesData } from '../../data/services';
 
-const ServiceTeam = ({ initialServiceId }) => {
+const ServiceTeam = ({
+    initialServiceId,
+    customTitle,
+    customDescription,
+    customHeading,
+    customLabel,
+    customExpValue,
+    customExpLabel,
+    customCapabilities
+}) => {
     const [selectedServiceId, setSelectedServiceId] = useState(initialServiceId || servicesData[0].id);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [expandedCapabilities, setExpandedCapabilities] = useState({});
     const dropdownRef = useRef(null);
 
     const selectedService = servicesData.find(s => s.id === selectedServiceId);
+
+    // Use props if provided, otherwise fallback to selectedService data or defaults
+    const displayTitle = customTitle || "Expert Team & Capabilities";
+    const displayDescription = customDescription || selectedService?.teamDescription || "Our team comprises highly skilled professionals from India’s top universities, including individuals with CPA certifications, Master’s degrees, and MBAs. With over four years of experience, we ensure that only the best experts join our ranks.";
+    const displayHeading = customHeading || selectedService?.teamHeading || "Our Team";
+    const displayLabel = customLabel || "Our Expertise";
+    const displayExpValue = customExpValue || "4";
+    const displayExpLabel = customExpLabel || "Years of Average Experience";
+    const displayCapabilities = customCapabilities || selectedService?.capabilities || [];
 
     // Update internal state if prop changes
     useEffect(() => {
@@ -51,25 +69,29 @@ const ServiceTeam = ({ initialServiceId }) => {
                 <div className="grid md:grid-cols-2 gap-16 items-center">
                     <div>
                         <Reveal>
-                            <span className="text-bloom-primary font-semibold tracking-wider uppercase text-sm mb-2 block">Our Expertise</span>
+                            <span className="text-bloom-primary font-semibold tracking-wider uppercase text-sm mb-2 block">
+                                {displayLabel}
+                            </span>
                         </Reveal>
                         <Reveal delay={100}>
-                            <h2 className="text-4xl font-bold text-white mb-6 font-heading">Expert Team & Capabilities</h2>
+                            <h2 className="text-4xl font-bold text-white mb-6 font-heading">
+                                {displayTitle}
+                            </h2>
                         </Reveal>
                         <Reveal delay={200}>
                             <p className="text-bloom-text-muted leading-relaxed text-lg mb-8 font-light">
-                                Our team comprises highly skilled professionals from India’s top universities, including individuals with CPA certifications, Master’s degrees, and MBAs. With over four years of experience, we ensure that only the best experts join our ranks.
+                                {displayDescription}
                             </p>
                         </Reveal>
 
                         <Reveal delay={300}>
                             <div className="inline-flex items-center gap-4 p-4 rounded-xl bg-bloom-blue/10 border border-bloom-blue/20">
                                 <div className="w-12 h-12 bg-bloom-blue rounded-lg flex items-center justify-center text-white font-bold text-xl">
-                                    <CountUp end={4} suffix="+" duration={2000} />
+                                    <CountUp end={parseInt(displayExpValue)} suffix="+" duration={2000} />
                                 </div>
                                 <div className="text-sm text-bloom-text-muted leading-tight">
-                                    <span className="text-white font-bold block">Years of Average Experience</span>
-                                    per team member
+                                    <span className="text-white font-bold block">{displayExpLabel}</span>
+                                    {customExpValue ? "" : "per team member"}
                                 </div>
                             </div>
                         </Reveal>
@@ -81,12 +103,12 @@ const ServiceTeam = ({ initialServiceId }) => {
                             <div className="absolute -inset-1 bg-gradient-to-r from-bloom-primary/20 to-bloom-blue/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                             <div className="relative z-10">
-                                <div className="relative mb-8" ref={dropdownRef}>
+                                <div className="relative mb-8" >
                                     <button
                                         
                                         className="flex items-center gap-3 text-2xl font-bold text-white hover:text-bloom-primary transition-colors group/btn"
                                     >
-                                        <span className="bg-gradient-to-r from-white to-bloom-blue bg-clip-text text-transparent">{selectedService?.title} Team</span>
+                                        <span className="bg-gradient-to-r from-white to-bloom-blue bg-clip-text text-transparent">{displayHeading}</span>
                                        
                                     </button>
 
@@ -116,7 +138,7 @@ const ServiceTeam = ({ initialServiceId }) => {
                                 </div>
 
                                 <div className="space-y-4">
-                                    {(selectedService?.capabilities || []).map((capability, index) => (
+                                    {displayCapabilities.map((capability, index) => (
                                         <div key={index} className="border-b border-white/5 last:border-0 pb-4 last:pb-0">
                                             <button
                                                 onClick={() => toggleAccordion(index)}

@@ -13,8 +13,7 @@ const RealmSection = () => {
                 </h2>
                 
                 <p className="text-bloom-text-muted max-w-2xl mx-auto leading-relaxed">
-                    Leveraging advanced analytics and industry expertise to provide actionable insights. 
-                    We turn data into your most valuable asset.
+                   In our global operations, the expertise of our skilled professionals in India is pivotal. They deliver top-notch services that redefine outsourcing in the real estate industry by seamlessly integrating their knowledge with advanced systems, resulting in unparalleled service quality.
                 </p>
             </div>
         </section>

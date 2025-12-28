@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Users, TrendingUp, ShieldCheck } from 'lucide-react';
 import videoSource from '../../assets/video1.mp4';
 
 const HeroModern = () => {
@@ -90,14 +90,19 @@ const HeroModern = () => {
                 </div>
 
                 {/* Services List - Endless marquee */}
-                <div className="marquee-wrapper mb-10 py-2 border-y border-white/10 backdrop-blur-sm rounded-full bg-white/5">
-                    <div className="marquee-track">
-                        {[...services, ...services].map((item, idx) => (
-                            <span key={idx} className="marquee-item">
-                                <span className="marquee-dot"></span>
-                                {item}
-                            </span>
-                        ))}
+                {/* Key Features / Trust Indicators */}
+                <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-10">
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
+                        <Users size={16} className="text-bloom-primary" />
+                        <span className="text-sm font-medium text-gray-200">Expert Teams</span>
+                    </div>
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
+                        <TrendingUp size={16} className="text-bloom-blue" />
+                        <span className="text-sm font-medium text-gray-200">Scalable Growth</span>
+                    </div>
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
+                        <ShieldCheck size={16} className="text-green-400" />
+                        <span className="text-sm font-medium text-gray-200">Secure & Compliant</span>
                     </div>
                 </div>
 

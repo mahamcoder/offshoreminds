@@ -21,29 +21,29 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
 
                 const { collection, getDocs } = await import('firebase/firestore');
                 const { db } = await import('../../firebase');
-                
+
                 try {
                     const querySnapshot = await getDocs(collection(db, "blogs"));
                     const blogsList = querySnapshot.docs.map(doc => ({
                         id: doc.id,
                         ...doc.data()
                     }));
-                    
+
                     if (blogsList.length > 0) {
                         // Sort by date if possible, otherwise rely on order
                         // blogsList.sort(...) 
                         setBlogs(blogsList);
                     } else {
-                         // Fallback to static if DB is empty
-                         setBlogs(blogsData);
+                        // Fallback to static if DB is empty
+                        setBlogs(blogsData);
                     }
                 } catch (err) {
                     console.error("Error fetching from Firebase", err);
                     setBlogs(blogsData);
                 }
             } catch (err) {
-                 console.error("Error initializing Firebase fetch", err);
-                 setBlogs(blogsData);
+                console.error("Error initializing Firebase fetch", err);
+                setBlogs(blogsData);
             } finally {
                 setLoading(false);
             }
@@ -71,7 +71,7 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
 
     if (loading) {
         return (
-             <div className="flex justify-center py-20">
+            <div className="flex justify-center py-20">
                 <div className="w-10 h-10 border-4 border-bloom-primary border-t-transparent rounded-full animate-spin"></div>
             </div>
         );
@@ -105,18 +105,40 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
                                     </div>
                                 </div>
 
-                                <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-bloom-blue transition-colors cursor-pointer leading-tight">
-                                    {post.title}
-                                </h3>
+                                {post.externalLink ? (
+                                    <a
+                                        href={post.externalLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-bloom-blue transition-colors cursor-pointer leading-tight block"
+                                    >
+                                        {post.title}
+                                    </a>
+                                ) : (
+                                    <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-bloom-blue transition-colors cursor-pointer leading-tight">
+                                        {post.title}
+                                    </h3>
+                                )}
 
                                 <p className="text-bloom-text-muted mb-6 line-clamp-3 text-sm leading-relaxed">
                                     {post.excerpt}
                                 </p>
 
                                 <div className="mt-auto">
-                                    <Link to={`/blogs/${post.id}`} className="text-bloom-secondary font-bold text-sm uppercase tracking-wider flex items-center gap-2 group-hover:text-white transition-colors">
-                                        Read Article <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                                    </Link>
+                                    {post.externalLink ? (
+                                        <a
+                                            href={post.externalLink}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-bloom-secondary font-bold text-sm uppercase tracking-wider flex items-center gap-2 group-hover:text-white transition-colors"
+                                        >
+                                            Read Article <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                        </a>
+                                    ) : (
+                                        <Link to={`/blogs/${post.id}`} className="text-bloom-secondary font-bold text-sm uppercase tracking-wider flex items-center gap-2 group-hover:text-white transition-colors">
+                                            Read Article <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                        </Link>
+                                    )}
                                 </div>
                             </div>
                         </div>

@@ -5,6 +5,8 @@ import rahulImg from "../../assets/Rahul.jpg";
 import gayana from "../../assets/Gayana.png";
 import sanjitImg from "../../assets/sanjit.png";
 import JapnahImg from "../../assets/Japnah.png";
+import Sythum from "../../assets/AC/Sythum shah.jpg";
+
 
 const TeamSection = () => {
     const [selectedMember, setSelectedMember] = useState(null);
@@ -53,7 +55,7 @@ const TeamSection = () => {
         {
             name: "Satyam Sah",
             role: "Senior Financial Analyst",
-            image: "https://ui-avatars.com/api/?name=Satyam+Sah&background=5D5CDE&color=fff&size=200",
+            image: Sythum,
             linkedin: "#",
             bio: "Satyam specializes in institutional-grade financial analysis. From underwriting new acquisitions to complex sensitivity analysis, he provides the data-driven support our clients need to make informed decisions."
         }

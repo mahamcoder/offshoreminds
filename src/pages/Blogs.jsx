@@ -1,22 +1,17 @@
 import { useState } from 'react';
 import BlogGrid from '../components/blogs/BlogGrid';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { ChevronDown, ArrowRight } from 'lucide-react';
 import Reveal from '../components/common/Reveal';
 import { blogCategories } from '../data/blogs';
+import ServiceCard from '../components/ServiceCard';
+import { servicesData } from '../data/services';
 
 const Blogs = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const serviceLinks = [
-    "Real Estate Financial Analysis",
-    "Real Estate Accounting Support",
-    "Real Estate Marketing",
-    "Financial Modeling",
-    "Real Estate Asset Management",
-    "Real Estate Analytics"
-  ];
+
 
   return (
     <div className="bg-bloom-dark min-h-screen text-white">
@@ -79,26 +74,31 @@ const Blogs = () => {
       </section>
 
       {/* Services Links Section */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-white/5 backdrop-blur-lg"></div>
+      <section className="py-24 relative overflow-hidden bg-bloom-dark/50 border-y border-white/5">
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <Reveal width="100%">
+              <span className="text-bloom-blue font-semibold uppercase tracking-widest text-sm mb-4 block">Take the Next Step</span>
+            </Reveal>
+            <Reveal delay={100} width="100%">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Explore Our <span className="text-bloom-primary">Services</span></h2>
+            </Reveal>
+            <Reveal delay={200} width="100%">
+              <p className="text-bloom-text-muted text-lg">
+                Discover how our specialized expertise can be tailored to meet your unique real estate challenges.
+              </p>
+            </Reveal>
+          </div>
 
-        <div className="container mx-auto px-4 relative z-10 text-center flex flex-col items-center">
-          <Reveal>
-            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-white">
-              Explore Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-bloom-blue">Services</span>
-            </h2>
-          </Reveal>
-
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {serviceLinks.map((link, i) => (
-              <Reveal key={i} delay={i * 100} width="100%">
-                <Link
-                  to="/services"
-                  className="group bg-bloom-dark/50 border border-white/10 p-6 rounded-xl hover:bg-bloom-primary hover:border-bloom-primary transition-all duration-300 flex items-center justify-between text-left h-full"
-                >
-                  <span className="font-bold text-white group-hover:text-bloom-dark transition-colors">{link}</span>
-                  <ArrowRight size={20} className="text-bloom-primary group-hover:text-bloom-dark transition-colors" />
-                </Link>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {servicesData.map((service, index) => (
+              <Reveal key={service.id} delay={index * 100} width="100%" height="100%">
+                <ServiceCard
+                  icon={service.icon}
+                  title={service.title}
+                  description={service.shortDescription}
+                  link={`/services/${service.id}`}
+                />
               </Reveal>
             ))}
           </div>

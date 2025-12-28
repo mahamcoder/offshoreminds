@@ -17,7 +17,9 @@ const JobEditor = ({ existingJob = null, onClose = null }) => {
         category: 'Finance',
         description: '',
         responsibilities: [''],
-        requirements: ['']
+        responsibilities: [''],
+        requirements: [''],
+        applyLink: ''
     });
 
     useEffect(() => {
@@ -31,7 +33,9 @@ const JobEditor = ({ existingJob = null, onClose = null }) => {
                 category: existingJob.category || 'Finance',
                 description: existingJob.description || '',
                 responsibilities: existingJob.responsibilities && existingJob.responsibilities.length > 0 ? existingJob.responsibilities : [''],
-                requirements: existingJob.requirements && existingJob.requirements.length > 0 ? existingJob.requirements : ['']
+                responsibilities: existingJob.responsibilities && existingJob.responsibilities.length > 0 ? existingJob.responsibilities : [''],
+                requirements: existingJob.requirements && existingJob.requirements.length > 0 ? existingJob.requirements : [''],
+                applyLink: existingJob.applyLink || ''
             });
         }
     }, [existingJob]);
@@ -74,7 +78,9 @@ const JobEditor = ({ existingJob = null, onClose = null }) => {
                 category: formData.category,
                 description: formData.description,
                 responsibilities: cleanResponsibilities,
+                responsibilities: cleanResponsibilities,
                 requirements: cleanRequirements,
+                applyLink: formData.applyLink,
                 updatedAt: serverTimestamp()
             };
 
@@ -213,6 +219,24 @@ const JobEditor = ({ existingJob = null, onClose = null }) => {
                                     </div>
                                 </div>
                             </div>
+
+
+                            {/* Application Link */}
+                            <div className="space-y-2 pt-4 border-t border-white/5">
+                                <label className="text-sm font-medium text-gray-300">Application Link (Optional)</label>
+                                <div className="relative">
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-mono text-xs">URL</div>
+                                    <input
+                                        type="url"
+                                        name="applyLink"
+                                        value={formData.applyLink}
+                                        onChange={handleChange}
+                                        className="w-full bg-bloom-dark/80 border border-white/10 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:border-bloom-primary/50 focus:ring-1 focus:ring-bloom-primary/50 transition-all text-white placeholder-gray-600"
+                                        placeholder="https://docs.google.com/forms/..."
+                                    />
+                                    <p className="text-xs text-bloom-text-muted mt-2 ml-1">If provided, the 'Apply Now' button will redirect here. If empty, it opens the default email client.</p>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Section: Job Description */}
@@ -318,8 +342,8 @@ const JobEditor = ({ existingJob = null, onClose = null }) => {
                         </div>
                     </form>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 

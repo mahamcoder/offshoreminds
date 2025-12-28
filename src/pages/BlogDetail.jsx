@@ -9,8 +9,8 @@ const BlogDetail = () => {
     const { serviceId } = useParams(); // Note: Route param is :serviceId in App.jsx?? Wait, I need to check App.jsx route name. Assuming I name it :id or :blogId.
     // Actually, looking at App.jsx, there is no blog detail route yet. I will add it as /blogs/:id.
     // So here I should use useParams().id.
-    const { id } = useParams(); 
-    
+    const { id } = useParams();
+
     const [blog, setBlog] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -62,9 +62,9 @@ const BlogDetail = () => {
             {/* Hero Image */}
             <div className="w-full h-[400px] md:h-[500px] relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-bloom-dark to-transparent z-10"></div>
-                <img 
-                    src={blog.image} 
-                    alt={blog.title} 
+                <img
+                    src={blog.image}
+                    alt={blog.title}
                     className="w-full h-full object-cover"
                 />
             </div>
@@ -110,12 +110,12 @@ const BlogDetail = () => {
                                 </div>
                             </div>
                         )}
-                        
-                         <div className="mt-12 pt-8 border-t border-white/10 flex justify-between items-center">
+
+                        <div className="mt-12 pt-8 border-t border-white/10 flex justify-between items-center">
                             <Link to="/blogs" className="inline-flex items-center gap-2 text-bloom-primary font-bold hover:translate-x-[-4px] transition-transform">
                                 <ArrowLeft size={20} /> Back to Insights
                             </Link>
-                            
+
 
                         </div>
                     </div>

@@ -97,19 +97,138 @@ const Services = () => {
 
             <HorizontalTools />
 
-            <ServiceTeam />
+            <ServiceTeam
+                customTitle="Expert Team & Capabilities"
+                customDescription="We unite CPAs, CFAs, MBAs, and top analysts to provide end-to-end real estate solutions. Leveraging expertise in accounting, asset management, financial modeling, and market research, we turn complex data from tools like CoStar, Yardi Matrix, Argus, and RealPage into clear, investor-ready insights for confident U.S. investment decisions."
+                customHeading="Our Core Capabilities"
+                customExpValue="20"
+                customExpLabel="Combined Core Specialists"
+                customCapabilities={[
+                    {
+                        title: "Real Estate Financial Analysis & Modeling",
+                        details: ["Underwriting & deal screening",
+
+                            "Financial forecasting & predictive modeling",
+
+                            "IRR / NPV / Equity multiple analysis",
+
+                            "DSCR & lender-focused metrics",
+
+                            "Capital stack & waterfall modeling",
+
+                            "Project finance (infrastructure & development)",
+
+                            "Renewable & energy project modeling",
+                        ]
+                    },
+                    {
+                        title: "Underwriting, Due Diligence & Deal Evaluation",
+                        details: ["Market, tenant & sponsor analysis",
+
+                            "Rent roll & lease review and validation",
+
+                            "Expense audits, TTM vs Proforma comparisons",
+
+                            "Sales/rent comps & tax projections",
+
+                            "Risk and stress-test scenarios",
+
+                            "Lender/credit alignment & covenant checks"]
+                    },
+                    {
+                        title: "Lease, Asset & Portfolio Performance Management",
+                        details: ["Lease abstraction, summaries & administration",
+
+                            "Asset KPIs, NOI/CapEx/OpEx performance",
+
+                            "Investor reporting (monthly/quarterly)",
+
+                            "Rent roll & occupancy monitoring",
+                            "CAM/TI/OpEx verification & variance checks",
+
+                            "Portfolio benchmarking vs market",
+
+                            "Dashboarding & portfolio health reviews"]
+                    },
+                    {
+                        title: "Bookkeeping, Financial Reporting & Operational Accounting",
+                        details: ["Monthly/quarterly close processes",
+
+                            "P&L, Balance Sheet, Cash Flow reporting",
+
+                            "Bank & ledger reconciliation",
+
+                            "Budget vs actuals & variance monitoring",
+
+                            "Capital improvement & construction cost tracking",
+
+                            "Cost audits & procurement oversight",
+
+                        ]
+                    },
+                    {
+                        title: "Tax Strategy, Compliance & Transaction Support",
+                        details: ["1031 exchange advisory coordination",
+
+                            "Cost segregation study readiness & data prep",
+
+                            "Real estate tax planning & compliance",
+
+                            "Purchase/sale transaction accounting support",
+
+                            "Regulatory & compliance audits",
+
+                            "Lender/tax authority communication support",
+
+
+                        ]
+                    },
+                    {
+                        title: "Market Intelligence, Research & Location Analysis",
+                        details: ["Submarket & location analysis (macro & micro)",
+
+                            "Demographic & economic indicators review",
+
+                            "Demand, supply & affordability metrics",
+
+                            "Market comps & industry benchmarking",
+
+                            "Growth forecasting & trend mapping",
+
+                            "Competitive landscape & rent positioning",
+
+                        ]
+                    },
+                    {
+                        title: "Investor Communications & Deal Materials",
+                        details: ["Sub-Services Covered:Offering Memorandums (OMs) & pitch decks",
+
+                            "Investor reports & quarterly presentations",
+
+                            "Property flyers, brochures & marketing kits",
+
+                            "Capital raise support packages",
+
+                            "Development and construction trackers",
+
+                            "Portfolio summary & executive briefs",
+
+                        ]
+                    }
+                ]}
+            />
 
             {/* CTA */}
             <section className="py-24 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-bloom-dark to-bloom-primary/10"></div>
-                <div className="container mx-auto px-4 max-w-4xl text-center relative z-10">
+                <div className="absolute inset-0 bg-gradient-to-b from-bloom-dark to-bloom-primary/10 text-center"></div>
+                <div className="container mx-auto px-4 max-w-4xl flex flex-col items-center justify-center relative z-10">
                     <Reveal>
                         <h2 className="text-3xl md:text-5xl font-bold mb-6 text-white leading-tight">Need a custom solution?</h2>
                     </Reveal>
                     <Reveal delay={200}>
-                        <p className="text-bloom-text-muted mb-10 text-xl font-light">We understand every real estate firm is unique. Let's discuss a tailored engagement model that fits your needs.</p>
+                        <p className="text-bloom-text-muted mb-10 text-xl font-light text-center">We understand every real estate firm is unique. Let's discuss a tailored engagement model that fits your needs.</p>
                     </Reveal>
-                    <Reveal delay={300}>
+                    <Reveal delay={300} className="mx-auto">
                         <a href="https://calendly.com/gyan-offshoreminds/30min?month=2025-12" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-bloom-primary text-white font-bold py-4 px-10 rounded-full hover:bg-white hover:text-bloom-dark transition-all duration-300 shadow-[0_0_20px_rgba(93,92,222,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">
                             Schedule a Call <ArrowRight size={18} />
                         </a>

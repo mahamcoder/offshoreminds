@@ -80,7 +80,7 @@ const Contact = () => {
                         {/* Right: Form + Info Stack */}
                         <div className="space-y-8 flex flex-col">
                             {/* Contact Form Card */}
-                            <Reveal delay={200}>
+                            <Reveal delay={200} width="100%">
                                 <div className="bg-white/5 backdrop-blur-md p-8 lg:p-10 rounded-3xl shadow-xl border border-white/10 hover:border-bloom-primary/30 transition-all duration-300">
                                     <h2 className="text-3xl font-bold text-white mb-6 font-heading">Send Us A Message</h2>
                                     <form className="space-y-6" onSubmit={onSubmit}>
@@ -103,7 +103,7 @@ const Contact = () => {
                             </Reveal>
 
                             {/* Contact Info Card */}
-                            <Reveal delay={400}>
+                            <Reveal delay={400} width="100%">
                                 <ContactInfo />
                             </Reveal>
                         </div>

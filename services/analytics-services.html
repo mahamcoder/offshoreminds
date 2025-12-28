@@ -1,74 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Analytics Services | Offshore Minds</title>
-    <link rel="stylesheet" href="/src/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <!-- Navbar -->
-    <header class="navbar">
-      <div class="container nav-container">
-        <a href="/" class="logo">
-          <span class="logo-text">Offshore<span class="text-secondary">Minds</span></span>
-        </a>
-        <button id="mobile-menu-btn" class="mobile-menu-btn"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button>
-        <nav class="nav-links">
-          <a href="/" class="nav-link">Home</a>
-          <a href="/about.html" class="nav-link">About Us</a>
-          <div class="dropdown">
-            <a href="/services.html" class="nav-link active dropdown-toggle">Services</a>
-            <div class="dropdown-menu">
-               <a href="/services/financial-services.html">Real Estate Financial Services</a>
-              <a href="/services/accounting-services.html">Accounting Services</a>
-              <a href="/services/analytics-services.html">Real Estate Analytics Services</a>
-              <a href="/services/asset-management.html">Asset Management Services</a>
-              <a href="/services/financial-modeling.html">Financial Modeling Services</a>
-              <a href="/services/marketing.html">Real Estate Marketing</a>
-            </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/favicon/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/favicon/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/favicon/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+  <link rel="manifest" href="/favicon/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/favicon/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics Services | Offshore Minds</title>
+  <link rel="stylesheet" href="/src/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="logo">
+        <span class="logo-text">Offshore<span class="text-secondary">Minds</span></span>
+      </a>
+      <button id="mobile-menu-btn" class="mobile-menu-btn"><span class="bar"></span><span class="bar"></span><span
+          class="bar"></span></button>
+      <nav class="nav-links">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/about.html" class="nav-link">About Us</a>
+        <div class="dropdown">
+          <a href="/services.html" class="nav-link active dropdown-toggle">Services</a>
+          <div class="dropdown-menu">
+            <a href="/services/financial-services.html">Real Estate Financial Services</a>
+            <a href="/services/accounting-services.html">Accounting Services</a>
+            <a href="/services/analytics-services.html">Real Estate Analytics Services</a>
+            <a href="/services/asset-management.html">Asset Management Services</a>
+            <a href="/services/financial-modeling.html">Financial Modeling Services</a>
+            <a href="/services/marketing.html">Real Estate Marketing</a>
           </div>
-          <a href="/case-studies.html" class="nav-link">Case Studies</a>
-          <a href="/blogs.html" class="nav-link">Blogs</a>
-          <a href="/contact.html" class="nav-link btn btn-primary">Contact Us</a>
-        </nav>
+        </div>
+        <a href="/case-studies.html" class="nav-link">Case Studies</a>
+        <a href="/blogs.html" class="nav-link">Blogs</a>
+        <a href="/contact.html" class="nav-link btn btn-primary">Contact Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="section" style="background: var(--color-bg-light); padding: 5rem 0;">
+    <div class="container">
+      <div class="hero-container">
+        <div class="hero-content">
+          <span class="hero-badge">Data Driven</span>
+          <h1 class="hero-title">Real Estate <span class="text-secondary">Analytics</span></h1>
+          <p class="hero-description">Unlock the power of your data to make smarter investment decisions.</p>
+        </div>
+        <div class="hero-image-wrapper">
+          <img
+            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            alt="Analytics" class="hero-image">
+        </div>
       </div>
-    </header>
+    </div>
+  </section>
 
-    <section class="section" style="background: var(--color-bg-light); padding: 5rem 0;">
-        <div class="container">
-             <div class="hero-container">
-                <div class="hero-content">
-                    <span class="hero-badge">Data Driven</span>
-                    <h1 class="hero-title">Real Estate <span class="text-secondary">Analytics</span></h1>
-                    <p class="hero-description">Unlock the power of your data to make smarter investment decisions.</p>
-                </div>
-                 <div class="hero-image-wrapper">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Analytics" class="hero-image">
-                </div>
-            </div>
-        </div>
-    </section>
+  <section class="section">
+    <div class="container" style="max-width: 900px;">
+      <div class="service-card" style="align-items: start; margin-bottom: 2rem;">
+        <h3>Analytics Capabilities</h3>
+        <ul style="list-style: none; margin-top: 1rem;">
+          <li style="margin-bottom: 1rem;">✓ Market Trend Analysis</li>
+          <li style="margin-bottom: 1rem;">✓ Demographic Studies</li>
+          <li style="margin-bottom: 1rem;">✓ Predictive Modeling</li>
+          <li style="margin-bottom: 1rem;">✓ Portfolio Performance Benchmarking</li>
+        </ul>
+      </div>
+      <div class="text-center">
+        <a href="/contact.html" class="btn btn-primary">Get Started</a>
+      </div>
+    </div>
+  </section>
+  <script type="module" src="/src/main.js"></script>
+</body>
 
-    <section class="section">
-        <div class="container" style="max-width: 900px;">
-            <div class="service-card" style="align-items: start; margin-bottom: 2rem;">
-                <h3>Analytics Capabilities</h3>
-                <ul style="list-style: none; margin-top: 1rem;">
-                    <li style="margin-bottom: 1rem;">✓ Market Trend Analysis</li>
-                    <li style="margin-bottom: 1rem;">✓ Demographic Studies</li>
-                    <li style="margin-bottom: 1rem;">✓ Predictive Modeling</li>
-                    <li style="margin-bottom: 1rem;">✓ Portfolio Performance Benchmarking</li>
-                </ul>
-            </div>
-             <div class="text-center">
-                 <a href="/contact.html" class="btn btn-primary">Get Started</a>
-            </div>
-        </div>
-    </section>
-    <script type="module" src="/src/main.js"></script>
-  </body>
 </html>
