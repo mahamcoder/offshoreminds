@@ -12,19 +12,60 @@ const Careers = () => {
     useEffect(() => {
         const fetchJobs = async () => {
             try {
-                const q = query(collection(db, "jobs"), orderBy("createdAt", "desc"));
-                const querySnapshot = await getDocs(q);
-                const jobsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                const { collection, getDocs, query, orderBy } = await import('firebase/firestore');
+                const { toast } = await import('react-hot-toast');
 
-                if (jobsList.length > 0) {
-                    setJobs(jobsList);
-                } else {
-                    // Fallback to static data if DB is empty to show something
-                    setJobs(jobsData);
+                let firestoreJobs = [];
+                try {
+                    // Strategy 1: Ordered by creation time
+                    const q = query(collection(db, "jobs"), orderBy("createdAt", "desc"));
+                    const querySnapshot = await getDocs(q);
+                    firestoreJobs = querySnapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data(),
+                        isDynamic: true
+                    }));
+                } catch (orderErr) {
+                    if (orderErr.code === 'permission-denied') {
+                        toast.error("Public job access is blocked by database rules.");
+                    }
+                    console.warn("Ordered fetch failed for jobs, falling back to simple fetch:", orderErr.message);
+                    try {
+                        // Strategy 2: Simple fetch (resilient to missing index)
+                        const querySnapshot = await getDocs(collection(db, "jobs"));
+                        firestoreJobs = querySnapshot.docs.map(doc => ({
+                            id: doc.id,
+                            ...doc.data(),
+                            isDynamic: true
+                        }));
+                    } catch (fetchErr) {
+                        if (fetchErr.code === 'permission-denied') {
+                            toast.error("Could not load jobs. Permission denied.");
+                        }
+                        console.error("Critical job fetch error:", fetchErr);
+                    }
                 }
+
+                // switch-over Logic: If user has their own jobs, show ONLY those.
+                // If the DB is empty, show the original examples.
+                let finalJobs = [];
+                if (firestoreJobs.length > 0) {
+                    finalJobs = firestoreJobs;
+                } else {
+                    finalJobs = jobsData.map(j => ({ ...j, isDynamic: false }));
+                }
+
+                // In-memory sorting (prioritize newest)
+                finalJobs.sort((a, b) => {
+                    const timeA = a.createdAt?.seconds ? a.createdAt.seconds * 1000 : Date.now();
+                    const timeB = b.createdAt?.seconds ? b.createdAt.seconds * 1000 : Date.now();
+                    return timeB - timeA;
+                });
+
+                setJobs(finalJobs);
             } catch (error) {
-                console.error("Error fetching jobs:", error);
-                setJobs(jobsData); // Fallback on error
+                console.error("Error initializing job fetch:", error);
+                setJobs(jobsData.map(j => ({ ...j, isDynamic: false })));
             } finally {
                 setLoading(false);
             }

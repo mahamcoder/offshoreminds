@@ -87,7 +87,7 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
             }
         } catch (error) {
             console.error("Error saving blog:", error);
-            toast.error("Failed to save blog.");
+            toast.error(`Failed to save blog: ${error.message || 'Unknown error'}`);
         } finally {
             setLoading(false);
         }
@@ -200,7 +200,7 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                         </div>
 
                         {/* Content */}
-                        {/* <div>
+                        <div>
                             <label className="block text-sm font-semibold mb-2 text-bloom-blue">Content</label>
                             <textarea
                                 name="content"
@@ -212,7 +212,7 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                                 required
                             ></textarea>
                             <p className="text-xs text-bloom-text-muted mt-2">Basic support for entering text. For more complex formatting, HTML can be pasted here if rendering allows.</p>
-                        </div> */}
+                        </div>
 
                         {/* Keywords */}
                         <div>

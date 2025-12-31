@@ -26,16 +26,28 @@ const Dashboard = () => {
         try {
             const q = query(collection(db, "blogs"), orderBy("createdAt", "desc"));
             const querySnapshot = await getDocs(q);
-            const blogsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setBlogs(blogsList);
+            const firestoreBlogs = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                isDynamic: true
+            }));
+
+            // switch-over Logic: If user has their own blogs, show ONLY those.
+            let finalBlogs = [];
+            if (firestoreBlogs.length > 0) {
+                finalBlogs = firestoreBlogs;
+            } else {
+                finalBlogs = blogsData.map(b => ({ ...b, isDynamic: false }));
+            }
+
+            setBlogs(finalBlogs);
         } catch (error) {
             console.error("Error fetching blogs:", error);
-            try {
-                const querySnapshot = await getDocs(collection(db, "blogs"));
-                const blogsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                blogsList.sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds);
-                setBlogs(blogsList);
-            } catch (e) { }
+            if (error.code === 'permission-denied') {
+                toast.error("Access denied. Please check your Firestore rules.");
+            }
+            // Fallback to static data
+            setBlogs(blogsData.map(b => ({ ...b, isDynamic: false })));
         } finally {
             setLoading(false);
         }
@@ -46,16 +58,28 @@ const Dashboard = () => {
         try {
             const q = query(collection(db, "jobs"), orderBy("createdAt", "desc"));
             const querySnapshot = await getDocs(q);
-            const jobsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setJobs(jobsList);
+            const firestoreJobs = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                isDynamic: true
+            }));
+
+            // switch-over Logic: If user has their own jobs, show ONLY those.
+            let finalJobs = [];
+            if (firestoreJobs.length > 0) {
+                finalJobs = firestoreJobs;
+            } else {
+                finalJobs = jobsData.map(j => ({ ...j, isDynamic: false }));
+            }
+
+            setJobs(finalJobs);
         } catch (error) {
             console.error("Error fetching jobs:", error);
-            try {
-                const querySnapshot = await getDocs(collection(db, "jobs"));
-                const jobsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                jobsList.sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds);
-                setJobs(jobsList);
-            } catch (e) { }
+            if (error.code === 'permission-denied') {
+                toast.error("Access denied. Please check your Firestore rules.");
+            }
+            // Fallback to static data
+            setJobs(jobsData.map(j => ({ ...j, isDynamic: false })));
         } finally {
             setLoading(false);
         }
@@ -68,23 +92,30 @@ const Dashboard = () => {
 
     const handleLogout = async () => {
         await signOut(auth);
-        navigate('/admin/login');
+        navigate('/blogs');
     };
 
-    const handleDelete = async (id, collectionName) => {
+    const handleDelete = async (item, collectionName) => {
         const itemType = collectionName === 'blogs' ? 'blog' : 'job';
+
+        // If it's a static example, we can't delete it from Firestore
+        if (item.isDynamic === false) {
+            toast.error(`This is a sample ${itemType}. To edit or delete it, please click 'Import Data' first.`);
+            return;
+        }
+
         if (window.confirm(`Are you sure you want to delete this ${itemType}? This action cannot be undone.`)) {
             try {
-                await deleteDoc(doc(db, collectionName, id));
+                await deleteDoc(doc(db, collectionName, item.id));
                 if (collectionName === 'blogs') {
-                    setBlogs(prev => prev.filter(blog => blog.id !== id));
+                    setBlogs(prev => prev.filter(blog => blog.id !== item.id));
                 } else {
-                    setJobs(prev => prev.filter(job => job.id !== id));
+                    setJobs(prev => prev.filter(job => job.id !== item.id));
                 }
                 toast.success(`${itemType.charAt(0).toUpperCase() + itemType.slice(1)} deleted successfully!`);
             } catch (error) {
                 console.error(`Error deleting ${itemType}:`, error);
-                toast.error(`Failed to delete ${itemType}.`);
+                toast.error(`Failed to delete ${itemType}: ${error.message || 'Unknown error'}`);
             }
         }
     };
@@ -279,7 +310,12 @@ const Dashboard = () => {
                                                         </div>
                                                     )}
                                                     <div>
-                                                        <h3 className="font-bold text-white text-lg line-clamp-1 mb-1 group-hover:text-bloom-blue transition-colors">{item.title}</h3>
+                                                        <div className="flex items-center gap-2 mb-1">
+                                                            <h3 className="font-bold text-white text-lg line-clamp-1 group-hover:text-bloom-blue transition-colors">{item.title}</h3>
+                                                            {item.isDynamic === false && (
+                                                                <span className="px-1.5 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-500 border border-amber-500/20 font-bold uppercase tracking-wider">Example</span>
+                                                            )}
+                                                        </div>
                                                         <p className="text-gray-500 text-sm line-clamp-1">
                                                             {activeTab === 'blogs' ? item.excerpt : `${item.location} • ${item.type}`}
                                                         </p>
@@ -313,7 +349,7 @@ const Dashboard = () => {
                                                         <Edit2 size={18} />
                                                     </button>
                                                     <button
-                                                        onClick={() => handleDelete(item.id, activeTab)}
+                                                        onClick={() => handleDelete(item, activeTab)}
                                                         className="p-2.5 text-red-400 hover:bg-red-400/10 rounded-xl transition-all hover:scale-110"
                                                         title="Delete"
                                                     >

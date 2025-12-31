@@ -2,48 +2,77 @@ import { useState, useEffect } from 'react';
 import { ArrowRight, Calendar, User, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { blogsData } from '../../data/blogs';
+import { toast } from 'react-hot-toast';
 
 const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
-    const [visibleCount, setVisibleCount] = useState(3);
+    const [visibleCount, setVisibleCount] = useState(6);
     const [blogs, setBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchBlogs = async () => {
             try {
-                // Check if we have firebase keys (basic check)
                 if (!import.meta.env.VITE_FIREBASE_API_KEY) {
-                    // console.warn("Firebase not configured, using static data");
                     setBlogs(blogsData);
                     setLoading(false);
                     return;
                 }
 
-                const { collection, getDocs } = await import('firebase/firestore');
+                const { collection, getDocs, query, orderBy } = await import('firebase/firestore');
                 const { db } = await import('../../firebase');
 
+                let firestoreBlogs = [];
                 try {
-                    const querySnapshot = await getDocs(collection(db, "blogs"));
-                    const blogsList = querySnapshot.docs.map(doc => ({
+                    // Strategy 1: Ordered by creation time
+                    const q = query(collection(db, "blogs"), orderBy("createdAt", "desc"));
+                    const querySnapshot = await getDocs(q);
+                    firestoreBlogs = querySnapshot.docs.map(doc => ({
                         id: doc.id,
-                        ...doc.data()
+                        ...doc.data(),
+                        isDynamic: true
                     }));
-
-                    if (blogsList.length > 0) {
-                        // Sort by date if possible, otherwise rely on order
-                        // blogsList.sort(...) 
-                        setBlogs(blogsList);
-                    } else {
-                        // Fallback to static if DB is empty
-                        setBlogs(blogsData);
+                } catch (orderErr) {
+                    if (orderErr.code === 'permission-denied') {
+                        toast.error("Public blog access is blocked by database rules. Please update Firestore rules.");
+                        console.error("FIREBASE PERMISSION ERROR: Please ensure your Firestore rules allow public reads for the 'blogs' collection.");
                     }
-                } catch (err) {
-                    console.error("Error fetching from Firebase", err);
-                    setBlogs(blogsData);
+                    console.warn("Ordered fetch failed, falling back to simple fetch:", orderErr.message);
+                    try {
+                        // Strategy 2: Simple fetch (resilient to missing indexes/fields)
+                        const querySnapshot = await getDocs(collection(db, "blogs"));
+                        firestoreBlogs = querySnapshot.docs.map(doc => ({
+                            id: doc.id,
+                            ...doc.data(),
+                            isDynamic: true
+                        }));
+                    } catch (fetchErr) {
+                        if (fetchErr.code === 'permission-denied') {
+                            toast.error("Could not load blogs. Permission denied.");
+                        }
+                        console.error("Critical fetch error:", fetchErr);
+                    }
                 }
+
+                // switch-over Logic: If user has their own blogs, show ONLY those. 
+                // If the DB is empty, show the original examples.
+                let finalBlogs = [];
+                if (firestoreBlogs.length > 0) {
+                    finalBlogs = firestoreBlogs;
+                } else {
+                    finalBlogs = blogsData.map(b => ({ ...b, isDynamic: false }));
+                }
+
+                // Strategy 3: In-memory sorting (ensures newest content is always first)
+                finalBlogs.sort((a, b) => {
+                    const timeA = a.createdAt?.seconds ? a.createdAt.seconds * 1000 : new Date(a.date).getTime();
+                    const timeB = b.createdAt?.seconds ? b.createdAt.seconds * 1000 : new Date(b.date).getTime();
+                    return timeB - timeA;
+                });
+
+                setBlogs(finalBlogs);
             } catch (err) {
                 console.error("Error initializing Firebase fetch", err);
-                setBlogs(blogsData);
+                setBlogs(blogsData.map(b => ({ ...b, isDynamic: false })));
             } finally {
                 setLoading(false);
             }
@@ -66,7 +95,7 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
     const hasMore = visibleCount < filteredPosts.length;
 
     const handleShowMore = () => {
-        setVisibleCount(prev => prev + 3);
+        setVisibleCount(filteredPosts.length); // Show ALL remaining on click
     };
 
     if (loading) {
@@ -83,13 +112,26 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
                 {visiblePosts.length > 0 ? (
                     visiblePosts.map((post) => (
                         <div key={post.id} className="group bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden border border-white/10 hover:border-bloom-primary/50 transition-all duration-300 hover:-translate-y-2 h-full flex flex-col">
+                            {/* Improved Clickable Image Hook */}
                             <div className="h-56 overflow-hidden relative shrink-0">
-                                <img
-                                    src={post.image}
-                                    alt={post.title}
-                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                />
-                                <div className="absolute inset-0 bg-bloom-dark/20 mix-blend-multiply transition-opacity group-hover:opacity-0"></div>
+                                {post.externalLink ? (
+                                    <a href={post.externalLink} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+                                        <img
+                                            src={post.image}
+                                            alt={post.title}
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        />
+                                    </a>
+                                ) : (
+                                    <Link to={`/blogs/${post.id}`} className="block w-full h-full">
+                                        <img
+                                            src={post.image}
+                                            alt={post.title}
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        />
+                                    </Link>
+                                )}
+                                <div className="absolute inset-0 bg-bloom-dark/20 mix-blend-multiply transition-opacity group-hover:opacity-0 pointer-events-none"></div>
                                 <div className="absolute top-4 left-4 bg-bloom-dark/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-bloom-primary border border-white/10">
                                     {post.category}
                                 </div>
@@ -105,6 +147,7 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
                                     </div>
                                 </div>
 
+                                {/* Improved Clickable Title Hook */}
                                 {post.externalLink ? (
                                     <a
                                         href={post.externalLink}
@@ -115,9 +158,12 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
                                         {post.title}
                                     </a>
                                 ) : (
-                                    <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-bloom-blue transition-colors cursor-pointer leading-tight">
+                                    <Link
+                                        to={`/blogs/${post.id}`}
+                                        className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-bloom-blue transition-colors cursor-pointer leading-tight block"
+                                    >
                                         {post.title}
-                                    </h3>
+                                    </Link>
                                 )}
 
                                 <p className="text-bloom-text-muted mb-6 line-clamp-3 text-sm leading-relaxed">
@@ -157,7 +203,7 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
                         onClick={handleShowMore}
                         className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-bloom-primary/20 to-bloom-blue/20 border border-bloom-primary/40 rounded-full text-white font-bold hover:from-bloom-primary hover:to-bloom-primary hover:text-bloom-dark transition-all duration-300 shadow-lg hover:shadow-bloom-primary/30"
                     >
-                        Show More Articles
+                        Read More Articles
                         <ChevronDown size={20} className="group-hover:translate-y-1 transition-transform" />
                     </button>
                 </div>
