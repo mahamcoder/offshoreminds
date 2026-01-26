@@ -1,15 +1,57 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { uploadToCloudinary } from '../../utils/cloudinary';
 import { db, auth } from '../../firebase';
 import { collection, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { ArrowLeft, Upload, Save, X } from 'lucide-react';
+import { ArrowLeft, Upload, Save, X, BarChart2, Trash2, Edit2 } from 'lucide-react';
 import { blogCategories } from '../../data/blogs';
+import ReactQuill, { Quill } from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import ChartModal from './ChartModal';
+import BlogRenderer from '../blog/BlogRenderer';
+
+// Register Custom Chart Blot to prevent Quill from stripping attributes
+const Block = Quill.import('blots/block');
+class ChartBlot extends Block {
+    static create(value) {
+        let node = super.create();
+        node.setAttribute('class', 'custom-chart-placeholder relative group my-8');
+        node.setAttribute('data-chart', value.dataChart);
+        node.setAttribute('contenteditable', 'false');
+
+        // Use innerHTML to add the controls overlay with new CSS classes
+        node.innerHTML = `
+            <div class="pointer-events-none p-8 font-bold text-bloom-text-muted">[Interactive Chart: ${value.title || 'Untitled'}]</div>
+            <div class="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 rounded-2xl pointer-events-auto">
+                <button type="button" class="edit-chart-btn media-control-btn edit-media-btn px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xl">Edit Chart</button>
+                <button type="button" class="delete-chart-btn media-control-btn delete-media-btn px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xl">Delete Chart</button>
+            </div>
+        `;
+
+        return node;
+    }
+
+    static value(node) {
+        return {
+            dataChart: node.getAttribute('data-chart'),
+            title: node.querySelector('div')?.innerText.replace('[Interactive Chart: ', '').replace(']', '') || 'Untitled'
+        };
+    }
+}
+ChartBlot.blotName = 'chart';
+ChartBlot.tagName = 'div';
+ChartBlot.className = 'custom-chart-placeholder';
+Quill.register(ChartBlot);
 
 const BlogEditor = ({ existingBlog = null, onClose = null }) => {
     const navigate = useNavigate();
+    const quillRef = useRef(null);
     const [loading, setLoading] = useState(false);
+    const [editMode, setEditMode] = useState('write'); // 'write' or 'preview'
+    const [isChartModalOpen, setIsChartModalOpen] = useState(false);
+    const [editingChartInfo, setEditingChartInfo] = useState(null); // { node, data }
+    const [extractedCharts, setExtractedCharts] = useState([]);
     const [formData, setFormData] = useState({
         title: '',
         excerpt: '',
@@ -21,6 +63,206 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
         keywords: '',
         externalLink: ''
     });
+
+    // ... existing useEffect ...
+
+    // ... existing imageHandler ...
+
+    const chartHandler = useCallback(() => {
+        setIsChartModalOpen(true);
+    }, []);
+
+    const handleInsertChart = (chartData) => {
+        const quill = quillRef.current.getEditor();
+
+        // Use Base64 to avoid quoting issues
+        const encodedData = btoa(unescape(encodeURIComponent(JSON.stringify(chartData))));
+
+        if (editingChartInfo) {
+            // Replace existing chart node
+            const { node } = editingChartInfo;
+            const blot = Quill.find(node);
+            const index = quill.getIndex(blot);
+
+            quill.deleteText(index, 1);
+            quill.insertEmbed(index, 'chart', {
+                dataChart: encodedData,
+                title: chartData.title || 'Untitled'
+            });
+            setEditingChartInfo(null);
+        } else {
+            // Insert new chart
+            const range = quill.getSelection(true);
+            quill.insertEmbed(range.index, 'chart', {
+                dataChart: encodedData,
+                title: chartData.title || 'Untitled'
+            });
+            quill.setSelection(range.index + 1);
+        }
+    };
+
+    // Close Modal and Reset Editing Info
+    const handleCloseChartModal = () => {
+        setIsChartModalOpen(false);
+        setEditingChartInfo(null);
+    };
+
+    // Universal Click Listener for Media (Charts and Images)
+    useEffect(() => {
+        if (quillRef.current && editMode === 'write') {
+            const quill = quillRef.current.getEditor();
+            const container = quill.root;
+
+            const handleClick = (e) => {
+                // 1. Handle Chart Controls
+                const editBtn = e.target.closest('.edit-chart-btn');
+                const deleteChartBtn = e.target.closest('.delete-chart-btn');
+
+                if (editBtn || deleteChartBtn) {
+                    const chartPlaceholder = e.target.closest('.custom-chart-placeholder');
+                    if (chartPlaceholder) {
+                        const rawData = chartPlaceholder.getAttribute('data-chart');
+                        if (editBtn) {
+                            try {
+                                const chartData = JSON.parse(decodeURIComponent(escape(atob(rawData))));
+                                setEditingChartInfo({ node: chartPlaceholder, data: chartData });
+                                setIsChartModalOpen(true);
+                            } catch (err) {
+                                console.error("Failed to parse chart:", err);
+                                toast.error("Could not edit chart data");
+                            }
+                        } else if (deleteChartBtn) {
+                            if (window.confirm("Delete this chart?")) {
+                                const blot = Quill.find(chartPlaceholder);
+                                quill.deleteText(quill.getIndex(blot), 1);
+                                toast.success("Chart deleted");
+                            }
+                        }
+                        return; // Done
+                    }
+                }
+
+                // 2. Handle Regular Image Clicks
+                if (e.target.tagName === 'IMG') {
+                    const img = e.target;
+                    // Provide a simple prompt for now, or we could show an overlay
+                    if (window.confirm("Do you want to delete this image?")) {
+                        const blot = Quill.find(img);
+                        quill.deleteText(quill.getIndex(blot), 1);
+                        toast.success("Image deleted");
+                    }
+                }
+            };
+
+            container.addEventListener('click', handleClick);
+            return () => container.removeEventListener('click', handleClick);
+        }
+    }, [editMode]);
+
+    // Extract charts from content to show in the manager
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (quillRef.current) {
+                const quill = quillRef.current.getEditor();
+                const chartBlots = quill.scroll.descendants(Quill.import('blots/block')).filter(blot => blot.statics.blotName === 'chart');
+
+                const charts = chartBlots.map(blot => {
+                    const node = blot.domNode;
+                    const rawData = node.getAttribute('data-chart');
+                    try {
+                        const data = JSON.parse(decodeURIComponent(escape(atob(rawData))));
+                        return { id: Math.random().toString(36).substr(2, 9), blot, data };
+                    } catch (e) {
+                        return { id: Math.random().toString(36).substr(2, 9), blot, data: { title: 'Corrupted Chart' } };
+                    }
+                });
+                setExtractedCharts(charts);
+            }
+        }, 500); // Debounce
+        return () => clearTimeout(timer);
+    }, [formData.content]);
+
+    const handleClearAll = () => {
+        if (window.confirm("Are you sure you want to clear the entire description? This cannot be undone.")) {
+            setFormData(prev => ({ ...prev, content: '' }));
+            toast.success("Content cleared");
+        }
+    };
+
+    const handleDeleteChartFromList = (blot) => {
+        const quill = quillRef.current.getEditor();
+        const index = quill.getIndex(blot);
+        quill.deleteText(index, 1);
+        toast.success("Chart removed");
+    };
+
+    const handleEditChartFromList = (blot, data) => {
+        setEditingChartInfo({ node: blot.domNode, data });
+        setIsChartModalOpen(true);
+    };
+
+    const handleDeleteBlog = async () => {
+        if (!existingBlog) return;
+        if (window.confirm("CRITICAL: Are you sure you want to delete this entire blog post? This action is permanent.")) {
+            try {
+                setLoading(true);
+                await deleteDoc(doc(db, "blogs", existingBlog.id));
+                toast.success("Blog post deleted");
+                if (onClose) onClose();
+                else navigate('/admin/dashboard');
+            } catch (error) {
+                toast.error("Delete failed: " + error.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
+
+    const imageHandler = useCallback(() => {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.onchange = async () => {
+            const file = input.files[0];
+            if (file) {
+                try {
+                    const loadingToast = toast.loading("Uploading image...");
+                    // Assume uploadToCloudinary returns the URL string
+                    const url = await uploadToCloudinary(file);
+
+                    const quill = quillRef.current.getEditor();
+                    const range = quill.getSelection(true);
+
+                    quill.insertEmbed(range.index, 'image', url);
+                    quill.setSelection(range.index + 1);
+
+                    toast.dismiss(loadingToast);
+                    toast.success("Image uploaded!");
+                } catch (error) {
+                    toast.error("Image upload failed");
+                    console.error("Error uploading image:", error);
+                }
+            }
+        };
+    }, []);
+
+    const modules = useMemo(() => ({
+        toolbar: {
+            container: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                ['link', 'image', 'code-block'],
+                ['clean']
+            ],
+            handlers: {
+                image: imageHandler,
+                'code-block': chartHandler
+            }
+        }
+    }), [imageHandler, chartHandler]);
 
     useEffect(() => {
         if (existingBlog) {
@@ -37,6 +279,7 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
             });
         }
     }, [existingBlog]);
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -186,7 +429,7 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                         </div>
 
                         {/* External Link */}
-                        <div>
+                        {/* <div>
                             <label className="block text-sm font-semibold mb-2 text-bloom-blue">linked URL</label>
                             <input
                                 type="url"
@@ -197,21 +440,102 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                                 placeholder="https://example.com/full-article"
                             />
                             <p className="text-xs text-bloom-text-muted mt-2">If provided, the 'Read More' button will redirect here instead of the internal blog page.</p>
-                        </div>
+                        </div> */}
 
                         {/* Content */}
-                        <div>
-                            <label className="block text-sm font-semibold mb-2 text-bloom-blue">Content</label>
-                            <textarea
-                                name="content"
-                                value={formData.content}
-                                onChange={handleChange}
-                                rows="12"
-                                className="w-full bg-bloom-dark/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-bloom-primary transition-colors font-mono text-sm leading-relaxed"
-                                placeholder="Write your full blog content here..."
-                                required
-                            ></textarea>
-                            <p className="text-xs text-bloom-text-muted mt-2">Basic support for entering text. For more complex formatting, HTML can be pasted here if rendering allows.</p>
+                        <div className="h-full">
+                            <div className="flex items-center justify-between mb-4">
+                                <label className="block text-sm font-semibold text-bloom-blue">Content Description</label>
+                                <div className="flex items-center gap-4">
+                                    <button
+                                        type="button"
+                                        onClick={handleClearAll}
+                                        className="text-xs font-bold text-red-400 hover:text-red-300 transition-colors uppercase tracking-widest"
+                                    >
+                                        Clear All
+                                    </button>
+                                    <div className="flex bg-white/5 p-1 rounded-xl">
+                                        <button
+                                            type="button"
+                                            onClick={() => setEditMode('write')}
+                                            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${editMode === 'write' ? 'bg-bloom-primary text-bloom-dark shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                                        >
+                                            Write
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setEditMode('preview')}
+                                            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${editMode === 'preview' ? 'bg-bloom-primary text-bloom-dark shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                                        >
+                                            Preview
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {editMode === 'write' ? (
+                                <div className="space-y-6">
+                                    <div className="bg-bloom-dark/50 border border-white/10 rounded-xl overflow-hidden focus-within:border-bloom-primary transition-colors text-white">
+                                        <ReactQuill
+                                            ref={quillRef}
+                                            theme="snow"
+                                            value={formData.content}
+                                            onChange={(content) => setFormData(prev => ({ ...prev, content }))}
+                                            style={{ height: '300px', marginBottom: '50px' }}
+                                            className="text-white"
+                                            modules={modules}
+                                        />
+                                        <p className="text-xs text-bloom-text-muted p-4 border-t border-white/5">
+                                            Use the <strong>Code Block</strong> icon (<code>&lt;/&gt;</code>) to insert an Interactive Chart.
+                                        </p>
+                                    </div>
+
+                                    {/* Media Manager Panel */}
+                                    {extractedCharts.length > 0 && (
+                                        <div className="bg-white/5 border border-white/10 rounded-2xl p-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                            <div className="flex items-center gap-3 mb-6">
+                                                <div className="w-8 h-8 bg-bloom-primary/10 rounded-lg flex items-center justify-center text-bloom-primary">
+                                                    <BarChart2 size={18} />
+                                                </div>
+                                                <h3 className="text-sm font-bold text-white uppercase tracking-wider">Charts in this post ({extractedCharts.length})</h3>
+                                            </div>
+
+                                            <div className="space-y-3">
+                                                {extractedCharts.map((item) => (
+                                                    <div key={item.id} className="flex items-center justify-between p-4 bg-white/[0.03] rounded-xl border border-white/5 hover:border-white/10 transition-all group">
+                                                        <div className="flex flex-col">
+                                                            <span className="text-sm font-bold text-white leading-none mb-1">{item.data.title || 'Untitled Chart'}</span>
+                                                            <span className="text-[10px] text-bloom-text-muted uppercase tracking-widest">{item.data.type} chart</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-1">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleEditChartFromList(item.blot, item.data)}
+                                                                className="p-2 text-gray-400 hover:text-bloom-primary transition-colors opacity-0 group-hover:opacity-100"
+                                                                title="Edit Chart"
+                                                            >
+                                                                <Edit2 size={16} />
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleDeleteChartFromList(item.blot)}
+                                                                className="p-2 text-gray-400 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                                                                title="Delete Chart"
+                                                            >
+                                                                <Trash2 size={16} />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="bg-bloom-dark/50 border border-white/10 rounded-xl p-8 min-h-[400px]">
+                                    <BlogRenderer content={formData.content} />
+                                </div>
+                            )}
                         </div>
 
                         {/* Keywords */}
@@ -228,25 +552,43 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                         </div>
 
                         {/* Submit */}
-                        <div className="pt-4">
+                        <div className="pt-8 flex flex-col gap-4">
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-bloom-primary text-bloom-dark font-bold py-4 rounded-xl hover:bg-white hover:scale-[1.01] transition-all duration-300 flex items-center justify-center gap-2"
+                                className="w-full bg-bloom-primary text-bloom-dark font-bold py-4 rounded-xl hover:bg-white hover:scale-[1.01] transition-all duration-300 flex items-center justify-center gap-2 shadow-xl shadow-bloom-primary/10"
                             >
                                 {loading ? (
                                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-bloom-dark"></div>
                                 ) : (
                                     <>
                                         <Save size={20} />
-                                        {existingBlog ? 'Update Blog' : 'Publish Blog'}
+                                        {existingBlog ? 'Update Blog Post' : 'Publish Blog Post'}
                                     </>
                                 )}
                             </button>
+
+                            {existingBlog && (
+                                <button
+                                    type="button"
+                                    onClick={handleDeleteBlog}
+                                    disabled={loading}
+                                    className="w-full bg-red-500/10 text-red-500 border border-red-500/20 font-bold py-4 rounded-xl hover:bg-red-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-2"
+                                >
+                                    <Trash2 size={20} />
+                                    Delete Entire Blog Post
+                                </button>
+                            )}
                         </div>
                     </form>
                 </div>
             </div>
+            <ChartModal
+                isOpen={isChartModalOpen}
+                onClose={handleCloseChartModal}
+                onInsert={handleInsertChart}
+                editingData={editingChartInfo?.data}
+            />
         </div>
     );
 };

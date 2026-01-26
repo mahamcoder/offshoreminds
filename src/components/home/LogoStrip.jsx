@@ -17,14 +17,14 @@ const LogoStrip = () => {
         <section className="py-20 bg-bloom-dark text-center border-t border-white/5 section-fade animate-on-scroll">
             <div className="container mx-auto px-4">
                 <h2 className="text-3xl font-bold text-white mb-12 font-heading">Powering Global Brands</h2>
-                
+
                 <div className="flex flex-wrap justify-center items-center gap-12 md:gap-16">
                     {brands.map((brand, index) => (
                         <div key={index} className="group relative">
-                             {/* Logo Image */}
-                            <img 
-                                src={brand.logo} 
-                                alt={brand.name} 
+                            {/* Logo Image */}
+                            <img
+                                src={brand.logo}
+                                alt={brand.name}
                                 className="h-10 md:h-12 w-auto object-contain opacity-80 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-300 filter brightness-200 contrast-0 group-hover:filter-none"
                             />
                         </div>

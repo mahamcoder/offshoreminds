@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Outlet, ScrollRestoration, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import WhatsAppButton from './WhatsAppButton';
 
 const Layout = () => {
   const location = useLocation();
@@ -33,6 +34,7 @@ const Layout = () => {
         <Outlet />
       </main>
       <Footer />
+      <WhatsAppButton />
       <ScrollRestoration />
     </div>
   );

@@ -4,6 +4,8 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { ArrowLeft, Calendar, User, Share2 } from 'lucide-react';
 import Reveal from '../components/common/Reveal';
+import BlogRenderer from '../components/blog/BlogRenderer';
+import { blogsData } from '../data/blogs';
 
 const BlogDetail = () => {
     const { serviceId } = useParams(); // Note: Route param is :serviceId in App.jsx?? Wait, I need to check App.jsx route name. Assuming I name it :id or :blogId.
@@ -24,11 +26,23 @@ const BlogDetail = () => {
                 if (docSnap.exists()) {
                     setBlog({ id: docSnap.id, ...docSnap.data() });
                 } else {
-                    setError('Blog not found');
+                    // Fallback to static data
+                    const staticBlog = blogsData.find(b => b.id.toString() === id);
+                    if (staticBlog) {
+                        setBlog(staticBlog);
+                    } else {
+                        setError('Blog not found');
+                    }
                 }
             } catch (err) {
                 console.error("Error fetching blog:", err);
-                setError('Failed to load blog post');
+                // Fallback to static data on error too
+                const staticBlog = blogsData.find(b => b.id.toString() === id);
+                if (staticBlog) {
+                    setBlog(staticBlog);
+                } else {
+                    setError('Failed to load blog post');
+                }
             } finally {
                 setLoading(false);
             }
@@ -70,7 +84,7 @@ const BlogDetail = () => {
             </div>
 
             <div className="container mx-auto px-4 relative z-20 -mt-32">
-                <Reveal>
+                <Reveal width="100%">
                     <div className="max-w-4xl mx-auto bg-bloom-dark/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-12 shadow-2xl">
                         <div className="flex flex-wrap items-center gap-4 mb-6">
                             <span className="bg-bloom-primary/10 text-bloom-primary px-4 py-1.5 rounded-full text-sm font-bold border border-bloom-primary/20 uppercase tracking-wider">
@@ -84,18 +98,11 @@ const BlogDetail = () => {
                             </div>
                         </div>
 
-                        <h1 className="text-3xl md:text-5xl font-bold mb-8 leading-tight">
+                        <h1 className="text-3xl md:text-4xl  mb-8 text-gray-300">
                             {blog.title}
                         </h1>
 
-                        <div className="prose prose-invert prose-lg max-w-none prose-headings:text-bloom-blue prose-a:text-bloom-primary prose-img:rounded-xl">
-                            {/* Simple text rendering for now, can be upgraded to HTML parser if needed */}
-                            {blog.content.split('\n').map((paragraph, idx) => (
-                                <p key={idx} className="mb-6 leading-relaxed text-bloom-text-muted/90">
-                                    {paragraph}
-                                </p>
-                            ))}
-                        </div>
+                        <BlogRenderer content={blog.content} />
 
                         {/* Tags */}
                         {blog.keywords && blog.keywords.length > 0 && (

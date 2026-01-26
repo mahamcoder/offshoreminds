@@ -157,38 +157,113 @@ h6 {
 }
 
 @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
 }
 
 @keyframes fadeInUp {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes pageFade {
-    0% { opacity: 0; transform: translateY(10px); }
-    100% { opacity: 1; transform: translateY(0); }
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes floatSoft {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 @keyframes pulseGlow {
-    0% { box-shadow: 0 0 0 0 rgba(93, 92, 222, 0.35); }
-    70% { box-shadow: 0 0 0 18px rgba(93, 92, 222, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(93, 92, 222, 0); }
+    0% {
+        box-shadow: 0 0 0 0 rgba(93, 92, 222, 0.35);
+    }
+
+    70% {
+        box-shadow: 0 0 0 18px rgba(93, 92, 222, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(93, 92, 222, 0);
+    }
 }
 
 @keyframes gradient-x {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .animate-gradient-x {
     background-size: 200% auto;
     animation: gradient-x 15s ease infinite;
+}
+
+/* Custom Chart & Media Controls in Editor */
+.custom-chart-placeholder {
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.custom-chart-placeholder:hover {
+    border-color: rgba(93, 92, 222, 0.5) !important;
+    background: rgba(93, 92, 222, 0.08) !important;
+}
+
+.media-control-btn {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    cursor: pointer !important;
+}
+
+.delete-media-btn {
+    background-color: #ef4444 !important;
+    color: white !important;
+}
+
+.delete-media-btn:hover {
+    background-color: #dc2626 !important;
+}
+
+.edit-media-btn {
+    background-color: #5D5CDE !important;
+    color: white !important;
+}
+
+.edit-media-btn:hover {
+    background-color: #4b49c7 !important;
 }

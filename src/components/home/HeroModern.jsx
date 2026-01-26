@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Users, TrendingUp, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Users, TrendingUp, ShieldCheck, ChevronDown } from 'lucide-react';
 import videoSource from '../../assets/video1.mp4';
 
 const HeroModern = () => {
@@ -118,9 +118,16 @@ const HeroModern = () => {
 
             {/* Bottom Fade for smooth transition */}
             <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-bloom-dark to-transparent z-10 pointer-events-none"></div>
+            {/* Scroll Down Indicator - Lottie Animation */}
+            <div className="absolute bottom-[-2%] left-1/2 transform -translate-x-1/2 z-30 w-[50px] h-[50px] opacity-90 hover:opacity-100 transition-opacity">
+                <iframe
+                    src="https://lottie.host/embed/9f8f64ee-a634-4d3d-a0b3-913a2af2253e/XXidYi03ra.lottie"
+                    className="w-full h-full border-none overflow-hidden"
+                    title="Scroll Down"
+                ></iframe>
+            </div>
         </section>
     );
 };
 
 export default HeroModern;
-
