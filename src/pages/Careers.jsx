@@ -1,13 +1,41 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { jobsData } from '../data/jobs'; // Keep as fallback/initial state if needed, or remove later
 import { db } from '../firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { Briefcase, MapPin, Clock, ArrowRight, X, Globe, Zap, TrendingUp, Heart } from 'lucide-react';
 
+const toSlug = (text) => {
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')     // Replace spaces with -
+        .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+        .replace(/\-\-+/g, '-')   // Replace multiple - with single -
+        .replace(/^-+/, '')       // Trim - from start of text
+        .replace(/-+$/, '');      // Trim - from end of text
+};
+
 const Careers = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
     const [selectedJob, setSelectedJob] = useState(null);
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    // Sync URL ID (Slug) with selectedJob
+    useEffect(() => {
+        if (id && jobs.length > 0) {
+            // Find job where slug matches URL param OR id matches (backward compatibility)
+            const foundJob = jobs.find(j => toSlug(j.title) === id || j.id === id);
+            if (foundJob) {
+                setSelectedJob(foundJob);
+            }
+        } else if (!id) {
+            setSelectedJob(null);
+        }
+    }, [id, jobs]);
 
     useEffect(() => {
         const fetchJobs = async () => {
@@ -180,7 +208,7 @@ const Careers = () => {
                                             </td>
                                             <td className="px-6 py-6 text-right">
                                                 <button
-                                                    onClick={() => setSelectedJob(job)}
+                                                    onClick={() => navigate(`/careers/${toSlug(job.title)}`)}
                                                     className="px-5 py-2.5 rounded-lg border border-bloom-secondary text-bloom-secondary hover:bg-bloom-secondary hover:text-white transition-all text-sm font-semibold"
                                                 >
                                                     View & Apply
@@ -205,7 +233,7 @@ const Careers = () => {
                 <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
                     <div className="bg-bloom-dark border border-white/10 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative p-8 md:p-12 shadow-2xl">
                         <button
-                            onClick={() => setSelectedJob(null)}
+                            onClick={() => navigate('/careers')}
                             className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 text-gray-400 transition-colors"
                         >
                             <X size={24} />
