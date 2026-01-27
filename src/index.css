@@ -18,7 +18,7 @@ h4,
 h5,
 h6 {
     font-family: 'Poppins', sans-serif;
-    @apply text-primary font-bold;
+    @apply text-white font-bold;
 }
 
 /* Custom Base Styles */
@@ -243,6 +243,64 @@ h6 {
 .custom-chart-placeholder:hover {
     border-color: rgba(93, 92, 222, 0.5) !important;
     background: rgba(93, 92, 222, 0.08) !important;
+}
+
+/* Quill Editor Dark Theme Overrides */
+.ql-snow .ql-stroke {
+    stroke: #EAEAEA !important;
+}
+
+.ql-snow .ql-fill {
+    fill: #EAEAEA !important;
+}
+
+.ql-snow .ql-picker {
+    color: #EAEAEA !important;
+}
+
+.ql-snow .ql-picker-options {
+    background-color: #1a1a2e !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #EAEAEA !important;
+}
+
+.ql-snow .ql-picker-item:hover {
+    color: #5D5CDE !important;
+}
+
+.ql-editor {
+    color: #EAEAEA !important;
+    font-size: 1.125rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3,
+.prose h1,
+.prose h2,
+.prose h3,
+.prose-headings {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+/* Quill Size Classes */
+.ql-size-small {
+    font-size: 0.75em;
+}
+
+.ql-size-large {
+    font-size: 1.5em;
+}
+
+.ql-size-huge {
+    font-size: 2.5em;
 }
 
 .media-control-btn {

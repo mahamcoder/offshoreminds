@@ -1,7 +1,8 @@
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Reveal from '../common/Reveal';
 
-const SubServicesGrid = ({ subServices }) => {
+const SubServicesGrid = ({ subServices, serviceId }) => {
     if (!subServices || subServices.length === 0) return null;
 
     return (
@@ -41,9 +42,9 @@ const SubServicesGrid = ({ subServices }) => {
                                             {sub.description}
                                         </p>
                                         <div className="mt-auto">
-                                            <button className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-white hover:text-bloom-primary transition-colors">
+                                            <Link to={`/services/${serviceId}/sub/${sub.id}`} className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-white hover:text-bloom-primary transition-colors">
                                                 Explore <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                                            </button>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>

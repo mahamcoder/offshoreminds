@@ -116,33 +116,39 @@ export const servicesData = [
         ],
         subServices: [
             {
+                id: "debt-equity-underwriting",
                 title: "Debt & Equity Underwriting",
                 description: "Strengthen underwriting practice by deploying advanced digital technologies to mitigate risks across the underwriting Processes.",
                 image: image2
             },
             {
+                id: "service-asset-management",
                 title: "Service & Asset Management",
                 description: "Transforming CRE Asset Management leveraging digitized reporting & analysis supplemented by deep industry knowledge of our experts.",
                 image: image5
             },
             {
+                id: "valuation-appraisal-support",
                 title: "Valuation / Appraisal Support",
                 description: "Comprehensive Valuation procedures, diligent audit process, and reports aided by augmented solutions.",
                 image: image9
             },
             {
+                id: "argus-financial-modeling",
                 title: "Argus Financial Modeling",
                 description: "Enable robust financial modeling, including property valuation, cash flow forecasting, and sensitivity analysis. We provide in-depth insights.",
                 image: image1
             },
 
             {
+                id: "loan-closing-support",
                 title: "Loan Closing Support",
-                description: "Helps in preparing and creating closing packages. All the documents collected at closing are accurate and in conformance with the loan to be originated.",
+                description: "Helps in preparing and creating closing packages. All the documents collected at closing are accurate and in conformance with the loan to be originated.",
                 image: image6
             },
 
             {
+                id: "offering-memorandums",
                 title: "Offering Memorandums",
                 description: "Provide support in creating written and visual content for the Offering Memorandum, covering property details, loan and financial analysis, tenancy overview, historical statements, pro forma analysis, and management and sponsor charts.",
                 image: image8
@@ -222,16 +228,19 @@ export const servicesData = [
         ],
         subServices: [
             {
+                id: "bookkeeping",
                 title: "Bookkeeping",
                 description: "Monitoring your financial activities, guaranteeing precise and current record-keeping. This encompasses documenting transactions, matching bank statements, and preserving detailed records of revenues and expenditures.",
                 image: image3
             },
             {
+                id: "accounting",
                 title: "Accounting",
                 description: "The creation of key financial documents such as balance sheets, income statements, and cash flow statements. These documents are essential for gaining insights into your company’s financial status.",
                 image: image4
             },
             {
+                id: "financial-planning-analysis",
                 title: "Financial Planning and Analysis",
                 description: "The development and execution of financial strategies and budgets. We also offer continuous analysis and reporting to ensure your financial goals are met.",
                 image: image5
@@ -323,16 +332,19 @@ export const servicesData = [
         ],
         subServices: [
             {
+                id: "market-intelligence-deal-screening",
                 title: "Market Intelligence & Deal Screening",
                 description: "We help identify, prioritize, and assess new opportunities using customized market datasets and scoring tools.",
                 image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
             {
+                id: "asset-performance-kpi-dashboards",
                 title: "Asset Performance & KPI Dashboards",
                 description: "We provide visibility across your portfolio through automated dashboards and deep-dive reports.",
                 image: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
             {
+                id: "forecasting-predictive-modeling",
                 title: "Forecasting & Predictive Modeling",
                 description: "We build forward-looking models to assess market risk, rent trends, and absorption rates.",
                 image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
@@ -402,21 +414,23 @@ export const servicesData = [
         ],
         subServices: [
             {
+                id: "property-performance-tracking",
                 title: "Property Performance Tracking",
                 description: "We monitor and analyze operating results to identify opportunities for revenue enhancement and expense control, providing detailed monthly and quarterly reports.",
                 image: image7
             },
             {
+                id: "investor-reporting-dashboards",
                 title: "Investor Reporting & Dashboards",
                 description: "Custom-designed Excel and Power BI dashboards for LPs, GPs, and fund managers. Includes capital account updates and distribution history.",
                 image: image6
             },
             {
+                id: "rent-roll-lease-management",
                 title: "Rent Roll & Lease Management",
                 description: "Maintain up-to-date lease data with structured tracking of lease expirations, rollover risks, rent escalations, and renewal negotiations.",
                 image: image8
             },
-
         ],
         capabilities: [
             {
@@ -499,16 +513,19 @@ export const servicesData = [
 
         subServices: [
             {
+                id: "real-estate-financial-modeling",
                 title: "Real Estate Financial Modeling",
                 description: "From acquisition to refinance, our models include fully dynamic underwritings for multifamily, office, retail, industrial, and mixed-use assets.",
                 image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
             {
+                id: "infrastructure-project-finance",
                 title: "Infrastructure Project Finance",
                 description: "We model large-scale, long-term infrastructure investments under PPP and traditional DBFOM structures.",
                 image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
             {
+                id: "renewable-energy-modeling",
                 title: "Renewable Energy Modeling",
                 description: "We work closely with clean energy sponsors, investors, and IPPs to build bankable models for solar, wind, and hybrid projects.",
                 image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
@@ -560,16 +577,19 @@ export const servicesData = [
         ],
         subServices: [
             {
+                id: "offering-memorandums-marketing",
                 title: "Offering Memorandums (OMs)",
                 description: "Professionally designed and data-driven investment packages that highlight property features, market positioning, rent rolls, and financials.",
                 image: image10
             },
             {
+                id: "investor-pitch-decks",
                 title: "Investor Pitch Decks",
                 description: "Engaging, visually appealing decks that help you raise capital or present to LPs, covering investment thesis, financial projections, and team credentials.",
                 image: image11
             },
             {
+                id: "property-flyers-brochures",
                 title: "Property Flyers & Brochures",
                 description: "Concise, on-brand one-pagers or multi-page brochures designed for quick listings, open houses, or virtual tours.",
                 image: image12

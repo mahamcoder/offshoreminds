@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { ArrowRight, Building2, MapPin, TrendingUp, Clock, CheckCircle } from 'lucide-react';
 
 const CaseStudyItem = ({ study, isReversed }) => {
@@ -66,9 +67,12 @@ const CaseStudyItem = ({ study, isReversed }) => {
                     ))}
                 </div>
 
-                <button className="flex items-center gap-2 text-white font-bold text-sm uppercase tracking-wider hover:text-bloom-primary transition-colors w-fit group-hover:translate-x-2 transition-transform duration-300">
+                <Link
+                    to={`/case-studies/${study.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                    className="flex items-center gap-2 text-white font-bold text-sm uppercase tracking-wider hover:text-bloom-primary transition-all w-fit group-hover:translate-x-2 duration-300"
+                >
                     Read Full Case Study <ArrowRight size={16} />
-                </button>
+                </Link>
             </div>
         </div>
     );

@@ -60,7 +60,7 @@ const ServiceDetail = () => {
 
       <ServiceOverview overview={service.overview} description={service.fullDescription} title={service.title} />
 
-      <SubServicesGrid subServices={service.subServices} />
+      <SubServicesGrid subServices={service.subServices} serviceId={service.id} />
 
       <TechStack toolLogos={service.toolLogos} />
 

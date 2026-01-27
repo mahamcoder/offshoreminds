@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import { ArrowLeft, Calendar, User, Share2 } from 'lucide-react';
+import { generateSlug } from '../utils/slug';
 import Reveal from '../components/common/Reveal';
 import BlogRenderer from '../components/blog/BlogRenderer';
 import { blogsData } from '../data/blogs';
 
 const BlogDetail = () => {
-    const { serviceId } = useParams(); // Note: Route param is :serviceId in App.jsx?? Wait, I need to check App.jsx route name. Assuming I name it :id or :blogId.
-    // Actually, looking at App.jsx, there is no blog detail route yet. I will add it as /blogs/:id.
-    // So here I should use useParams().id.
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const [blog, setBlog] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -19,30 +18,65 @@ const BlogDetail = () => {
 
     useEffect(() => {
         const fetchBlog = async () => {
+            console.log("Fetching blog with identifier:", id);
             try {
-                const docRef = doc(db, "blogs", id);
-                const docSnap = await getDoc(docRef);
-
-                if (docSnap.exists()) {
-                    setBlog({ id: docSnap.id, ...docSnap.data() });
-                } else {
-                    // Fallback to static data
-                    const staticBlog = blogsData.find(b => b.id.toString() === id);
-                    if (staticBlog) {
-                        setBlog(staticBlog);
-                    } else {
-                        setError('Blog not found');
+                // 1. Try fetching by ID first (legacy support)
+                try {
+                    const docRef = doc(db, "blogs", id);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        console.log("Found blog by ID");
+                        setBlog({ id: docSnap.id, ...docSnap.data() });
+                        setLoading(false);
+                        return;
                     }
+                } catch (e) {
+                    console.log("Not a valid ID or fetch failed, trying slug...");
                 }
-            } catch (err) {
-                console.error("Error fetching blog:", err);
-                // Fallback to static data on error too
-                const staticBlog = blogsData.find(b => b.id.toString() === id);
+
+                // 2. Try fetching by Slug field
+                const q = query(collection(db, "blogs"), where("slug", "==", id));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    console.log("Found blog by slug field");
+                    const blogDoc = querySnapshot.docs[0];
+                    setBlog({ id: blogDoc.id, ...blogDoc.data() });
+                    setLoading(false);
+                    return;
+                }
+
+                // 3. Fallback: Fetch all and match by title slug (for older blogs missing slug field)
+                console.log("Trying title-slug match fallback...");
+                const allDocs = await getDocs(collection(db, "blogs"));
+                const matchingDoc = allDocs.docs.find(doc => {
+                    const data = doc.data();
+                    const titleSlug = data.title ? generateSlug(data.title) : '';
+                    return titleSlug === id;
+                });
+
+                if (matchingDoc) {
+                    console.log("Found blog by matching title-slug across all docs");
+                    setBlog({ id: matchingDoc.id, ...matchingDoc.data() });
+                    setLoading(false);
+                    return;
+                }
+
+                // 4. Fallback to static data
+                const staticBlog = blogsData.find(b =>
+                    b.id.toString() === id || (b.title && generateSlug(b.title) === id)
+                );
+
                 if (staticBlog) {
+                    console.log("Found blog in static data");
                     setBlog(staticBlog);
                 } else {
-                    setError('Failed to load blog post');
+                    console.warn("Blog not found after all attempts.");
+                    setError('Blog not found');
                 }
+            } catch (err) {
+                console.error("Critical error fetching blog:", err);
+                setError('Failed to load blog post');
             } finally {
                 setLoading(false);
             }
@@ -50,6 +84,17 @@ const BlogDetail = () => {
 
         if (id) fetchBlog();
     }, [id]);
+
+    // SEO Redirect: If we loaded by ID or a mismatching slug, but we have a canonical slug, redirect.
+    useEffect(() => {
+        if (!blog || loading) return;
+
+        const canonicalSlug = blog.slug || generateSlug(blog.title);
+        // If current URL param 'id' is NOT the canonical slug, but it IS the firebase ID, redirect to slug.
+        if (id && id !== canonicalSlug && id === blog.id) {
+            navigate(`/blogs/${canonicalSlug}`, { replace: true });
+        }
+    }, [blog, id, loading, navigate]);
 
     if (loading) {
         return (
@@ -98,7 +143,7 @@ const BlogDetail = () => {
                             </div>
                         </div>
 
-                        <h1 className="text-3xl md:text-4xl  mb-8 text-gray-300">
+                        <h1 className="text-3xl md:text-5xl font-bold mb-8 text-white leading-tight">
                             {blog.title}
                         </h1>
 

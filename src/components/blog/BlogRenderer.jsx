@@ -55,8 +55,15 @@ const ChartCard = ({ chartData }) => {
                                 <YAxis stroke={textColor} fontSize={12} tickLine={false} axisLine={false} />
                                 <Tooltip
                                     cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.5)' }}
-                                    itemStyle={{ color: '#fff', fontWeight: 'bold' }}
+                                    contentStyle={{
+                                        backgroundColor: '#1E1B4B',
+                                        border: '1px solid rgba(255,255,255,0.2)',
+                                        borderRadius: '12px',
+                                        boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)',
+                                        padding: '8px 12px'
+                                    }}
+                                    itemStyle={{ color: '#ffffff', fontWeight: 'bold', fontSize: '14px' }}
+                                    labelStyle={{ color: '#94A3B8', marginBottom: '4px', fontWeight: 'bold' }}
                                 />
                                 <Bar dataKey="value" name="Value" radius={[6, 6, 0, 0]} barSize={40}>
                                     {data.map((entry, index) => (
@@ -70,7 +77,16 @@ const ChartCard = ({ chartData }) => {
                                 <XAxis dataKey="name" stroke={textColor} fontSize={12} tickLine={false} axisLine={false} tick={{ dy: 10 }} />
                                 <YAxis stroke={textColor} fontSize={12} tickLine={false} axisLine={false} />
                                 <Tooltip
-                                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                                    contentStyle={{
+                                        backgroundColor: '#1E1B4B',
+                                        border: '1px solid rgba(255,255,255,0.2)',
+                                        borderRadius: '12px',
+                                        boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)',
+                                        padding: '8px 12px'
+                                    }}
+                                    itemStyle={{ color: '#ffffff', fontWeight: 'bold', fontSize: '14px' }}
+                                    labelStyle={{ color: '#94A3B8', marginBottom: '4px', fontWeight: 'bold' }}
+                                    cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 2 }}
                                 />
                                 <Line
                                     type="monotone"
@@ -98,7 +114,14 @@ const ChartCard = ({ chartData }) => {
                                     ))}
                                 </Pie>
                                 <Tooltip
-                                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                                    contentStyle={{
+                                        backgroundColor: '#1E1B4B',
+                                        border: '1px solid rgba(255,255,255,0.2)',
+                                        borderRadius: '12px',
+                                        boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)',
+                                        padding: '8px 12px'
+                                    }}
+                                    itemStyle={{ color: '#ffffff', fontWeight: 'bold', fontSize: '14px' }}
                                 />
                                 <Legend verticalAlign="bottom" height={36} />
                             </PieChart>
@@ -114,7 +137,15 @@ const ChartCard = ({ chartData }) => {
                                 <XAxis dataKey="name" stroke={textColor} fontSize={12} tickLine={false} axisLine={false} tick={{ dy: 10 }} />
                                 <YAxis stroke={textColor} fontSize={12} tickLine={false} axisLine={false} />
                                 <Tooltip
-                                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                                    contentStyle={{
+                                        backgroundColor: '#1E1B4B',
+                                        border: '1px solid rgba(255,255,255,0.2)',
+                                        borderRadius: '12px',
+                                        boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)',
+                                        padding: '8px 12px'
+                                    }}
+                                    itemStyle={{ color: '#ffffff', fontWeight: 'bold', fontSize: '14px' }}
+                                    labelStyle={{ color: '#94A3B8', marginBottom: '4px', fontWeight: 'bold' }}
                                 />
                                 <Area type="monotone" dataKey="value" stroke="#8B5CF6" strokeWidth={3} fillOpacity={1} fill="url(#colorValue)" />
                             </AreaChart>
@@ -150,7 +181,8 @@ const BlogRenderer = ({ content }) => {
     // - [x] Update `BlogDetail.jsx` to use `BlogRenderer` <!-- id: 31 -->
     return (
         <div className="prose prose-invert prose-lg max-w-none
-            prose-headings:text-bloom-blue prose-headings:font-bold prose-headings:tracking-tight
+            prose-headings:text-white prose-h1:text-white prose-h2:text-white prose-h3:text-white
+            prose-headings:font-bold prose-headings:tracking-tight
             prose-p:text-bloom-text-muted/90 prose-p:leading-relaxed prose-p:mb-8
             prose-a:text-bloom-primary prose-a:no-underline hover:prose-a:underline
             prose-blockquote:border-l-4 prose-blockquote:border-bloom-primary prose-blockquote:bg-white/5 prose-blockquote:py-4 prose-blockquote:px-8 prose-blockquote:rounded-r-2xl prose-blockquote:italic
@@ -158,7 +190,7 @@ const BlogRenderer = ({ content }) => {
             prose-img:rounded-2xl prose-img:shadow-2xl">
             {parse(DOMPurify.sanitize(content, {
                 ADD_ATTR: ['data-chart', 'class', 'style'],
-                ADD_TAGS: ['div']
+                ADD_TAGS: ['div', 'h1', 'h2', 'h3']
             }), {
                 replace: (domNode) => {
                     // Robust detection: Look for data-chart attribute or the specific class
@@ -210,8 +242,13 @@ const BlogRenderer = ({ content }) => {
                                 chartData = tryDecode(rawData);
                             } catch (error) {
                                 console.error("Chart data parsing failed:", error);
-                                // Return null to ensure no errors are shown on the live site
-                                return null;
+                                // Return null/empty fragment to remove from DOM entirely
+                                return <></>;
+                            }
+
+                            if (!chartData || !chartData.data || !Array.isArray(chartData.data)) {
+                                console.warn("Invalid chart data structure:", chartData);
+                                return <></>;
                             }
 
                             return <ChartCard chartData={chartData} />;

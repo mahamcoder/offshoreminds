@@ -3,6 +3,7 @@ import { ArrowRight, Calendar, User, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { blogsData } from '../../data/blogs';
 import { toast } from 'react-hot-toast';
+import { generateSlug } from '../../utils/slug';
 
 const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
     const [visibleCount, setVisibleCount] = useState(6);
@@ -114,23 +115,13 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
                         <div key={post.id} className="group bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden border border-white/10 hover:border-bloom-primary/50 transition-all duration-300 hover:-translate-y-2 h-full flex flex-col">
                             {/* Improved Clickable Image Hook */}
                             <div className="h-56 overflow-hidden relative shrink-0">
-                                {post.externalLink ? (
-                                    <a href={post.externalLink} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
-                                        <img
-                                            src={post.image}
-                                            alt={post.title}
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                        />
-                                    </a>
-                                ) : (
-                                    <Link to={`/blogs/${post.id}`} className="block w-full h-full">
-                                        <img
-                                            src={post.image}
-                                            alt={post.title}
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                        />
-                                    </Link>
-                                )}
+                                <Link to={`/blogs/${post.slug || generateSlug(post.title) || post.id}`} className="block w-full h-full">
+                                    <img
+                                        src={post.image}
+                                        alt={post.title}
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+                                </Link>
                                 <div className="absolute inset-0 bg-bloom-dark/20 mix-blend-multiply transition-opacity group-hover:opacity-0 pointer-events-none"></div>
                                 <div className="absolute top-4 left-4 bg-bloom-dark/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-bloom-primary border border-white/10">
                                     {post.category}
@@ -148,43 +139,21 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
                                 </div>
 
                                 {/* Improved Clickable Title Hook */}
-                                {post.externalLink ? (
-                                    <a
-                                        href={post.externalLink}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-bloom-blue transition-colors cursor-pointer leading-tight block"
-                                    >
-                                        {post.title}
-                                    </a>
-                                ) : (
-                                    <Link
-                                        to={`/blogs/${post.id}`}
-                                        className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-bloom-blue transition-colors cursor-pointer leading-tight block"
-                                    >
-                                        {post.title}
-                                    </Link>
-                                )}
+                                <Link
+                                    to={`/blogs/${post.slug || generateSlug(post.title) || post.id}`}
+                                    className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-bloom-blue transition-colors cursor-pointer leading-tight block"
+                                >
+                                    {post.title}
+                                </Link>
 
                                 <p className="text-bloom-text-muted mb-6 line-clamp-3 text-sm leading-relaxed">
                                     {post.excerpt}
                                 </p>
 
                                 <div className="mt-auto">
-                                    {post.externalLink ? (
-                                        <a
-                                            href={post.externalLink}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-bloom-secondary font-bold text-sm uppercase tracking-wider flex items-center gap-2 group-hover:text-white transition-colors"
-                                        >
-                                            Read Article <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                                        </a>
-                                    ) : (
-                                        <Link to={`/blogs/${post.id}`} className="text-bloom-secondary font-bold text-sm uppercase tracking-wider flex items-center gap-2 group-hover:text-white transition-colors">
-                                            Read Article <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                                        </Link>
-                                    )}
+                                    <Link to={`/blogs/${post.slug || generateSlug(post.title) || post.id}`} className="text-bloom-secondary font-bold text-sm uppercase tracking-wider flex items-center gap-2 group-hover:text-white transition-colors">
+                                        Explore <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                    </Link>
                                 </div>
                             </div>
                         </div>

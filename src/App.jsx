@@ -10,9 +10,11 @@ const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
 const Services = lazy(() => import('./pages/Services'));
 const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
+const SubServiceDetail = lazy(() => import('./pages/SubServiceDetail'));
 const CaseStudies = lazy(() => import('./pages/CaseStudies'));
 const Blogs = lazy(() => import('./pages/Blogs'));
 const BlogDetail = lazy(() => import('./pages/BlogDetail'));
+const CaseStudyDetail = lazy(() => import('./pages/CaseStudyDetail'));
 const Careers = lazy(() => import('./pages/Careers'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const Terms = lazy(() => import('./pages/Terms'));
@@ -42,7 +44,9 @@ const router = createBrowserRouter([
       { path: "contact", element: <Contact /> },
       { path: "services", element: <Services /> },
       { path: "services/:serviceId", element: <ServiceDetail /> },
+      { path: "services/:serviceId/sub/:subServiceId", element: <SubServiceDetail /> },
       { path: "case-studies", element: <CaseStudies /> },
+      { path: "case-studies/:id", element: <CaseStudyDetail /> },
       { path: "blogs", element: <Blogs /> },
       { path: "blogs/:id", element: <BlogDetail /> },
       { path: "careers", element: <Careers /> },

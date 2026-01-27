@@ -105,11 +105,11 @@ const ServiceTeam = ({
                             <div className="relative z-10">
                                 <div className="relative mb-8" >
                                     <button
-                                        
+
                                         className="flex items-center gap-3 text-2xl font-bold text-white hover:text-bloom-primary transition-colors group/btn"
                                     >
                                         <span className="bg-gradient-to-r from-white to-bloom-blue bg-clip-text text-transparent">{displayHeading}</span>
-                                       
+
                                     </button>
 
                                     {/* Dropdown Menu */}

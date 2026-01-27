@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { uploadToCloudinary } from '../../utils/cloudinary';
+import { generateSlug } from '../../utils/slug';
 import { db, auth } from '../../firebase';
 import { collection, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { ArrowLeft, Upload, Save, X, BarChart2, Trash2, Edit2 } from 'lucide-react';
@@ -12,20 +13,22 @@ import ChartModal from './ChartModal';
 import BlogRenderer from '../blog/BlogRenderer';
 
 // Register Custom Chart Blot to prevent Quill from stripping attributes
-const Block = Quill.import('blots/block');
-class ChartBlot extends Block {
+const BlockEmbed = Quill.import('blots/block/embed');
+class ChartBlot extends BlockEmbed {
     static create(value) {
         let node = super.create();
         node.setAttribute('class', 'custom-chart-placeholder relative group my-8');
-        node.setAttribute('data-chart', value.dataChart);
+        node.setAttribute('data-chart', value.dataChart || value);
         node.setAttribute('contenteditable', 'false');
+
+        const title = value.title || 'Untitled';
 
         // Use innerHTML to add the controls overlay with new CSS classes
         node.innerHTML = `
-            <div class="pointer-events-none p-8 font-bold text-bloom-text-muted">[Interactive Chart: ${value.title || 'Untitled'}]</div>
+            <div class="pointer-events-none p-8 font-bold text-bloom-text-muted text-center border-2 border-dashed border-white/10 rounded-2xl">[Interactive Chart: ${title}]</div>
             <div class="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 rounded-2xl pointer-events-auto">
-                <button type="button" class="edit-chart-btn media-control-btn edit-media-btn px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xl">Edit Chart</button>
-                <button type="button" class="delete-chart-btn media-control-btn delete-media-btn px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xl">Delete Chart</button>
+                <button type="button" class="edit-chart-btn media-control-btn edit-media-btn px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xl bg-bloom-primary text-bloom-dark">Edit Chart</button>
+                <button type="button" class="delete-chart-btn media-control-btn delete-media-btn px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xl bg-red-500 text-white">Delete Chart</button>
             </div>
         `;
 
@@ -164,18 +167,20 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
         const timer = setTimeout(() => {
             if (quillRef.current) {
                 const quill = quillRef.current.getEditor();
-                const chartBlots = quill.scroll.descendants(Quill.import('blots/block')).filter(blot => blot.statics.blotName === 'chart');
+                const chartBlots = quill.scroll.descendants(Quill.import('blots/embed') || Quill.import('blots/block')).filter(blot => blot.statics.blotName === 'chart');
 
                 const charts = chartBlots.map(blot => {
                     const node = blot.domNode;
                     const rawData = node.getAttribute('data-chart');
+                    if (!rawData) return null; // Ignore placeholders without data
+
                     try {
                         const data = JSON.parse(decodeURIComponent(escape(atob(rawData))));
                         return { id: Math.random().toString(36).substr(2, 9), blot, data };
                     } catch (e) {
-                        return { id: Math.random().toString(36).substr(2, 9), blot, data: { title: 'Corrupted Chart' } };
+                        return null; // Strict: ignore corrupted data
                     }
-                });
+                }).filter(Boolean);
                 setExtractedCharts(charts);
             }
         }, 500); // Debounce
@@ -252,8 +257,10 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
         toolbar: {
             container: [
                 [{ 'header': [1, 2, 3, false] }],
-                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'size': ['small', false, 'large', 'huge'] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                ['blockquote', { 'list': 'ordered' }, { 'list': 'bullet' }],
                 ['link', 'image', 'code-block'],
                 ['clean']
             ],
@@ -303,15 +310,30 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                 imageUrl = await uploadToCloudinary(formData.image);
             }
 
+            // Cleanup content: Remove empty chart placeholders or ghost divs
+            // Use DOMParser for robust cleaning instead of brittle regex
+            const parser = new DOMParser();
+            const tempDoc = parser.parseFromString(formData.content, 'text/html');
+            const placeholders = tempDoc.querySelectorAll('.custom-chart-placeholder');
+
+            placeholders.forEach(p => {
+                if (!p.getAttribute('data-chart')) {
+                    p.remove();
+                }
+            });
+
+            const cleanContent = tempDoc.body.innerHTML;
+
             const blogData = {
                 title: formData.title,
                 excerpt: formData.excerpt,
-                content: formData.content,
+                content: cleanContent,
                 category: formData.category,
                 image: imageUrl,
                 author: formData.author,
                 keywords: formData.keywords.split(',').map(k => k.trim()).filter(k => k),
                 externalLink: formData.externalLink,
+                slug: generateSlug(formData.title),
                 updatedAt: serverTimestamp()
             };
 
@@ -484,6 +506,13 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                                             style={{ height: '300px', marginBottom: '50px' }}
                                             className="text-white"
                                             modules={modules}
+                                            formats={[
+                                                'header', 'size',
+                                                'bold', 'italic', 'underline', 'strike', 'blockquote',
+                                                'list', 'bullet',
+                                                'link', 'image', 'code-block', 'chart',
+                                                'color', 'background'
+                                            ]}
                                         />
                                         <p className="text-xs text-bloom-text-muted p-4 border-t border-white/5">
                                             Use the <strong>Code Block</strong> icon (<code>&lt;/&gt;</code>) to insert an Interactive Chart.

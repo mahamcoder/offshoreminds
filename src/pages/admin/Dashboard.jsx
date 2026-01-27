@@ -10,6 +10,7 @@ import JobEditor from '../../components/admin/JobEditor';
 import { blogsData } from '../../data/blogs';
 import { jobsData } from '../../data/jobs';
 import { serverTimestamp, addDoc } from 'firebase/firestore';
+import { generateSlug } from '../../utils/slug';
 
 const Dashboard = () => {
     const [activeTab, setActiveTab] = useState('blogs'); // 'blogs' or 'jobs'
@@ -151,6 +152,7 @@ const Dashboard = () => {
                     date: blog.date,
                     author: blog.author || 'Admin',
                     image: typeof blog.image === 'string' ? blog.image : '',
+                    slug: generateSlug(blog.title),
                     createdAt: serverTimestamp()
                 });
                 blogsAdded++;
@@ -334,7 +336,7 @@ const Dashboard = () => {
                                                 <div className="flex justify-end items-center gap-3 opacity-60 group-hover:opacity-100 transition-opacity">
                                                     {activeTab === 'blogs' && (
                                                         <button
-                                                            onClick={() => navigate(`/blogs/${item.id}`)}
+                                                            onClick={() => navigate(`/blogs/${item.slug || generateSlug(item.title) || item.id}`)}
                                                             className="p-2.5 text-blue-400 hover:bg-blue-400/10 rounded-xl transition-all hover:scale-110"
                                                             title="View Live"
                                                         >
