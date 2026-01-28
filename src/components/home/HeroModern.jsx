@@ -49,22 +49,48 @@ const HeroModern = () => {
         "Real Estate Financial Analysis"
     ];
 
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     return (
         <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden section-fade animate-on-scroll">
             {/* Background Effects */}
             <div className="absolute inset-0 z-0 bg-bloom-dark">
-                {/* Subtle Video Background */}
-                <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-                    <video
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="w-full h-full object-cover opacity-25 mix-blend-screen"
-                    >
-                        <source src={videoSource} type="video/mp4" />
-                    </video>
-                </div>
+                {/* Subtle Video Background - Desktop Only */}
+                {!isMobile && (
+                    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            poster="https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?q=80&w=1000&auto=format&fit=crop" // Lightweight fallback
+                            className="w-full h-full object-cover opacity-25 mix-blend-screen"
+                        >
+                            <source src={videoSource} type="video/mp4" />
+                        </video>
+                    </div>
+                )}
+
+                {/* Mobile Fallback Background */}
+                {isMobile && (
+                    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                        <img
+                            src="https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?q=80&w=800&auto=format&fit=crop"
+                            alt="Background"
+                            fetchpriority="high"
+                            className="w-full h-full object-cover opacity-20 mix-blend-screen"
+                        />
+                    </div>
+                )}
                 {/* Gradient Blobs */}
                 <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-bloom-primary/30 rounded-full blur-[100px] animate-pulse float-soft"></div>
                 <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-secondary/20 rounded-full blur-[120px] float-soft" style={{ animationDelay: '1.2s' }}></div>

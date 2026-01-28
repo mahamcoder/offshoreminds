@@ -1,4 +1,4 @@
-import cover from "../assets/cover.png";
+import cover from "../assets/cover.webp";
 
 export const blogsData = [
     {

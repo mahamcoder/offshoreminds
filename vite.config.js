@@ -11,9 +11,10 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-react': ['react', 'react-dom', 'react-router-dom', 'react-helmet-async'],
           'vendor-firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
-          'vendor-ui': ['lucide-react', 'react-hot-toast']
+          'vendor-ui': ['lucide-react', 'react-hot-toast', 'recharts'],
+          'vendor-utils': ['axios', 'dompurify', 'html-react-parser']
         },
       },
     },

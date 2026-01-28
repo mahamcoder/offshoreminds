@@ -8,3 +8,15 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
   </React.StrictMode>,
 )
+
+// Remove Initial Loader after React mount
+const loader = document.getElementById('initial-loader');
+if (loader) {
+  // Small delay to ensure first paint happens
+  requestAnimationFrame(() => {
+    loader.style.opacity = '0';
+    setTimeout(() => {
+      loader.remove();
+    }, 500); // Matches CSS transition
+  });
+}

@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Linkedin, X } from 'lucide-react';
 import Reveal from '../common/Reveal';
-import rahulImg from "../../assets/Rahul.jpg";
-import gayana from "../../assets/Gayana.png";
-import sanjitImg from "../../assets/sanjit.png";
-import JapnahImg from "../../assets/Japnah.png";
-import Sythum from "../../assets/AC/Sythum shah.jpg";
+import rahulImg from "../../assets/Rahul.webp";
+import gayana from "../../assets/Gayana.webp";
+import sanjitImg from "../../assets/sanjit.webp";
+import JapnahImg from "../../assets/Japnah.webp";
+import Sythum from "../../assets/AC/Sythum shah.webp";
 
 
 const TeamSection = () => {

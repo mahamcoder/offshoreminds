@@ -1,8 +1,8 @@
-import jllLogo from '../../assets/logos/jll.png';
-import berkadiaLogo from '../../assets/logos/berkadia.png';
-import brookfieldLogo from '../../assets/logos/brookfield.png';
-import greysteelLogo from '../../assets/logos/greysteel.png';
-import cbreLogo from '../../assets/logos/cbre.png';
+import jllLogo from '../../assets/logos/jll.webp';
+import berkadiaLogo from '../../assets/logos/berkadia.webp';
+import brookfieldLogo from '../../assets/logos/brookfield.webp';
+import greysteelLogo from '../../assets/logos/greysteel.webp';
+import cbreLogo from '../../assets/logos/cbre.webp';
 
 const LogoStrip = () => {
     const brands = [
