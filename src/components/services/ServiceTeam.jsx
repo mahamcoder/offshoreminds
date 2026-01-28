@@ -12,7 +12,9 @@ const ServiceTeam = ({
     customLabel,
     customExpValue,
     customExpLabel,
-    customCapabilities
+    customCapabilities,
+    customHighlight, // New prop
+    hideDropdown = false
 }) => {
     const [selectedServiceId, setSelectedServiceId] = useState(initialServiceId || servicesData[0].id);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -85,15 +87,30 @@ const ServiceTeam = ({
                         </Reveal>
 
                         <Reveal delay={300}>
-                            <div className="inline-flex items-center gap-4 p-4 rounded-xl bg-bloom-blue/10 border border-bloom-blue/20">
-                                <div className="w-12 h-12 bg-bloom-blue rounded-lg flex items-center justify-center text-white font-bold text-xl">
-                                    <CountUp end={parseInt(displayExpValue)} suffix="+" duration={2000} />
+                            {customHighlight ? (
+                                <div className="p-6 rounded-2xl bg-gradient-to-br from-bloom-primary/20 to-bloom-blue/10 border border-bloom-primary/30 backdrop-blur-sm relative overflow-hidden group">
+                                    <div className="absolute inset-0 bg-bloom-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                    <div className="relative z-10 flex items-start gap-4">
+                                        <div className="w-12 h-12 bg-bloom-primary/20 rounded-xl flex items-center justify-center text-bloom-primary flex-shrink-0">
+                                            <CheckCircle2 size={24} />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-base  text-white mb-2">{customHighlight.title}</h3>
+                                            <p className="text-bloom-text-muted text-sm leading-relaxed">{customHighlight.description}</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="text-sm text-bloom-text-muted leading-tight">
-                                    <span className="text-white font-bold block">{displayExpLabel}</span>
-                                    {customExpValue ? "" : "per team member"}
+                            ) : (
+                                <div className="inline-flex items-center gap-4 p-4 rounded-xl bg-bloom-blue/10 border border-bloom-blue/20">
+                                    <div className="w-12 h-12 bg-bloom-blue rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                                        <CountUp end={parseInt(displayExpValue)} suffix="+" duration={2000} />
+                                    </div>
+                                    <div className="text-sm text-bloom-text-muted leading-tight">
+                                        <span className="text-white font-bold block">{displayExpLabel}</span>
+                                        {customExpValue ? "" : "per team member"}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </Reveal>
                     </div>
 
@@ -104,36 +121,44 @@ const ServiceTeam = ({
 
                             <div className="relative z-10">
                                 <div className="relative mb-8" >
-                                    <button
-
-                                        className="flex items-center gap-3 text-2xl font-bold text-white hover:text-bloom-primary transition-colors group/btn"
-                                    >
-                                        <span className="bg-gradient-to-r from-white to-bloom-blue bg-clip-text text-transparent">{displayHeading}</span>
-
-                                    </button>
-
-                                    {/* Dropdown Menu */}
-                                    {isDropdownOpen && (
-                                        <div className="absolute top-full left-0 mt-4 w-full sm:w-72 bg-bloom-dark border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-200">
-                                            <div className="py-2">
-                                                {servicesData.map((service) => (
-                                                    <button
-                                                        key={service.id}
-                                                        onClick={() => {
-                                                            setSelectedServiceId(service.id);
-                                                            setIsDropdownOpen(false);
-                                                        }}
-                                                        className={`w-full text-left px-6 py-3 text-sm transition-colors flex items-center justify-between ${selectedServiceId === service.id
-                                                            ? 'bg-bloom-primary/20 text-white font-bold'
-                                                            : 'text-bloom-text-muted hover:bg-white/5 hover:text-white'
-                                                            }`}
-                                                    >
-                                                        {service.title}
-                                                        {selectedServiceId === service.id && <div className="w-1.5 h-1.5 rounded-full bg-bloom-primary shadow-[0_0_8px_theme(colors.bloom-primary)]"></div>}
-                                                    </button>
-                                                ))}
-                                            </div>
+                                    {hideDropdown ? (
+                                        <div className="text-2xl font-bold text-white">
+                                            <span className="bg-gradient-to-r from-white to-bloom-blue bg-clip-text text-transparent">{displayHeading}</span>
                                         </div>
+                                    ) : (
+                                        <>
+                                            <button
+
+                                                className="flex items-center gap-3 text-2xl font-bold text-white hover:text-bloom-primary transition-colors group/btn"
+                                            >
+                                                <span className="bg-gradient-to-r from-white to-bloom-blue bg-clip-text text-transparent">{displayHeading}</span>
+
+                                            </button>
+
+                                            {/* Dropdown Menu */}
+                                            {isDropdownOpen && (
+                                                <div className="absolute top-full left-0 mt-4 w-full sm:w-72 bg-bloom-dark border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+                                                    <div className="py-2">
+                                                        {servicesData.map((service) => (
+                                                            <button
+                                                                key={service.id}
+                                                                onClick={() => {
+                                                                    setSelectedServiceId(service.id);
+                                                                    setIsDropdownOpen(false);
+                                                                }}
+                                                                className={`w-full text-left px-6 py-3 text-sm transition-colors flex items-center justify-between ${selectedServiceId === service.id
+                                                                    ? 'bg-bloom-primary/20 text-white font-bold'
+                                                                    : 'text-bloom-text-muted hover:bg-white/5 hover:text-white'
+                                                                    }`}
+                                                            >
+                                                                {service.title}
+                                                                {selectedServiceId === service.id && <div className="w-1.5 h-1.5 rounded-full bg-bloom-primary shadow-[0_0_8px_theme(colors.bloom-primary)]"></div>}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </>
                                     )}
                                 </div>
 

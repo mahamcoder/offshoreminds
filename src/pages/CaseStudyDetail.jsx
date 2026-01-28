@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, MapPin, Building2, Clock, CheckCircle, Share2 } from 'lucide-react';
+import { ArrowLeft, MapPin, Building2, Clock, CheckCircle, Share2, Download, Video, Volume2 } from 'lucide-react';
 import Reveal from '../components/common/Reveal';
 import { caseStudiesData } from '../data/caseStudies';
 
@@ -8,6 +8,8 @@ const CaseStudyDetail = () => {
     const { id } = useParams();
     const [study, setStudy] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isReading, setIsReading] = useState(false);
+    const [showVideoModal, setShowVideoModal] = useState(false);
 
     useEffect(() => {
         // Find study by ID or title-slug
@@ -18,6 +20,92 @@ const CaseStudyDetail = () => {
         setStudy(foundStudy);
         setLoading(false);
     }, [id]);
+
+    // Share functionality
+    const handleShare = async () => {
+        const shareData = {
+            title: study.title,
+            text: `Check out this case study: ${study.title}`,
+            url: window.location.href
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                // Fallback: Copy to clipboard
+                await navigator.clipboard.writeText(window.location.href);
+                alert('Link copied to clipboard!');
+            }
+        } catch (err) {
+            console.log('Error sharing:', err);
+        }
+    };
+
+    // Download functionality
+    const handleDownload = () => {
+        // Create a formatted text document
+        const content = `
+${study.title}
+${'='.repeat(study.title.length)}
+
+Category: ${study.category}
+Location: ${study.location}
+
+THE CHALLENGE
+-------------
+${study.challenge}
+
+OUR SOLUTION
+------------
+${study.solution}
+
+KEY RESULTS
+-----------
+${study.results.map((result, i) => `${i + 1}. ${result}`).join('\n')}
+
+---
+Downloaded from: ${window.location.href}
+        `;
+
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${study.title.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-case-study.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    };
+
+    // Voice/Read Aloud functionality
+    const handleVoice = () => {
+        if (isReading) {
+            window.speechSynthesis.cancel();
+            setIsReading(false);
+        } else {
+            const text = `
+                ${study.title}. 
+                The Challenge: ${study.challenge}. 
+                Our Solution: ${study.solution}. 
+                Key Results: ${study.results.join('. ')}.
+            `;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9;
+            utterance.pitch = 1;
+            utterance.onend = () => setIsReading(false);
+            window.speechSynthesis.speak(utterance);
+            setIsReading(true);
+        }
+    };
+
+    // Cleanup speech on unmount
+    useEffect(() => {
+        return () => {
+            window.speechSynthesis.cancel();
+        };
+    }, []);
 
     if (loading) {
         return (
@@ -114,28 +202,53 @@ const CaseStudyDetail = () => {
 
                     {/* Sidebar */}
                     <div className="space-y-8">
-                        <div className="bg-white/5 border border-white/10 rounded-3xl p-8 sticky top-32">
-                            <h3 className="text-xl font-bold mb-6 text-white text-left">Study Details</h3>
-                            <div className="space-y-4 text-sm text-left">
-                                <div className="flex justify-between py-3 border-b border-white/5">
-                                    <span className="text-gray-500">Industry</span>
-                                    <span className="text-white font-medium">Real Estate Finance</span>
+                        <div className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-10 sticky top-32">
+                            <h3 className="text-2xl font-bold mb-8 text-white text-left">Study Details</h3>
+                            <div className="space-y-6 text-sm text-left">
+                                <div className="flex flex-col gap-2 pb-5 border-b border-white/10">
+                                    <span className="text-gray-400 text-xs uppercase tracking-wider">Industry</span>
+                                    <span className="text-white font-semibold text-base">Real Estate Finance</span>
                                 </div>
-                                <div className="flex justify-between py-3 border-b border-white/5">
-                                    <span className="text-gray-500">Service</span>
-                                    <span className="text-white font-medium">{study.category}</span>
+                                <div className="flex flex-col gap-2 pb-5 border-b border-white/10">
+                                    <span className="text-gray-400 text-xs uppercase tracking-wider">Service</span>
+                                    <span className="text-white font-semibold text-base leading-snug">{study.category}</span>
                                 </div>
-                                <div className="flex justify-between py-3 border-b border-white/5">
-                                    <span className="text-gray-500">Timeline</span>
-                                    <span className="text-white font-medium">Completed 2024</span>
+                                <div className="flex flex-col gap-2 pb-5">
+                                    <span className="text-gray-400 text-xs uppercase tracking-wider">Timeline</span>
+                                    <span className="text-white font-semibold text-base">Completed 2024</span>
                                 </div>
                             </div>
 
-                            <div className="mt-8 pt-8 border-t border-white/5 space-y-4">
-                                <button className="w-full py-4 bg-bloom-primary text-bloom-dark font-bold rounded-2xl hover:bg-white transition-all flex items-center justify-center gap-2">
+                            <div className="mt-10 pt-8 border-t border-white/10 space-y-3">
+                                <button
+                                    onClick={handleShare}
+                                    className="w-full py-4 px-6 bg-bloom-primary text-white font-bold rounded-2xl hover:bg-bloom-primary/80 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-bloom-primary/20"
+                                >
                                     Share Success <Share2 size={18} />
                                 </button>
-                                <Link to="/contact" className="w-full py-4 border border-white/10 text-white font-bold rounded-2xl hover:bg-white/5 transition-all flex items-center justify-center">
+
+                                <button
+                                    onClick={handleDownload}
+                                    className="w-full py-4 px-6 bg-bloom-blue text-white font-bold rounded-2xl hover:bg-bloom-blue/80 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-bloom-blue/20"
+                                >
+                                    Download Study <Download size={18} />
+                                </button>
+
+                                <button
+                                    onClick={() => setShowVideoModal(true)}
+                                    className="w-full py-4 px-6 bg-bloom-secondary text-bloom-dark font-bold rounded-2xl hover:bg-bloom-secondary/80 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-bloom-secondary/20"
+                                >
+                                    Watch Video <Video size={18} />
+                                </button>
+
+                                <button
+                                    onClick={handleVoice}
+                                    className={`w-full py-4 px-6 ${isReading ? 'bg-bloom-primary/60 border-bloom-primary' : 'bg-white/10 border-white/10'} ${isReading ? 'text-white' : 'text-bloom-secondary'} font-bold rounded-2xl border-2 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg ${isReading ? 'shadow-bloom-primary/20' : 'shadow-white/5'}`}
+                                >
+                                    {isReading ? 'Stop Reading' : 'Read Aloud'} <Volume2 size={18} className={isReading ? 'animate-pulse' : ''} />
+                                </button>
+
+                                <Link to="/contact" className="w-full py-4 px-6 border-2 border-white/10 text-white font-bold rounded-2xl hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex items-center justify-center">
                                     Get Similar Results
                                 </Link>
                             </div>
@@ -149,6 +262,41 @@ const CaseStudyDetail = () => {
                     </Link>
                 </div>
             </div>
+
+            {/* Video Modal */}
+            {showVideoModal && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fadeIn"
+                    onClick={() => setShowVideoModal(false)}
+                >
+                    <div
+                        className="relative w-full max-w-4xl bg-bloom-dark rounded-3xl overflow-hidden shadow-2xl"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            onClick={() => setShowVideoModal(false)}
+                            className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white font-bold text-xl transition-colors"
+                        >
+                            ×
+                        </button>
+                        <div className="aspect-video bg-black">
+                            {/* Replace with actual video URL */}
+                            <iframe
+                                className="w-full h-full"
+                                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                                title="Case Study Video"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            ></iframe>
+                        </div>
+                        <div className="p-6 bg-white/5 border-t border-white/10">
+                            <h3 className="text-xl font-bold text-white mb-2">{study.title} - Video Presentation</h3>
+                            <p className="text-gray-400 text-sm">Learn more about this successful project implementation</p>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
