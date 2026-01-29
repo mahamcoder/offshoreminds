@@ -171,20 +171,54 @@ export const subServicesData = {
         ],
         expertise: {
             title: "Valuation & Appraisal Support",
-            heading: "Certified Appraisal Experts",
-            description: "Our team supports appraisers with rigorous data analysis and report preparation, ensuring high-quality valuation deliverables.",
+            heading: "Valuation & Research Capabilities",
+            description: "Accurate valuation is the foundation of every real estate transaction. We provide scalable valuation support to appraisers, brokers, and asset managers through rigorous DCF modeling and backend appraisal analysis. Using industry standards like Argus and Excel, we handle data entry, market research, and BOV or highest-and-best-use analysis—so your team can focus on final value decisions and client relationships.",
+             highlight: {
+                title: "Argus Certified Modeling Experts",
+                description: "Proficiency in Argus Enterprise, Excel, and CoStar integration."
+            },
             capabilities: [
                 {
-                    title: "Report Preparation",
-                    details: ["Drafting appraisal reports", "Data verification", "Exhibit creation"]
+                    title: "Core Valuation Modeling",
+                    details: [
+                        "Discounted Cash Flow (DCF) Analysis",
+                        "Direct Capitalization & Gross Rent Multiplier (GRM)",
+                        "Argus Enterprise Model Creation & Audits",
+                        "Broker Opinion of Value (BOV) Preparation",
+                        "Purchase Price Allocation (PPA)",
+                        "Portfolio Valuation & Roll-ups"
+
+                    ]
                 },
                 {
-                    title: "Market Analysis",
-                    details: ["Sales comparison approach", "Income capitalization analysis", "Cost approach support"]
+                    title: "Appraisal Review & Management",
+                    details: [
+                        "Third-Party Appraisal Review (Compliance Checks)",
+                        "Draft Report Proofreading & Formatting",
+                        "Valuation Methodology Validation",
+                        "Cash Flow & Rent Roll Cross-Verification",
+                        "Discrepancy Reporting & Resolution"
+                    ]
                 },
                 {
-                    title: "Review Services",
-                    details: ["Appraisal review", "Quality control checks", "Compliance validation"]
+                    title: "Market Research & Comparables",
+                    details: [
+                        "Sales Comparable (Sales Comps) Research",
+                        "Lease Comparable Analysis & Adjustment Grids",
+                        "Cap Rate & Market Yield Studies",
+                        "Demographic & Economic Trend Analysis",
+                        "Competitor Supply/Demand Analysis"
+                    ]
+                },
+                {
+                    title: "Specialized Valuation Support",
+                    details: [
+                        "Property Tax Appeal Valuations",
+                        "Highest and Best Use (HBU) Analysis",
+                        "Litigation Support & Expert Witness Prep",
+                        "Right-of-Way & Easement Valuation Support",
+                        "Ground Lease Valuation Modeling"
+                    ]
                 }
             ]
         }
@@ -209,21 +243,60 @@ export const subServicesData = {
             }
         ],
         expertise: {
-            title: "ARGUS Expertise",
-            heading: "ARGUS Certified Professionals",
-            description: "Our specialists are certified in ARGUS Enterprise, delivering industry-standard cash flow projections and valuations.",
+            title: "Argus Enterprise Modeling Solutions",
+            heading: "Argus Capabilities & Deliverables",
+            description: "Argus Enterprise is the language of institutional real estate, but accuracy depends on how well it’s modeled. Our Argus-certified analysts build and audit AE models with precision—capturing complex lease terms, expense recoveries, and rollover scenarios. From Excel-to-Argus conversions to acquisition audits, we deliver defensible, audit-ready valuation insights.",
+             highlight: {
+                title: "Zero Errors Certified Precision ",
+                description: "Strict quality control for Expense Recoveries & MLA inputs."
+            },
             capabilities: [
                 {
-                    title: "Model Creation",
-                    details: ["Ground-up model building", "Property setup", "Rent roll import"]
+                    title: "New Model Creation & Conversion",
+                    details: [
+                        "Ground-up Argus Model Build (Office, Retail, Industrial)",
+                        "Excel to Argus Conversion & Migration",
+                        "Rent Roll & Operating Statement Integration",
+                        "Market Leasing Assumptions (MLA) Setup",
+                        "Detailed Expense Recovery Modeling (Net, Base Year, Stop)",
+                        "General Vacancy & Credit Loss Structuring"
+
+                    ]
                 },
                 {
-                    title: "Sensitivity Analysis",
-                    details: ["Market leasing assumption testing", "Cap rate sensitivity", "Vacancy stress testing"]
+                    title: "Model Audits & Quality Assurance",
+                    details: [
+                        "Third-Party Model Review & Stress Testing",
+                        "Lease Audit vs. Argus Input Verification",
+                        "Recovery Audit (CAM, Tax, Insurance Reimbursements)",
+                        "Input Error Detection & Correction",
+                        "Logic Checks for Renewal Probabilities",
+                        "Review of Rent Steps, Abatements, and Free Rent"
+
+                    ]
                 },
                 {
-                    title: "Audit & QC",
-                    details: ["Logic checks", "Formula verification", "Assumption validation"]
+                    title: "Advanced Portfolio Analysis",
+                    details: [
+                        "Portfolio Roll-up & Consolidation",
+                        "Sensitivity Analysis (Cap Rate, Rental Growth, Inflation)",
+                        "Scenario Modeling (Best/Worst Case, Hold/Sell)",
+                        "Debt Structuring within Argus",
+                        "Fund Level Reporting & Returns (IRR/Equity Multiple)"
+
+                    ]
+                },
+                {
+                    title: "Reporting & Data Management",
+                    details: [
+                        "Standard Argus Reports (Cash Flow, Executive Summary)",
+                        "Custom XL4ADW (Excel for Argus) Reporting",
+                        "Exporting Data for Investment Committee Decks",
+                        "Scenario Comparison Reports",
+                        "Assumption Variance Reporting"
+
+
+                    ]
                 }
             ]
         }
@@ -248,21 +321,60 @@ export const subServicesData = {
             }
         ],
         expertise: {
-            title: "Closing Support Team",
-            heading: "Loan Closing Specialists",
-            description: "We assist lenders and borrowers in navigating the complex loan closing process with precision and care.",
+            title: "Loan Closing Support Team",
+            heading: "Closing Coordination & Financial Services",
+            description: "The period between term sheet and funding is the most critical phase of any deal. We act as your dedicated closing coordinator, managing checklists, tax prorations, and Sources & Uses to ensure a smooth, accurate close. By aligning legal, title, and borrower teams, we eliminate bottlenecks and funding gaps—so you can focus on the next opportunity.",
+             highlight: {
+                title: "360° Support Admin & Finance ",
+                description: "Seamless coordination of Checklists, Funds Flow, and Settlement."
+            },
             capabilities: [
                 {
-                    title: "Document Management",
-                    details: ["Checklist tracking", "Document indexing", "Missing item follow-up"]
+                    title: "Transaction Management & Coordination",
+                    details: [
+                        "Master Closing Checklist Tracking & Updates",
+                        "Liaison with Legal, Title, & Borrower Teams",
+                        "Virtual Data Room (VDR) Management",
+                        "Condition Precedent (CP) Verification",
+                        "Insurance Certificate (COI) Compliance Review",
+                        "Critical Date & Deadline Management"
+
+                    ]
                 },
                 {
-                    title: "Due Diligence Review",
-                    details: ["Title commitment review", "Insurance certificate verification", "Entity document review"]
+                    title: "Settlement Accounting & Prorations",
+                    details: [
+                        "Draft & Audit Settlement Statements (HUD-1/Closing Disclosure)",
+                        "Sources & Uses (S&U) Balancing & Verification",
+                        "Real Estate Tax & Operating Expense Prorations",
+                        "Prepaid Interest & Per Diem Calculations",
+                        "Payoff Letter Review & Validation",
+                        "Borrower Equity Injection Verification"
+
+                    ]
                 },
                 {
-                    title: "Coordination",
-                    details: ["Closing call coordination", "Funding facilitation", "Post-closing binders"]
+                    title: "Funding & Funds Flow Analysis",
+                    details: [
+                        "Funds Flow Memorandum Preparation",
+                        "Wire Instruction Verification & Call-backs",
+                        "Initial Escrow & Reserve Account Sizing",
+                        "Construction Loan Budget Balancing (Day 1)",
+                        "Disbursement Authorization Audits",
+                        "Gap Analysis & Resolution",
+
+                    ]
+                },
+                {
+                    title: "Post-Closing Administration",
+                    details: [
+                        "Closing Binder / Bible Compilation (Digital & Print)",
+                        "Recorded Document Tracking (Deeds/Mortgages)",
+                        "Final Title Policy & Insurance Review",
+                        "Trailing Document Management",
+                        "Loan Onboarding / Servicing Handoff"
+
+                        ]
                 }
             ]
         }
@@ -287,21 +399,61 @@ export const subServicesData = {
             }
         ],
         expertise: {
-            title: "OM Creation Team",
-            heading: "Investment Marketing Experts",
-            description: "Our marketing and financial teams collaborate to produce top-tier Offering Memorandums that drive deal success.",
+            title: "Offering Memorandums (OM) Creation Team",
+            heading: "OM Production & Marketing Capabilities",
+            description: "A great Offering Memorandum does more than list facts; it shapes market perception. Our team provides full-service marketing and analytics, producing institutional-grade OMs that stand out. We manage the entire production lifecycle—from extracting rent roll data to designing the final brochure—and craft Investment Highlights that emphasize upsides while building defensible pro-forma valuations. Whether for a Class-A office tower or a multifamily value-add property, we deliver marketing collateral that accelerates the sale process.",
+            highlight: {
+                title: "Speed to Market 72-Hour Turnaround ",
+                description: "For Flyer/Teaser creation, enabling rapid deal launching."
+            },
             capabilities: [
                 {
-                    title: "Content Development",
-                    details: ["Executive summary writing", "Market overview drafting", "Financial summary creation"]
+                    title: "Content & Investment Narrative",
+                    details: [
+                        "Executive Summary & Investment Highlights",
+"The Story Formulation (Value-Add/Core-Plus/Opportunistic)",
+"Property Description & Asset Quality Review",
+"Location & Connectivity Narratives",
+"Tenant Profiles & Credit Analysis (Single Tenant/Net Lease)",
+"Risk Mitigation Factors"
+
+                    ]
                 },
                 {
-                    title: "Graphic Design",
-                    details: ["Layout design", "Photo editing", "Map customisation"]
+                    title: "Financial Analysis & Charts",
+                    details: [
+                        "Pro-Forma Cash Flow Projections (5/7/10 Year)",
+                        "Rent Roll Analysis & Lease Expiration Schedules",
+                        "Historical Operating Expense Analysis",
+                        "Sources & Uses / Capital Structure Modeling",
+                        "Competitive Set (Rent/Sales Comps) Visualization",
+                        "IRR & Equity Multiple Return Profiling"
+
+                    ]
                 },
                 {
-                    title: "Financial Integration",
-                    details: ["Pro forma inclusion", "Rent roll formatting", "Sales comp visualization"]
+                    title: "Creative Design & Visualization",
+                    details: [
+                        "Custom Branding & Layout (InDesign/Illustrator)",
+                        "Retailer Maps & Aerial Overlays",
+                        "Site Plans & Floor Plan Enhancement",
+                        "Stack Plans (for Office/Multifamily)",
+                        "Photo Retouching & Virtual Staging",
+                        "Interactive/Digital OM Versions"
+
+                    ]
+                },
+                 {
+                    title: "Market Research & Demographics",
+                    details: [
+                       "Micro-Market & Submarket Analysis",
+                       "Demographic Radius Reports (Population, Income, Growth)",
+                       "Employment Drivers & Major Employers",
+                       "Traffic Counts & Accessibility Studies",
+                       "Supply Pipeline (New Construction) Analysis"
+
+
+                    ]
                 }
             ]
         }

@@ -70,20 +70,25 @@ const SubServiceDetail = () => {
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-5">
-                                <a
-                                    href="https://calendly.com/gyan-offshoreminds/30min?month=2025-12"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                <Link
+                                    to="/contact"
                                     className="bg-bloom-primary text-white font-bold px-7 py-3 rounded-full hover:bg-white hover:text-bloom-dark transition-all duration-300 shadow-xl shadow-bloom-primary/20 hover:shadow-2xl hover:scale-105 flex items-center justify-center gap-3 group"
                                 >
                                     Get Started
                                     <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                                </a>
+                                </Link>
 
-                                <button className="px-7 py-3 rounded-full border border-white/20 text-white font-semibold hover:bg-white/10 backdrop-blur-sm transition-all duration-300 flex items-center justify-center gap-2 group">
+                                <a
+                                    href="#overview"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        document.getElementById('overview')?.scrollIntoView({ behavior: 'smooth' });
+                                    }}
+                                    className="px-7 py-3 rounded-full border border-white/20 text-white font-semibold hover:bg-white/10 backdrop-blur-sm transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer"
+                                >
                                     Learn More
                                     <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform opacity-0 group-hover:opacity-100" />
-                                </button>
+                                </a>
                             </div>
                         </Reveal>
                     </div>
@@ -95,7 +100,7 @@ const SubServiceDetail = () => {
                 </div>
             </section>
             {/* Overview Section - ServiceOverview Style */}
-            <section className="py-20 text-center relative overflow-hidden">
+            <section id="overview" className="py-20 text-center relative overflow-hidden">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-bloom-blue/5 rounded-full blur-[100px] pointer-events-none"></div>
 
                 <div className="container mx-auto px-4 max-w-4xl relative z-10 flex flex-col items-center">

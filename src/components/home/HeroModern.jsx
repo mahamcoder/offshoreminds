@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Users, TrendingUp, ShieldCheck, ChevronDown } from 'lucide-react';
-import videoSource from '../../assets/video1.mp4';
+import videoSource from '../../assets/video1.webm';
+import fallbackImage from "../../assets/home.webp"; // adjust path based on your file location
+
 
 const HeroModern = () => {
     const heroContent = [
@@ -72,7 +74,7 @@ const HeroModern = () => {
                             loop
                             muted
                             playsInline
-                            poster="https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?q=80&w=1000&auto=format&fit=crop" // Lightweight fallback
+                            poster={fallbackImage} // Lightweight fallback
                             className="w-full h-full object-cover opacity-25 mix-blend-screen"
                         >
                             <source src={videoSource} type="video/mp4" />
@@ -84,7 +86,7 @@ const HeroModern = () => {
                 {isMobile && (
                     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
                         <img
-                            src="https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?q=80&w=800&auto=format&fit=crop"
+                            src={fallbackImage}
                             alt="Background"
                             fetchpriority="high"
                             className="w-full h-full object-cover opacity-20 mix-blend-screen"
