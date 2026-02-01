@@ -5,6 +5,7 @@ import { ArrowLeft, CheckCircle2, ArrowRight } from 'lucide-react';
 import Reveal from '../components/common/Reveal';
 import HomeContact from '../components/home/HomeContact';
 import ServiceTeam from '../components/services/ServiceTeam';
+import ServiceCard from '../components/ServiceCard';
 
 const SubServiceDetail = () => {
     const { serviceId, subServiceId } = useParams();
@@ -66,7 +67,7 @@ const SubServiceDetail = () => {
                             </h1>
 
                             <p className="text-lg md:text-xl text-gray-300 font-light leading-relaxed mb-10 max-w-2xl text-balance">
-                                {subService.description}
+                                {specificData.heroDescription || subService.description}
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-5">
@@ -100,7 +101,7 @@ const SubServiceDetail = () => {
                 </div>
             </section>
             {/* Overview Section - ServiceOverview Style */}
-            <section id="overview" className="py-20 text-center relative overflow-hidden">
+            {/* <section id="overview" className="py-20 text-center relative overflow-hidden">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-bloom-blue/5 rounded-full blur-[100px] pointer-events-none"></div>
 
                 <div className="container mx-auto px-4 max-w-4xl relative z-10 flex flex-col items-center">
@@ -115,7 +116,7 @@ const SubServiceDetail = () => {
                         </p>
                     </Reveal>
                 </div>
-            </section>
+            </section> */}
 
             {/* Scrolling Marquee */}
             <section className="py-10 bg-bloom-dark border-y border-white/5 overflow-hidden">
@@ -124,8 +125,8 @@ const SubServiceDetail = () => {
                         {[...Array(4)].map((_, i) => (
                             <div key={i} className="flex gap-12 items-center">
                                 {["Strategic Planning", "Market Analysis", "Risk Management", "Financial Modeling", "Due Diligence", "Asset Management", "Valuation", "Closing Support"].map((text, idx) => (
-                                    <div key={idx} className="marquee-item text-xl text-white/20 font-bold uppercase tracking-widest hover:text-bloom-blue/40 transition-colors cursor-default">
-                                        {text} <span className="text-bloom-blue">.</span>
+                                    <div key={idx} className="marquee-item text-base text-white/20 font-bold uppercase tracking-widest hover:text-bloom-blue/40 transition-colors cursor-default">
+                                        {text} <span className="text-bloom-blue">&#10070;</span>
                                     </div>
                                 ))}
                             </div>
@@ -186,6 +187,37 @@ const SubServiceDetail = () => {
                 customCapabilities={specificData.expertise?.capabilities || service.capabilities}
                 customHighlight={specificData.expertise?.highlight} // Added Prop
             />
+ {/* Services Links Section */}
+      <section className="py-24 relative overflow-hidden bg-bloom-dark/50 border-y border-white/5">
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <Reveal width="100%">
+              <span className="text-bloom-blue font-semibold uppercase tracking-widest text-sm mb-4 block">Take the Next Step</span>
+            </Reveal>
+            <Reveal delay={100} width="100%">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Explore Our <span className="text-bloom-primary">Services</span></h2>
+            </Reveal>
+            <Reveal delay={200} width="100%">
+              <p className="text-bloom-text-muted text-lg">
+                Discover how our specialized expertise can be tailored to meet your unique real estate challenges.
+              </p>
+            </Reveal>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {servicesData.map((service, index) => (
+              <Reveal key={service.id} delay={index * 100} width="100%" height="100%">
+                <ServiceCard
+                  icon={service.icon}
+                  title={service.title}
+                  description={service.shortDescription}
+                  link={`/services/${service.id}`}
+                />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
             <HomeContact />
         </div>

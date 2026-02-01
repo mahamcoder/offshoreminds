@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, MapPin, Building2, Clock, CheckCircle, Share2, Download, Video, Volume2 } from 'lucide-react';
+import {
+    ArrowLeft, MapPin, Building2, Clock, CheckCircle, Share2,
+    Download, Video, Volume2, Maximize, DollarSign, Building, MapPinHouse
+} from 'lucide-react';
 import Reveal from '../components/common/Reveal';
 import { caseStudiesData } from '../data/caseStudies';
 
@@ -10,6 +13,20 @@ const CaseStudyDetail = () => {
     const [loading, setLoading] = useState(true);
     const [isReading, setIsReading] = useState(false);
     const [showVideoModal, setShowVideoModal] = useState(false);
+
+    // Icon mapping for metrics
+    const getMetricIcon = (iconName) => {
+        switch (iconName) {
+            case 'Maximize': return <Maximize className="text-white" size={32} />;
+            case 'DollarSign': return <DollarSign className="text-white" size={32} />;
+            case 'Building': return <Building className="text-white" size={32} />;
+            case 'Building2': return <Building2 className="text-white" size={32} />;
+            case 'Clock': return <Clock className="text-white" size={32} />;
+            case 'CheckCircle': return <CheckCircle className="text-white" size={32} />;
+            case 'MapPin': return <MapPin className="text-white" size={32} />;
+            default: return <CheckCircle className="text-white" size={32} />;
+        }
+    };
 
     useEffect(() => {
         // Find study by ID or title-slug
@@ -163,6 +180,19 @@ Downloaded from: ${window.location.href}
                 <div className="grid lg:grid-cols-3 gap-12 text-left">
                     {/* Main Content */}
                     <div className="lg:col-span-2 space-y-12">
+                        {study.atGlance && (
+                            <Reveal delay={200}>
+                                <div className="bg-bloom-blue/5 border border-bloom-blue/20 rounded-3xl p-8 md:p-12 backdrop-blur-sm">
+                                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-bloom-blue">
+                                        <CheckCircle /> At a Glance
+                                    </h2>
+                                    <p className="text-gray-300 text-lg leading-relaxed">
+                                        {study.atGlance}
+                                    </p>
+                                </div>
+                            </Reveal>
+                        )}
+
                         <Reveal delay={300}>
                             <div className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12 backdrop-blur-sm">
                                 <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
@@ -185,14 +215,41 @@ Downloaded from: ${window.location.href}
                             </div>
                         </Reveal>
 
+                        {study.benefits && (
+                            <Reveal delay={450}>
+                                <div className="bg-bloom-secondary/5 border border-bloom-secondary/20 rounded-3xl p-8 md:p-12 backdrop-blur-sm">
+                                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-bloom-secondary">
+                                        <CheckCircle /> Key Benefits
+                                    </h2>
+                                    <ul className="space-y-4">
+                                        {study.benefits.map((benefit, idx) => (
+                                            <li key={idx} className="flex items-start gap-4">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-bloom-secondary mt-2.5 shrink-0" />
+                                                <span className="text-gray-300 text-lg leading-relaxed">{benefit}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </Reveal>
+                        )}
+
                         <Reveal delay={500}>
-                            <div className="space-y-6">
-                                <h2 className="text-2xl font-bold mb-6 text-white">Key Results</h2>
-                                <div className="grid sm:grid-cols-2 gap-4">
-                                    {study.results.map((result, idx) => (
-                                        <div key={idx} className="bg-white/5 border border-white/10 p-6 rounded-2xl flex items-start gap-4 hover:border-bloom-secondary/50 transition-colors">
-                                            <CheckCircle className="text-bloom-secondary shrink-0 mt-1" />
-                                            <span className="text-gray-300 font-medium">{result}</span>
+                            <div className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12 backdrop-blur-sm">
+                                <h2 className="text-2xl font-bold mb-10 text-white">Key Metrics</h2>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                                    {(study.keyMetrics || []).map((metric, idx) => (
+                                        <div key={idx} className="flex items-start gap-6 group">
+                                            <div className="bg-white/5 rounded-2xl group-hover:bg-bloom-primary/20 transition-colors shrink-0">
+                                                {getMetricIcon(metric.icon)}
+                                            </div>
+                                            <div>
+                                                <div className="text-xl font-bold text-white leading-none mb-2">
+                                                    {metric.value}
+                                                </div>
+                                                <div className="text-gray-400 text-sm  leading-snug">
+                                                    {metric.label}
+                                                </div>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>

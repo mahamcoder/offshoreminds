@@ -130,7 +130,7 @@ const BlogDetail = () => {
 
             <div className="container mx-auto px-4 relative z-20 -mt-32">
                 <Reveal width="100%">
-                    <div className="max-w-4xl mx-auto bg-bloom-dark/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-12 shadow-2xl">
+                    <div className="max-w-6xl mx-auto bg-bloom-dark/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-12 shadow-2xl">
                         <div className="flex flex-wrap items-center gap-4 mb-6">
                             <span className="bg-bloom-primary/10 text-bloom-primary px-4 py-1.5 rounded-full text-sm font-bold border border-bloom-primary/20 uppercase tracking-wider">
                                 {blog.category}
@@ -143,7 +143,7 @@ const BlogDetail = () => {
                             </div>
                         </div>
 
-                        <h1 className="text-3xl md:text-5xl font-bold mb-8 text-white leading-tight">
+                        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-white leading-tight">
                             {blog.title}
                         </h1>
 

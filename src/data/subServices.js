@@ -19,6 +19,7 @@ export const subServicesData = {
                 description: "Flexible underwriting capacity to handle fluctuating deal flow without compromising on quality or turnaround time."
             }
         ],
+        heroDescription: "Strengthen your underwriting process with advanced digital technologies and expert analysis. We mitigate risks and provide detailed insights from deal screening to final credit memos.",
         expertise: {
             title: "Commercial Debt & Equity Underwriting Services",
             heading: "Underwriting Solutions & Capabilities",
@@ -91,11 +92,12 @@ export const subServicesData = {
                 description: "Identify and execute value-add opportunities to maximize asset value over the holding period."
             }
         ],
+        heroDescription: "Maximize the value of your real estate portfolio with proactive asset management and institutional-grade reporting. We transform data into clear, actionable hold-sell strategies.",
         expertise: {
             title: "Strategic Asset & Portfolio Management",
             heading: "Asset Management Capabilities",
             description: "Effective asset management goes beyond property oversight—it’s about maximizing value and minimizing risk. We act as trusted financial stewards of your real estate, using data-driven insights to optimize performance, reduce OpEx, and improve tenant retention. From variance analysis to CAPEX planning, we deliver clear, institutional-grade reporting to support confident hold-sell decisions.",
-             highlight: {
+            highlight: {
                 title: "48-Hour Turnaround on Preliminary Underwriting ",
                 description: "Rapid deal screening and sizing for time-sensitive assets."
             },
@@ -169,11 +171,12 @@ export const subServicesData = {
                 description: "Efficient processes to ensure rapid turnaround times for time-sensitive deals."
             }
         ],
+        heroDescription: "Comprehensive valuation and appraisal support services powered by rigorous DCF modeling and market intelligence. We provide scalable support to help you stay ahead of the curve.",
         expertise: {
             title: "Valuation & Appraisal Support",
             heading: "Valuation & Research Capabilities",
             description: "Accurate valuation is the foundation of every real estate transaction. We provide scalable valuation support to appraisers, brokers, and asset managers through rigorous DCF modeling and backend appraisal analysis. Using industry standards like Argus and Excel, we handle data entry, market research, and BOV or highest-and-best-use analysis—so your team can focus on final value decisions and client relationships.",
-             highlight: {
+            highlight: {
                 title: "Argus Certified Modeling Experts",
                 description: "Proficiency in Argus Enterprise, Excel, and CoStar integration."
             },
@@ -242,11 +245,12 @@ export const subServicesData = {
                 description: "Thorough review of existing models to ensure accuracy and logic integrity."
             }
         ],
+        heroDescription: "Argus Enterprise is the language of institutional real estate. We build and audit AE models with precision, ensuring audit-ready valuation insights for your portfolio.",
         expertise: {
             title: "Argus Enterprise Modeling Solutions",
             heading: "Argus Capabilities & Deliverables",
             description: "Argus Enterprise is the language of institutional real estate, but accuracy depends on how well it’s modeled. Our Argus-certified analysts build and audit AE models with precision—capturing complex lease terms, expense recoveries, and rollover scenarios. From Excel-to-Argus conversions to acquisition audits, we deliver defensible, audit-ready valuation insights.",
-             highlight: {
+            highlight: {
                 title: "Zero Errors Certified Precision ",
                 description: "Strict quality control for Expense Recoveries & MLA inputs."
             },
@@ -320,11 +324,12 @@ export const subServicesData = {
                 description: "Ensure all final documents are properly indexed and stored for future reference."
             }
         ],
+        heroDescription: "The period between term sheet and funding is critical. We act as your dedicated closing coordinator to ensure a smooth, accurate close for every transaction.",
         expertise: {
             title: "Loan Closing Support Team",
             heading: "Closing Coordination & Financial Services",
             description: "The period between term sheet and funding is the most critical phase of any deal. We act as your dedicated closing coordinator, managing checklists, tax prorations, and Sources & Uses to ensure a smooth, accurate close. By aligning legal, title, and borrower teams, we eliminate bottlenecks and funding gaps—so you can focus on the next opportunity.",
-             highlight: {
+            highlight: {
                 title: "360° Support Admin & Finance ",
                 description: "Seamless coordination of Checklists, Funds Flow, and Settlement."
             },
@@ -374,7 +379,7 @@ export const subServicesData = {
                         "Trailing Document Management",
                         "Loan Onboarding / Servicing Handoff"
 
-                        ]
+                    ]
                 }
             ]
         }
@@ -398,6 +403,7 @@ export const subServicesData = {
                 description: "Cover all critical aspects including location, market, financials, and property details."
             }
         ],
+        heroDescription: "Transform property data into compelling investment narratives. We produce institutional-grade Offering Memorandums that accelerate the sale and financing process.",
         expertise: {
             title: "Offering Memorandums (OM) Creation Team",
             heading: "OM Production & Marketing Capabilities",
@@ -411,11 +417,11 @@ export const subServicesData = {
                     title: "Content & Investment Narrative",
                     details: [
                         "Executive Summary & Investment Highlights",
-"The Story Formulation (Value-Add/Core-Plus/Opportunistic)",
-"Property Description & Asset Quality Review",
-"Location & Connectivity Narratives",
-"Tenant Profiles & Credit Analysis (Single Tenant/Net Lease)",
-"Risk Mitigation Factors"
+                        "The Story Formulation (Value-Add/Core-Plus/Opportunistic)",
+                        "Property Description & Asset Quality Review",
+                        "Location & Connectivity Narratives",
+                        "Tenant Profiles & Credit Analysis (Single Tenant/Net Lease)",
+                        "Risk Mitigation Factors"
 
                     ]
                 },
@@ -443,14 +449,14 @@ export const subServicesData = {
 
                     ]
                 },
-                 {
+                {
                     title: "Market Research & Demographics",
                     details: [
-                       "Micro-Market & Submarket Analysis",
-                       "Demographic Radius Reports (Population, Income, Growth)",
-                       "Employment Drivers & Major Employers",
-                       "Traffic Counts & Accessibility Studies",
-                       "Supply Pipeline (New Construction) Analysis"
+                        "Micro-Market & Submarket Analysis",
+                        "Demographic Radius Reports (Population, Income, Growth)",
+                        "Employment Drivers & Major Employers",
+                        "Traffic Counts & Accessibility Studies",
+                        "Supply Pipeline (New Construction) Analysis"
 
 
                     ]
@@ -479,6 +485,7 @@ export const subServicesData = {
                 description: "Detailed categorization of expenses for better budget control and tax preparation."
             }
         ],
+        heroDescription: "Maintain flawless financial records with meticulous standards. Our real-time bookkeeping provides instant visibility into your business's financial health.",
         expertise: {
             title: "Bookkeeping Experts",
             heading: "Certified Bookkeepers",
@@ -518,6 +525,7 @@ export const subServicesData = {
                 description: "Efficient month-end closing processes to timely produce financial statements."
             }
         ],
+        heroDescription: "Experience the peace of mind that comes with institutional-grade accounting. We ensure GAAP compliance and audit readiness for your real estate investments.",
         expertise: {
             title: "Accounting Team",
             heading: "CPA-Level Accountants",
@@ -557,6 +565,7 @@ export const subServicesData = {
                 description: "Assist in capital allocation decisions and investment appraisal."
             }
         ],
+        heroDescription: "Look ahead with confidence. Our FP&A experts provide the strategic insights, budgeting, and forecasting needed to drive sustainable growth.",
         expertise: {
             title: "FP&A Experts",
             heading: "Financial Analysts",
@@ -598,6 +607,7 @@ export const subServicesData = {
                 description: "Analyze population and income shifts to identify emerging markets."
             }
         ],
+        heroDescription: "Turn raw market data into actionable intelligence. We aggregate data from multiple sources to help you identify and score the best real estate opportunities.",
         expertise: {
             title: "Market Intelligence Team",
             heading: "Real Estate Data Analysts",
@@ -637,6 +647,7 @@ export const subServicesData = {
                 description: "Aggregate data across your entire portfolio for holistic performance analysis."
             }
         ],
+        heroDescription: "Transform complex data into visual clarity. Our custom KPI dashboards provide real-time monitoring across your entire real estate portfolio.",
         expertise: {
             title: "Dashboard Specialists",
             heading: "BI & Analytics Experts",
@@ -676,6 +687,7 @@ export const subServicesData = {
                 description: "Base your long-term strategy on data-backed forecasts rather than intuition."
             }
         ],
+        heroDescription: "Base your strategy on data, not intuition. We use advanced statistical models to quantify risk and forecast future asset performance.",
         expertise: {
             title: "Forecasting Team",
             heading: "Data Scientists",
@@ -717,6 +729,7 @@ export const subServicesData = {
                 description: "Consistent reporting formats across all properties for easy comparison."
             }
         ],
+        heroDescription: "Enhance your property performance with proactive monitoring and strategic expense control. We identify growth opportunities to maximize your net operating income.",
         expertise: {
             title: "Performance Team",
             heading: "Asset Performance Managers",
@@ -756,6 +769,7 @@ export const subServicesData = {
                 description: "Provide a complete picture of investment performance from asset to fund level."
             }
         ],
+        heroDescription: "Build investor trust with institutional-grade transparency. We deliver customized, automated reporting that highlights your portfolio's true performance.",
         expertise: {
             title: "Reporting Specialists",
             heading: "Investor Relations Support",
@@ -795,6 +809,7 @@ export const subServicesData = {
                 description: "Improve tenant satisfaction with accurate billing and timely communication."
             }
         ],
+        heroDescription: "Eliminate revenue leakage and stay ahead of critical dates. Our meticulous lease administration ensures your rent roll is always accurate and optimized.",
         expertise: {
             title: "Lease Admin Team",
             heading: "Lease Administrators",
@@ -836,6 +851,7 @@ export const subServicesData = {
                 description: "Rigorous testing to ensure calculation accuracy and formula integrity."
             }
         ],
+        heroDescription: "Build the financial backbone of your investment decisions. We create dynamic, audit-ready models for complex real estate acquisitions and developments.",
         expertise: {
             title: "Modeling Team",
             heading: "Real Estate Modelers",
@@ -875,6 +891,7 @@ export const subServicesData = {
                 description: "Model varying risk allocations between public and private partners."
             }
         ],
+        heroDescription: "Navigate the complexity of large-scale infrastructure projects. We provide specialized modeling and debt sculpting for long-term concession periods.",
         expertise: {
             title: "Project Finance Team",
             heading: "Infrastructure Analysts",
@@ -914,6 +931,7 @@ export const subServicesData = {
                 description: "Maximize sponsor IRR through optimal capital structuring."
             }
         ],
+        heroDescription: "Accelerate the energy transition with bankable financial models. We specialize in complex tax equity structures and regulatory incentive modeling.",
         expertise: {
             title: "Renewables Team",
             heading: "Energy Finance Experts",
@@ -955,6 +973,7 @@ export const subServicesData = {
                 description: "Create interactive OMs optimized for digital viewing and sharing."
             }
         ],
+        heroDescription: "Design best-in-class Offering Memorandums that command attention. We blend strategic storytelling with visual excellence to get your deals closed.",
         expertise: {
             title: "OM Specialists",
             heading: "Creative Marketing Team",
@@ -994,6 +1013,7 @@ export const subServicesData = {
                 description: "Decks tailored for in-person presentations or standalone reading."
             }
         ],
+        heroDescription: "Raise capital with confidence. Our presentation experts distill complex strategies into persuasive, high-impact pitch decks that win investors.",
         expertise: {
             title: "Pitch Deck Team",
             heading: "Presentation Experts",
@@ -1033,6 +1053,7 @@ export const subServicesData = {
                 description: "Deliverables ready for email, social media, and print."
             }
         ],
+        heroDescription: "Get your listings to market fast with eye-catching property flyers. We create essential marketing collateral that drives leasing and sales success.",
         expertise: {
             title: "Brochure Team",
             heading: "Marketing Designers",

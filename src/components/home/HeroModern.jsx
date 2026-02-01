@@ -146,14 +146,30 @@ const HeroModern = () => {
 
             {/* Bottom Fade for smooth transition */}
             <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-bloom-dark to-transparent z-10 pointer-events-none"></div>
-            {/* Scroll Down Indicator - Lottie Animation */}
-            <div className="absolute bottom-[-2%] left-1/2 transform -translate-x-1/2 z-30 w-[50px] h-[50px] opacity-90 hover:opacity-100 transition-opacity">
-                <iframe
-                    src="https://lottie.host/embed/9f8f64ee-a634-4d3d-a0b3-913a2af2253e/XXidYi03ra.lottie"
-                    className="w-full h-full border-none overflow-hidden"
-                    title="Scroll Down"
-                ></iframe>
+            {/* Scroll Down Indicator - Triple Animated Arrows */}
+            <div
+                className="absolute bottom-[-7px] left-1/2 transform -translate-x-1/2 z-30 flex flex-col items-center cursor-pointer group"
+                onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+            >
+                <div className="flex flex-col items-center -space-y-5">
+                    <ChevronDown className="text-white font-bold w-9 h-9 animate-arrow-blend" style={{ animationDelay: '0s' }} />
+                    <ChevronDown className="text-white font-bold w-9 h-9 animate-arrow-blend" style={{ animationDelay: '0.2s' }} />
+                    <ChevronDown className="text-white font-bold w-9 h-9 animate-arrow-blend" style={{ animationDelay: '0.4s' }} />
+                </div>
+               
             </div>
+
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @keyframes arrow-blend {
+                    0% { opacity: 0; transform: translateY(-10px); }
+                    50% { opacity: 0.5; transform: translateY(0); }
+                    100% { opacity: 0; transform: translateY(10px); }
+                }
+                .animate-arrow-blend {
+                    animation: arrow-blend 2s infinite ease-in-out;
+                }
+            `}} />
         </section>
     );
 };
