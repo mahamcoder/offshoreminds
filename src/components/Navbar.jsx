@@ -1,7 +1,7 @@
 import logo from '../assets/logo.webp';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown, Sparkles } from 'lucide-react';
 import { servicesData } from '../data/services';
 
 const Navbar = () => {
@@ -62,10 +62,26 @@ const Navbar = () => {
             <Link to="/case-studies" className={isActive('/case-studies')}>Case Studies</Link>
             <Link to="/blogs" className={isActive('/blogs')}>Blogs</Link>
             <Link to="/careers" className={isActive('/careers')}>Careers</Link>
-
-            <Link to="/contact" className={`btn-glass px-6 py-2 rounded-full font-medium transition-all`}>
+             <Link to="/contact" className={`btn-glass px-6 py-2 rounded-full font-medium transition-all`}>
               Contact Us
             </Link>
+
+            <Link to="/offshoreminds-ai" className="relative group inline-flex items-center justify-center ml-2">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-bloom-primary via-purple-500 to-bloom-secondary rounded-lg blur opacity-50 group-hover:opacity-100 transition duration-500 group-hover:duration-200 animate-pulse"></div>
+              <div className="relative px-4 py-2 
+bg-white/10 backdrop-blur-md 
+border border-white/20 
+text-white 
+shadow-[0_0_12px_rgba(139,92,246,0.35)] 
+hover:shadow-[0_0_22px_rgba(139,92,246,0.55)] 
+ rounded-lg leading-none flex items-center justify-center gap-2 transition-all">
+                <Sparkles className="w-4 h-4 text-bloom-secondary" />
+                <span className="text-sm font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">OffshoreMinds.AI</span>
+
+              </div>
+            </Link>
+
+           
           </nav>
 
           {/* Mobile Menu Button */}
@@ -98,9 +114,20 @@ const Navbar = () => {
             <Link to="/case-studies" onClick={() => setIsOpen(false)} className="block py-3 px-4 hover:bg-white/5 rounded-lg text-white font-medium">Case Studies</Link>
             <Link to="/blogs" onClick={() => setIsOpen(false)} className="block py-3 px-4 hover:bg-white/5 rounded-lg text-white font-medium">Blogs</Link>
             <Link to="/careers" onClick={() => setIsOpen(false)} className="block py-3 px-4 hover:bg-white/5 rounded-lg text-white font-medium">Careers</Link>
+
             <div className="pt-2">
               <Link to="/contact" onClick={() => setIsOpen(false)} className="w-full block text-center py-3 rounded-xl bg-bloom-primary text-white font-medium">Contact Us</Link>
             </div>
+            <Link to="/offshoreminds-ai" onClick={() => setIsOpen(false)} className="relative group mx-4 my-2 block">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-bloom-primary via-purple-500 to-bloom-secondary rounded-xl blur opacity-60 animate-pulse"></div>
+              <div className="relative px-4 py-3 bg-bloom-dark rounded-xl flex items-center justify-between border border-white/10">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-bloom-secondary" />
+                  <span className="text-sm font-bold text-white">OffshoreMinds.AI</span>
+                </div>
+                <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white bg-bloom-primary rounded-md">Coming Soon</span>
+              </div>
+            </Link>
           </div>
         )}
       </div>

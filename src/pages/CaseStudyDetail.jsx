@@ -61,7 +61,26 @@ const CaseStudyDetail = () => {
 
     // Download functionality
     const handleDownload = () => {
-        // Create a formatted text document
+        if (study.downloadLink) {
+            let url = study.downloadLink;
+            // Handle Google Sheets export to XLSX
+            if (url.includes('docs.google.com/spreadsheets')) {
+                url = url.replace(/\/edit.*$/, '/export?format=xlsx');
+            } 
+            // Handle Google Drive file links for direct download
+            else if (url.includes('drive.google.com')) {
+                const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                const fileId = match ? match[1] : null;
+                if (fileId) {
+                    url = `https://drive.google.com/uc?export=download&id=${fileId}`;
+                }
+            }
+            // Use location.assign or window.open for download
+            window.location.href = url;
+            return;
+        }
+
+        // Fallback: Create a formatted text document
         const content = `
 ${study.title}
 ${'='.repeat(study.title.length)}
@@ -99,8 +118,54 @@ Downloaded from: ${window.location.href}
     // Voice/Read Aloud functionality
     const handleVoice = () => {
         if (isReading) {
-            window.speechSynthesis.cancel();
+            if (study.audioLink) {
+                const audio = document.getElementById('case-study-audio');
+                audio.pause();
+            } else {
+                window.speechSynthesis.cancel();
+            }
             setIsReading(false);
+            return;
+        }
+
+        if (study.audioLink) {
+            let audioSrc = study.audioLink;
+
+            // Handle Google Drive file links for direct playback
+            if (audioSrc.includes('drive.google.com')) {
+                const match = audioSrc.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                const fileId = match ? match[1] : null;
+                
+                if (fileId) {
+                    audioSrc = `https://drive.google.com/uc?export=download&id=${fileId}`;
+                } else if (audioSrc.includes('folders/')) {
+                    // Folders still need to be opened in a new tab
+                    window.open(audioSrc, '_blank');
+                    return;
+                }
+            }
+
+            let audio = document.getElementById('case-study-audio');
+            if (!audio) {
+                audio = document.createElement('audio');
+                audio.id = 'case-study-audio';
+                audio.style.display = 'none';
+                document.body.appendChild(audio);
+            }
+            audio.src = audioSrc;
+            audio.onended = () => setIsReading(false);
+            audio.onerror = () => {
+                console.error("Audio playback failed. Falling back to speech synthesis.");
+                // If direct playback fails (e.g. folder or restriction), fall back or notify
+                window.open(study.audioLink, '_blank');
+                setIsReading(false);
+            };
+            audio.play().catch(err => {
+                console.error("Audio play error:", err);
+                window.open(study.audioLink, '_blank');
+                setIsReading(false);
+            });
+            setIsReading(true);
         } else {
             const text = `
                 ${study.title}. 
@@ -276,38 +341,51 @@ Downloaded from: ${window.location.href}
                                 </div>
                             </div>
 
-                            <div className="mt-10 pt-8 border-t border-white/10 space-y-3">
+                            <div className="mt-10 pt-8 border-t border-white/10 space-y-4">
                                 <button
                                     onClick={handleShare}
-                                    className="w-full py-4 px-6 bg-bloom-primary text-white font-bold rounded-2xl hover:bg-bloom-primary/80 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-bloom-primary/20"
+                                    className="w-full py-4 px-6 bg-gradient-to-r from-bloom-primary to-purple-600 text-white font-bold rounded-2xl hover:brightness-110 hover:shadow-[0_0_20px_rgba(93,92,222,0.3)] transition-all duration-300 flex items-center justify-between group shadow-lg"
                                 >
-                                    Share Success <Share2 size={18} />
+                                    <span className="flex items-center gap-2">Share Success</span>
+                                    <Share2 size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                                 </button>
 
                                 <button
                                     onClick={handleDownload}
-                                    className="w-full py-4 px-6 bg-bloom-blue text-white font-bold rounded-2xl hover:bg-bloom-blue/80 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-bloom-blue/20"
+                                    className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-bloom-blue text-white font-bold rounded-2xl hover:brightness-110 hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all duration-300 flex items-center justify-between group shadow-lg"
                                 >
-                                    Download Study <Download size={18} />
+                                    <span className="flex items-center gap-2">Download Study</span>
+                                    <Download size={18} className="group-hover:translate-y-1 transition-transform" />
                                 </button>
 
                                 <button
                                     onClick={() => setShowVideoModal(true)}
-                                    className="w-full py-4 px-6 bg-bloom-secondary text-bloom-dark font-bold rounded-2xl hover:bg-bloom-secondary/80 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-bloom-secondary/20"
+                                    className="w-full py-4 px-6 bg-gradient-to-r from-purple-400 to-bloom-secondary font-bold rounded-2xl hover:brightness-110 hover:shadow-[0_0_20px_rgba(192,132,252,0.3)] transition-all duration-300 flex items-center justify-between group shadow-lg text-bloom-dark"
                                 >
-                                    Watch Video <Video size={18} />
+                                    <span className="flex items-center gap-2">Watch Video</span>
+                                    <Video size={18} className="group-hover:scale-110 transition-transform" />
                                 </button>
 
                                 <button
                                     onClick={handleVoice}
-                                    className={`w-full py-4 px-6 ${isReading ? 'bg-bloom-primary/60 border-bloom-primary' : 'bg-white/10 border-white/10'} ${isReading ? 'text-white' : 'text-bloom-secondary'} font-bold rounded-2xl border-2 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg ${isReading ? 'shadow-bloom-primary/20' : 'shadow-white/5'}`}
+                                    className={`w-full py-4 px-6 border-2 transition-all duration-300 flex items-center justify-between gap-2 group shadow-lg rounded-2xl ${
+                                        isReading 
+                                        ? 'bg-bloom-primary/20 border-bloom-primary text-white' 
+                                        : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'
+                                    }`}
                                 >
-                                    {isReading ? 'Stop Reading' : 'Read Aloud'} <Volume2 size={18} className={isReading ? 'animate-pulse' : ''} />
+                                    <span className="flex items-center gap-2">{isReading ? 'Reading...' : 'Read Aloud'}</span>
+                                    <Volume2 size={18} className={`${isReading ? 'animate-pulse' : 'group-hover:scale-110 transition-transform'}`} />
                                 </button>
 
-                                <Link to="/contact" className="w-full py-4 px-6 border-2 border-white/10 text-white font-bold rounded-2xl hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex items-center justify-center">
-                                    Get Similar Results
-                                </Link>
+                                {study.relatedStudyId && (
+                                    <Link 
+                                        to={`/case-study/${study.relatedStudyId}`}
+                                        className="w-full py-4 px-6 border-2 border-white/10 text-white font-bold rounded-2xl hover:bg-white/5 hover:border-white/20 transition-all duration-300 flex items-center justify-center group"
+                                    >
+                                        Get Similar Results
+                                    </Link>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -337,10 +415,9 @@ Downloaded from: ${window.location.href}
                             ×
                         </button>
                         <div className="aspect-video bg-black">
-                            {/* Replace with actual video URL */}
                             <iframe
                                 className="w-full h-full"
-                                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                                src={study.videoLink || "https://www.youtube.com/embed/dQw4w9WgXcQ"}
                                 title="Case Study Video"
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

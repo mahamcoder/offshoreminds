@@ -21,7 +21,7 @@ const Terms = lazy(() => import('./pages/Terms'));
 const Disclaimers = lazy(() => import('./pages/Disclaimers'));
 const Login = lazy(() => import('./pages/admin/Login'));
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
-
+const OffshoreMindsAI = lazy(() => import('./pages/OffshoreMindsAI'));
 // Loading Component - Matches index.html styling exactly
 const PageLoader = () => (
   <div className="min-h-screen bg-bloom-dark flex items-center justify-center">
@@ -63,6 +63,7 @@ const router = createBrowserRouter([
       { path: "privacy-policy", element: <PrivacyPolicy /> },
       { path: "terms-and-conditions", element: <Terms /> },
       { path: "disclaimers", element: <Disclaimers /> },
+      { path: "offshoreminds-ai", element: <OffshoreMindsAI /> },
     ],
   },
 ]);

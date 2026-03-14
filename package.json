@@ -13,6 +13,7 @@
     "axios": "^1.13.2",
     "dompurify": "^3.3.1",
     "firebase": "^12.7.0",
+    "framer-motion": "^12.36.0",
     "html-react-parser": "^5.2.12",
     "lucide-react": "^0.468.0",
     "react": "^18.3.1",

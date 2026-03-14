@@ -1,55 +1,63 @@
 export const caseStudiesData = [
     {
         id: 1,
-        title: "Affordable Housing Development",
-        location: "Silver Spring, MD",
+        title: "ARGUS Update and Financial Modeling for a 14-Property Office Portfolio",
+        location: "205 W 37th St. Fl 8, New York, NY",
         category: "Financial Modeling & Valuation",
         image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-        atGlance:"We partnered with a global real estate developer on a $13 billion, 10,000-acre master-planned project that included townhomes, retail, hotel, and multifamily units. The objective was to build a powerful, scalable financial model capable of handling multi-phase construction, multiple funding layers, and return analysis across project stages",
-        challenge: "The client needed to evaluate multiple financing options for a $50M acquisition but lacked the bandwidth for a comprehensive market analysis.",
-        solution: "We created a dynamic model in < 48h that compared rent restrictions against market rents, highlighting the impact on returns and cash flows.",
+        atGlance:"We partnered with a client to update and consolidate financial models for a portfolio of 14 office properties acquired between 2021 and 2022. The objective was to update ARGUS models for over 150 tenants, integrate complex historical financials, and forecast future cash flows. By meticulously matching historical data with new capital structures, we delivered precise return metrics and a current portfolio valuation.",
+        challenge: "The client needed to update complex financial data for a 14-property office portfolio purchased in 2021-2022. Tracking over 150 tenants, including recent renewals and new leases, required a meticulous review of initial lease agreements and current rent rolls. Furthermore, calculating accurate return metrics required integrating complex historical data, such as capital expenditures, refinancing, new equity, and mezzanine debt, into a unified portfolio model.",
+        solution: "We updated ARGUS models for all 14 properties using current lease data. After exporting the cash flows, we built a comprehensive Excel model integrating historical financials and capital events to perfectly match existing records and accurately forecast performance.",
         benefits: [
-            "Accurate comparison of multi-layered financing options",
-            "Rapid identification of a 15% hidden value through market rent analysis",
-            "Extremely fast turnaround (48h) enabling timely acquisition decisions"
+            "Precision Valuation: Valued the portfolio at $160M (100% occupancy), showing strong appreciation from the initial $120M purchase.",
+            "Accurate Return Metrics:Matched historical financials with new capital structures to deliver precise return metrics from the closing date.",
+            "Unified Portfolio Visibility: Combined 14 property cash flows into one portfolio model for easier forecasting, reporting, and strategic planning"
         ],
         keyMetrics: [
-            { label: "Land Area under planning", value: "10k Acres", icon: "map-pin-house" },
-            { label: "Total Project Value", value: "$13B", icon: "DollarSign" },
-            { label: "Turnaround Time", value: "48H", icon: "Clock" }
+            { label: "Portfolio size", value: "14 Office Properties", icon: "map-pin-house" },
+            { label: "Tenant Volume", value: "150+ Active Tenants", icon: "DollarSign" },
+            { label: "Acquisition Value", value: "$120 Million", icon: "Clock" }
         ],
         results: [
             "Enabled $50M acquisition",
             "Identified 15% hidden value",
             "Completed in 48 hours"
         ],
-        keywords: ["financial modeling", "valuation", "affordable housing", "market analysis"]
+        keywords: ["financial modeling", "valuation", "affordable housing", "market analysis"],
+        downloadLink: "https://drive.google.com/file/d/1ZDeSmcv2oHJTVQBjMSxED2sh5dfab03p/view",
+        videoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        audioLink: "https://drive.google.com/file/d/1tl6gaS9pz4ezrbjTEAuPpZ353utGgmbC/view",
+        relatedStudyId: 2
     },
     {
         id: 2,
-        title: "FoF Waterfall - Office Property",
-        location: "New York, NY",
+        title: "FMultifamily Asset Management Reporting Template",
+        location: "205 W 37th St. Fl 8, New York, NY",
         category: "Investment Underwriting",
         image: "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2069&q=80",
-        atGlance: "Designed a multi-partner equity waterfall model for a NYC office asset, automating complex distribution calculations across multiple promote tiers.",
-        challenge: "Client required a complex multi-tier waterfall structure to calculate distributions for a mixed-use office asset with 4 equity partners.",
-        solution: "Our team built a bespoke Excel model with toggle switches for different promote structures, ensuring transparency for all stakeholders.",
+        atGlance: "We designed a ready-to-deploy Excel template that consolidates three core data inputs, trailing-12 P&L actuals, current-month rent roll, and AR aging, into a single, operator-ready dashboard. Built for multifamily portfolios of any size, it surfaces critical income, vacancy, delinquency, and expense KPIs at a glance, featuring configurable threshold triggers and automated variance flags to streamline asset management.",
+        challenge: "Asset managers face recurring data integration problems, dealing with P&L actuals, rent rolls, and AR aging reports that arrive in separate, inconsistent files. Manually reconciling these inputs into a coherent performance view is time-consuming and error-prone, creating critical blind spots around delinquency spikes, vacancy drift, expense overruns, and loss-to-lease gaps that compound over reporting periods.",
+        solution: "We built a structured Excel environment that automatically ingests T12 financials, current rent rolls, and AR aging into a unified operator dashboard. Each module feeds the central view instantly, providing period-selectable trending, unit-type breakdowns, and operator-configurable expense triggers without requiring manual data copying.",
         benefits: [
-            "100% accurate multi-tier distribution automation",
-            "Full transparency for all 4 equity partners",
-            "Flexible 'what-if' analysis with promote structure toggles"
+            "Dynamic Master Dashboard:Centralized dashboard showing key metrics, with all 7 sheets updating automatically.",
+            "Automated Variance Alerts:17 configurable triggers automatically flag issues like vacancy, bad debt, and NOI when thresholds are exceeded.",
+            "Comprehensive Financial Visibility:Combines income trends, lease expiry tracking, and AR aging to highlight top delinquent balances for faster collections."
         ],
         keyMetrics: [
-            { label: "Equity Partners", value: "4", icon: "Building" },
-            { label: "Calculations Accuracy", value: "100%", icon: "CheckCircle" },
-            { label: "Manual Work Saved", value: "20+ HRS", icon: "Clock" }
+            { label: "17 KPI Triggers", value: "Automated alerts forlive threshold monitoring", icon: "Building" },
+            { label: "Multi-Period Trending", value: "Built-in T1 through T120rolling comparisons", icon: "CheckCircle" },
+
         ],
         results: [
             "Automated distribution calculations",
             "Error-free investor reporting",
             "Saved 20+ hours of manual work"
         ],
-        keywords: ["underwriting", "waterfall", "equity", "investment analysis"]
+        keywords: ["underwriting", "waterfall", "equity", "investment analysis"],
+        downloadLink: "https://docs.google.com/spreadsheets/d/your-excel-link-here",
+        videoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        audioLink: "",
+        relatedStudyId: 1
     },
     {
         id: 3,
@@ -75,7 +83,11 @@ export const caseStudiesData = [
             "Real-time visibility for lenders",
             "Streamlined draw requests"
         ],
-        keywords: ["asset management", "development", "budget tracking", "construction"]
+        keywords: ["asset management", "development", "budget tracking", "construction"],
+        downloadLink: "https://docs.google.com/spreadsheets/d/your-excel-link-here",
+        videoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        audioLink: "",
+        relatedStudyId: 5
     },
     {
         id: 4,
@@ -101,7 +113,11 @@ export const caseStudiesData = [
             "Delivered in 72 hours",
             "100% investor approval rating"
         ],
-        keywords: ["pitch deck", "marketing", "investor presentation", "retail"]
+        keywords: ["pitch deck", "marketing", "investor presentation", "retail"],
+        downloadLink: "https://docs.google.com/spreadsheets/d/your-excel-link-here",
+        videoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        audioLink: "",
+        relatedStudyId: 1
     },
     {
         id: 5,
@@ -127,8 +143,12 @@ export const caseStudiesData = [
             "Analyzed 15 Sunbelt cities",
             "Enabled $500M deployment strategy"
         ],
-        keywords: ["market research", "data analysis", "multifamily", "sunbelt"]
-    }
+        keywords: ["market research", "data analysis", "multifamily", "sunbelt"],
+        downloadLink: "https://docs.google.com/spreadsheets/d/your-excel-link-here",
+        videoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        audioLink: "",
+        relatedStudyId: 3
+    },
 ];
 
 export const caseStudyCategories = [

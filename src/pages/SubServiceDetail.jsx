@@ -1,7 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { servicesData } from '../data/services';
 import { subServicesData } from '../data/subServices'; // Added Import
-import { ArrowLeft, CheckCircle2, ArrowRight } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ArrowRight, Sparkles } from 'lucide-react';
 import Reveal from '../components/common/Reveal';
 import HomeContact from '../components/home/HomeContact';
 import ServiceTeam from '../components/services/ServiceTeam';
@@ -118,15 +118,26 @@ const SubServiceDetail = () => {
                 </div>
             </section> */}
 
-            {/* Scrolling Marquee */}
-            <section className="py-10 bg-bloom-dark border-y border-white/5 overflow-hidden">
+            {/* Button-Style Moving Marquee */}
+            <section className="py-16 overflow-hidden backdrop-blur-sm">
                 <div className="marquee-wrapper">
-                    <div className="marquee-track">
+                    <div className="marquee-track py-4">
                         {[...Array(4)].map((_, i) => (
-                            <div key={i} className="flex gap-12 items-center">
+                            <div key={i} className="flex gap-8 items-center">
                                 {["Strategic Planning", "Market Analysis", "Risk Management", "Financial Modeling", "Due Diligence", "Asset Management", "Valuation", "Closing Support"].map((text, idx) => (
-                                    <div key={idx} className="marquee-item text-base text-white/20 font-bold uppercase tracking-widest hover:text-bloom-blue/40 transition-colors cursor-default">
-                                        {text} <span className="text-bloom-blue">&#10070;</span>
+                                    <div 
+                                        key={idx} 
+                                        className="group relative flex items-center gap-3 px-8 py-3 rounded-full bg-white/5 border border-white/10 hover:border-bloom-blue/50 transition-all duration-500 cursor-default hover:bg-white/10 hover:transform hover:scale-105 active:scale-95 shadow-lg shadow-black/20"
+                                    >
+                                        <Sparkles 
+                                            size={16} 
+                                            className="text-bloom-blue opacity-50 group-hover:opacity-100 transition-opacity duration-500" 
+                                        />
+                                        <span className="text-sm md:text-base text-white/80 group-hover:text-white font-bold uppercase tracking-widest transition-colors duration-500 whitespace-nowrap">
+                                            {text}
+                                        </span>
+                                        {/* Subtle internal glow */}
+                                        <div className="absolute inset-0 rounded-full bg-bloom-blue/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md -z-10"></div>
                                     </div>
                                 ))}
                             </div>
@@ -187,37 +198,37 @@ const SubServiceDetail = () => {
                 customCapabilities={specificData.expertise?.capabilities || service.capabilities}
                 customHighlight={specificData.expertise?.highlight} // Added Prop
             />
- {/* Services Links Section */}
-      <section className="py-24 relative overflow-hidden bg-bloom-dark/50 border-y border-white/5">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <Reveal width="100%">
-              <span className="text-bloom-blue font-semibold uppercase tracking-widest text-sm mb-4 block">Take the Next Step</span>
-            </Reveal>
-            <Reveal delay={100} width="100%">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Explore Our <span className="text-bloom-primary">Services</span></h2>
-            </Reveal>
-            <Reveal delay={200} width="100%">
-              <p className="text-bloom-text-muted text-lg">
-                Discover how our specialized expertise can be tailored to meet your unique real estate challenges.
-              </p>
-            </Reveal>
-          </div>
+            {/* Services Links Section */}
+            <section className="py-24 relative overflow-hidden bg-bloom-dark/50 border-y border-white/5">
+                <div className="container mx-auto px-4 relative z-10">
+                    <div className="text-center max-w-3xl mx-auto mb-16">
+                        <Reveal width="100%">
+                            <span className="text-bloom-blue font-semibold uppercase tracking-widest text-sm mb-4 block">Take the Next Step</span>
+                        </Reveal>
+                        <Reveal delay={100} width="100%">
+                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Explore Our <span className="text-bloom-primary">Services</span></h2>
+                        </Reveal>
+                        <Reveal delay={200} width="100%">
+                            <p className="text-bloom-text-muted text-lg">
+                                Discover how our specialized expertise can be tailored to meet your unique real estate challenges.
+                            </p>
+                        </Reveal>
+                    </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {servicesData.map((service, index) => (
-              <Reveal key={service.id} delay={index * 100} width="100%" height="100%">
-                <ServiceCard
-                  icon={service.icon}
-                  title={service.title}
-                  description={service.shortDescription}
-                  link={`/services/${service.id}`}
-                />
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {servicesData.map((service, index) => (
+                            <Reveal key={service.id} delay={index * 100} width="100%" height="100%">
+                                <ServiceCard
+                                    icon={service.icon}
+                                    title={service.title}
+                                    description={service.shortDescription}
+                                    link={`/services/${service.id}`}
+                                />
+                            </Reveal>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
             <HomeContact />
         </div>
