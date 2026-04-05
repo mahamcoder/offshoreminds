@@ -51,8 +51,8 @@ An automated timeline streamlined planning, giving the client a robust platform 
                                         </span>
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-lg text-white">Cost Reduction</h4>
-                                        <p className="text-gray-400 text-sm">Save significantly on operational overhead.</p>
+                                        <h4 className="font-bold text-lg text-white">Lower Operational Costs</h4>
+                                        <p className="text-gray-400 text-sm">Elite expertise. Fraction of the price.</p>
                                     </div>
                                 </div>
                             </Reveal>
@@ -65,8 +65,9 @@ An automated timeline streamlined planning, giving the client a robust platform 
                                     <div>
                                         <h4 className="font-bold text-lg text-white">
                                             <CountUp end={100} suffix="%" duration={4000} />
+                                            <span > Process Accuracy</span>
                                         </h4>
-                                        <p className="text-gray-400 text-sm">Process Accuracy</p>
+                                        <p className="text-gray-400 text-sm">Precision is not a promise. It is our standard.</p>
                                     </div>
                                 </div>
                             </Reveal>
@@ -77,8 +78,8 @@ An automated timeline streamlined planning, giving the client a robust platform 
                                         <span className="text-xl font-bold text-bloom-secondary group-hover:text-white">24/7</span>
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-lg text-white">Turnaround</h4>
-                                        <p className="text-gray-400 text-sm">Round-the-clock operations support.</p>
+                                        <h4 className="font-bold text-lg text-white">Availability</h4>
+                                        <p className="text-gray-400 text-sm">Your deadlines never sleep. Neither do we.</p>
                                     </div>
                                 </div>
                             </Reveal>

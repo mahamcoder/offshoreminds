@@ -14,7 +14,10 @@ const CaseStudies = () => {
   const [visibleCount, setVisibleCount] = useState(3);
 
   const filteredStudies = caseStudiesData.filter(study => {
-    const matchesCategory = selectedCategory === "All" || study.category === selectedCategory;
+    const matchesCategory = selectedCategory === "All" || 
+      (Array.isArray(study.category) 
+        ? study.category.includes(selectedCategory) 
+        : study.category === selectedCategory);
     const matchesSearch = searchQuery === "" ||
       study.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       study.challenge.toLowerCase().includes(searchQuery.toLowerCase()) ||

@@ -62,7 +62,7 @@ const Navbar = () => {
             <Link to="/case-studies" className={isActive('/case-studies')}>Case Studies</Link>
             <Link to="/blogs" className={isActive('/blogs')}>Blogs</Link>
             <Link to="/careers" className={isActive('/careers')}>Careers</Link>
-             <Link to="/contact" className={`btn-glass px-6 py-2 rounded-full font-medium transition-all`}>
+            <Link to="/contact" className={isActive('/contact')}>
               Contact Us
             </Link>
 
@@ -81,7 +81,7 @@ hover:shadow-[0_0_22px_rgba(139,92,246,0.55)]
               </div>
             </Link>
 
-           
+
           </nav>
 
           {/* Mobile Menu Button */}

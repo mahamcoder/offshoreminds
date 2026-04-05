@@ -63,8 +63,8 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
         image: null, // File object
         imageUrl: '', // URL string
         author: existingBlog ? existingBlog.author : (auth.currentUser?.displayName || 'Admin'),
-        keywords: '',
-        externalLink: ''
+        keywords: existingBlog ? (existingBlog.keywords ? existingBlog.keywords.join(', ') : '') : '',
+        linkedInUrl: existingBlog ? (existingBlog.linkedInUrl || '') : ''
     });
 
     // ... existing useEffect ...
@@ -282,7 +282,7 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                 imageUrl: existingBlog.image || '',
                 author: existingBlog.author || '',
                 keywords: existingBlog.keywords ? existingBlog.keywords.join(', ') : '',
-                externalLink: existingBlog.externalLink || ''
+                linkedInUrl: existingBlog.linkedInUrl || ''
             });
         }
     }, [existingBlog]);
@@ -332,7 +332,7 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                 image: imageUrl,
                 author: formData.author,
                 keywords: formData.keywords.split(',').map(k => k.trim()).filter(k => k),
-                externalLink: formData.externalLink,
+                linkedInUrl: formData.linkedInUrl,
                 slug: generateSlug(formData.title),
                 updatedAt: serverTimestamp()
             };
@@ -345,6 +345,8 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                 blogData.createdAt = serverTimestamp();
                 // For sorting reasons we might want a simple date string too, but timestamp is better
                 blogData.date = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                blogData.likesCount = 0;
+                blogData.commentsCount = 0;
 
                 await addDoc(collection(db, "blogs"), blogData);
                 toast.success("Blog created successfully!");
@@ -450,19 +452,21 @@ const BlogEditor = ({ existingBlog = null, onClose = null }) => {
                             ></textarea>
                         </div>
 
-                        {/* External Link */}
-                        {/* <div>
-                            <label className="block text-sm font-semibold mb-2 text-bloom-blue">linked URL</label>
+                        {/* LinkedIn URL Redirect */}
+                        <div>
+                            <label className="block text-sm font-semibold mb-2 text-bloom-blue">LinkedIn URL (Optional Redirect)</label>
                             <input
                                 type="url"
-                                name="externalLink"
-                                value={formData.externalLink}
+                                name="linkedInUrl"
+                                value={formData.linkedInUrl}
                                 onChange={handleChange}
                                 className="w-full bg-bloom-dark/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-bloom-primary transition-colors"
-                                placeholder="https://example.com/full-article"
+                                placeholder="https://www.linkedin.com/pulse/..."
                             />
-                            <p className="text-xs text-bloom-text-muted mt-2">If provided, the 'Read More' button will redirect here instead of the internal blog page.</p>
-                        </div> */}
+                            <p className="text-xs text-bloom-text-muted mt-2 tracking-wide">
+                                If provided, clicking the blog will redirect to this LinkedIn post instead of opening the internal page.
+                            </p>
+                        </div>
 
                         {/* Content */}
                         <div className="h-full">

@@ -20,14 +20,14 @@ const DifferenceSection = () => {
 
                         <div className="border-l-4 border-secondary pl-6 mb-4 md:mb-0">
                             <p className="text-xl text-blue-100 font-light italic leading-relaxed">
-                                "Offshore Minds: The Leading Choice for <br className="hidden md:block" /> Real Estate KPO Services"
+                                "Where Intelligent Automation and Human Mastery <br className="hidden md:block" />Unite to Deliver the World's Most Powerful Real Estate KPO Services."
                             </p>
                         </div>
                     </div>
 
                     <div className="md:w-1/2">
                         <p className="text-gray-300 text-lg leading-relaxed border-t md:border-t-0 md:border-l border-white/10 pt-8 md:pt-0 md:pl-10">
-                            Offshore Minds is a leading provider of real estate KPO services, renowned for excellence in providing outsourcing solutions for the real estate investment industry. Our success hinges on top-tier talent and systematic approaches.
+                            Offshore Minds is a next-generation KPO company purpose-built for businesses, CPA firms, and real estate companies that refuse to settle for ordinary outsourcing. We are something fundamentally different, a high-performance knowledge engine where advanced automation and elite human expertise operate in perfect synchrony, delivering faster, smarter, and more impactful outcomes than any traditional offshore KPO model can offer.
                         </p>
                     </div>
                 </div>

@@ -17,7 +17,6 @@ const JobEditor = ({ existingJob = null, onClose = null }) => {
         category: 'Finance',
         description: '',
         responsibilities: [''],
-        responsibilities: [''],
         requirements: [''],
         applyLink: ''
     });
@@ -32,7 +31,6 @@ const JobEditor = ({ existingJob = null, onClose = null }) => {
                 type: existingJob.type || 'Full-Time',
                 category: existingJob.category || 'Finance',
                 description: existingJob.description || '',
-                responsibilities: existingJob.responsibilities && existingJob.responsibilities.length > 0 ? existingJob.responsibilities : [''],
                 responsibilities: existingJob.responsibilities && existingJob.responsibilities.length > 0 ? existingJob.responsibilities : [''],
                 requirements: existingJob.requirements && existingJob.requirements.length > 0 ? existingJob.requirements : [''],
                 applyLink: existingJob.applyLink || ''
@@ -77,7 +75,6 @@ const JobEditor = ({ existingJob = null, onClose = null }) => {
                 type: formData.type,
                 category: formData.category,
                 description: formData.description,
-                responsibilities: cleanResponsibilities,
                 responsibilities: cleanResponsibilities,
                 requirements: cleanRequirements,
                 applyLink: formData.applyLink,

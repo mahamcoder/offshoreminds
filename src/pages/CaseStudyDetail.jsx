@@ -13,6 +13,7 @@ const CaseStudyDetail = () => {
     const [loading, setLoading] = useState(true);
     const [isReading, setIsReading] = useState(false);
     const [showVideoModal, setShowVideoModal] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
 
     // Icon mapping for metrics
     const getMetricIcon = (iconName) => {
@@ -60,23 +61,48 @@ const CaseStudyDetail = () => {
     };
 
     // Download functionality
-    const handleDownload = () => {
+    const handleDownload = async () => {
         if (study.downloadLink) {
+            setIsDownloading(true);
             let url = study.downloadLink;
-            // Handle Google Sheets export to XLSX
-            if (url.includes('docs.google.com/spreadsheets')) {
-                url = url.replace(/\/edit.*$/, '/export?format=xlsx');
-            } 
-            // Handle Google Drive file links for direct download
-            else if (url.includes('drive.google.com')) {
-                const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-                const fileId = match ? match[1] : null;
-                if (fileId) {
-                    url = `https://drive.google.com/uc?export=download&id=${fileId}`;
+
+            // Handle Google Sheets/Drive with fallback navigation
+            if (url.includes('docs.google.com/spreadsheets') || url.includes('drive.google.com')) {
+                if (url.includes('docs.google.com/spreadsheets')) {
+                    url = url.replace(/\/edit.*$/, '/export?format=xlsx');
+                } else if (url.includes('drive.google.com')) {
+                    const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                    const fileId = match ? match[1] : null;
+                    if (fileId) {
+                        url = `https://drive.google.com/uc?export=download&id=${fileId}`;
+                    }
                 }
+                window.location.href = url;
+                return;
             }
-            // Use location.assign or window.open for download
-            window.location.href = url;
+
+            // For local assets, use fetch + blob to force download
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                const fileName = study.title.replace(/[^a-z0-9]+/gi, '-').toLowerCase() + '.pdf';
+                link.setAttribute('download', fileName);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(blobUrl);
+            } catch (err) {
+                console.error("Local download failed:", err);
+                // Final fallback
+                window.open(url, '_blank');
+            } finally {
+                setIsDownloading(false);
+            }
             return;
         }
 
@@ -135,7 +161,7 @@ Downloaded from: ${window.location.href}
             if (audioSrc.includes('drive.google.com')) {
                 const match = audioSrc.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
                 const fileId = match ? match[1] : null;
-                
+
                 if (fileId) {
                     audioSrc = `https://drive.google.com/uc?export=download&id=${fileId}`;
                 } else if (audioSrc.includes('folders/')) {
@@ -352,40 +378,42 @@ Downloaded from: ${window.location.href}
 
                                 <button
                                     onClick={handleDownload}
-                                    className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-bloom-blue text-white font-bold rounded-2xl hover:brightness-110 hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all duration-300 flex items-center justify-between group shadow-lg"
+                                    disabled={isDownloading}
+                                    className={`w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-bloom-blue text-white font-bold rounded-2xl hover:brightness-110 hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all duration-300 flex items-center justify-between group shadow-lg ${isDownloading ? 'opacity-70 cursor-wait' : ''}`}
                                 >
-                                    <span className="flex items-center gap-2">Download Study</span>
-                                    <Download size={18} className="group-hover:translate-y-1 transition-transform" />
+                                    <span className="flex items-center gap-2">
+                                        {isDownloading ? 'Preparing Download...' : 'Download Study'}
+                                    </span>
+                                    <Download size={18} className={`${isDownloading ? 'animate-bounce' : 'group-hover:translate-y-1 transition-transform'}`} />
                                 </button>
 
-                                <button
+                                {/* <button
                                     onClick={() => setShowVideoModal(true)}
                                     className="w-full py-4 px-6 bg-gradient-to-r from-purple-400 to-bloom-secondary font-bold rounded-2xl hover:brightness-110 hover:shadow-[0_0_20px_rgba(192,132,252,0.3)] transition-all duration-300 flex items-center justify-between group shadow-lg text-bloom-dark"
                                 >
                                     <span className="flex items-center gap-2">Watch Video</span>
                                     <Video size={18} className="group-hover:scale-110 transition-transform" />
-                                </button>
+                                </button> */}
 
                                 <button
                                     onClick={handleVoice}
-                                    className={`w-full py-4 px-6 border-2 transition-all duration-300 flex items-center justify-between gap-2 group shadow-lg rounded-2xl ${
-                                        isReading 
-                                        ? 'bg-bloom-primary/20 border-bloom-primary text-white' 
-                                        : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'
-                                    }`}
+                                    className={`w-full py-4 px-6 border-2 transition-all duration-300 flex items-center justify-between gap-2 group shadow-lg rounded-2xl ${isReading
+                                            ? 'bg-bloom-primary/20 border-bloom-primary text-white'
+                                            : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'
+                                        }`}
                                 >
                                     <span className="flex items-center gap-2">{isReading ? 'Reading...' : 'Read Aloud'}</span>
                                     <Volume2 size={18} className={`${isReading ? 'animate-pulse' : 'group-hover:scale-110 transition-transform'}`} />
                                 </button>
 
-                                {study.relatedStudyId && (
-                                    <Link 
-                                        to={`/case-study/${study.relatedStudyId}`}
-                                        className="w-full py-4 px-6 border-2 border-white/10 text-white font-bold rounded-2xl hover:bg-white/5 hover:border-white/20 transition-all duration-300 flex items-center justify-center group"
-                                    >
-                                        Get Similar Results
-                                    </Link>
-                                )}
+                                <a
+                                    href="https://calendly.com/gyan-offshoreminds/30min?month=2025-12"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full py-4 px-6 border-2 border-white/10 text-white font-bold rounded-2xl hover:bg-white/5 hover:border-white/20 transition-all duration-300 flex items-center justify-center group"
+                                >
+                                    Get Similar Results
+                                </a>
                             </div>
                         </div>
                     </div>

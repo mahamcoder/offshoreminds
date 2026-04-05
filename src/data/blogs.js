@@ -10,7 +10,8 @@ export const blogsData = [
         category: "Market Trends & Analytics",
         date: "Oct 12, 2024",
         author: "Sarah J.",
-        keywords: ["AI", "commercial real estate", "technology", "analytics"]
+        keywords: ["AI", "commercial real estate", "technology", "analytics"],
+        linkedInUrl: "https://www.linkedin.com/pulse/artificial-intelligence-commercial-real-estate-2025-breakthrough/"
     },
     {
         id: 2,

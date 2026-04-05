@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, Calendar, User, ChevronDown } from 'lucide-react';
+import { ArrowRight, Calendar, User, ChevronDown, Heart, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { blogsData } from '../../data/blogs';
 import { toast } from 'react-hot-toast';
@@ -111,53 +111,101 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
         <>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {visiblePosts.length > 0 ? (
-                    visiblePosts.map((post) => (
-                        <div key={post.id} className="group bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden border border-white/10 hover:border-bloom-primary/50 transition-all duration-300 hover:-translate-y-2 h-full flex flex-col">
-                            {/* Improved Clickable Image Hook */}
-                            <div className="h-56 overflow-hidden relative shrink-0">
-                                <Link to={`/blogs/${post.slug || generateSlug(post.title) || post.id}`} className="block w-full h-full">
-                                    <img
-                                        src={post.image}
-                                        alt={post.title}
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                    />
-                                </Link>
-                                <div className="absolute inset-0 bg-bloom-dark/20 mix-blend-multiply transition-opacity group-hover:opacity-0 pointer-events-none"></div>
-                                <div className="absolute top-4 left-4 bg-bloom-dark/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-bloom-primary border border-white/10">
-                                    {post.category}
+                    visiblePosts.map((post) => {
+                        const detailLink = `/blogs/${post.slug || generateSlug(post.title) || post.id}`;
+                        const isLinkedIn = !!post.linkedInUrl;
+
+                        return (
+                            <div key={post.id} className="group bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden border border-white/10 hover:border-bloom-primary/50 transition-all duration-300 hover:-translate-y-2 h-full flex flex-col">
+                                {/* Improved Clickable Image Hook */}
+                                <div className="h-56 overflow-hidden relative shrink-0">
+                                    {isLinkedIn ? (
+                                        <a href={post.linkedInUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+                                            <img
+                                                src={post.image}
+                                                alt={post.title}
+                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            />
+                                        </a>
+                                    ) : (
+                                        <Link to={detailLink} className="block w-full h-full">
+                                            <img
+                                                src={post.image}
+                                                alt={post.title}
+                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            />
+                                        </Link>
+                                    )}
+                                    <div className="absolute inset-0 bg-bloom-dark/20 mix-blend-multiply transition-opacity group-hover:opacity-0 pointer-events-none"></div>
+                                    <div className="absolute top-4 left-4 bg-bloom-dark/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-bloom-primary border border-white/10">
+                                        {post.category}
+                                    </div>
+                                </div>
+
+                                <div className="p-8 flex flex-col flex-1">
+                                    <div className="flex items-center gap-3 text-xs text-bloom-text-muted mb-4 flex-wrap">
+                                        <div className="flex items-center gap-1">
+                                            <Calendar size={14} /> {post.date}
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                            <User size={14} /> {post.author}
+                                        </div>
+                                        {(post.likesCount > 0 || post.commentsCount > 0) && (
+                                            <div className="flex items-center gap-2 ml-auto">
+                                                {post.likesCount > 0 && (
+                                                    <span className="flex items-center gap-1 text-red-400/70">
+                                                        <Heart size={12} className="fill-red-400/70" />
+                                                        {post.likesCount}
+                                                    </span>
+                                                )}
+                                                {post.commentsCount > 0 && (
+                                                    <span className="flex items-center gap-1 text-bloom-blue/70">
+                                                        <MessageCircle size={12} />
+                                                        {post.commentsCount}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Improved Clickable Title Hook */}
+                                    {isLinkedIn ? (
+                                        <a
+                                            href={post.linkedInUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-bloom-blue transition-colors cursor-pointer leading-tight block"
+                                        >
+                                            {post.title}
+                                        </a>
+                                    ) : (
+                                        <Link
+                                            to={detailLink}
+                                            className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-bloom-blue transition-colors cursor-pointer leading-tight block"
+                                        >
+                                            {post.title}
+                                        </Link>
+                                    )}
+
+                                    <p className="text-bloom-text-muted mb-6 line-clamp-3 text-sm leading-relaxed">
+                                        {post.excerpt}
+                                    </p>
+
+                                    <div className="mt-auto">
+                                        {isLinkedIn ? (
+                                            <a href={post.linkedInUrl} target="_blank" rel="noopener noreferrer" className="text-bloom-secondary font-bold text-sm uppercase tracking-wider flex items-center gap-2 group-hover:text-white transition-colors">
+                                                Explore <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                            </a>
+                                        ) : (
+                                            <Link to={detailLink} className="text-bloom-secondary font-bold text-sm uppercase tracking-wider flex items-center gap-2 group-hover:text-white transition-colors">
+                                                Explore <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                            </Link>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-
-                            <div className="p-8 flex flex-col flex-1">
-                                <div className="flex items-center gap-4 text-xs text-bloom-text-muted mb-4">
-                                    <div className="flex items-center gap-1">
-                                        <Calendar size={14} /> {post.date}
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                        <User size={14} /> {post.author}
-                                    </div>
-                                </div>
-
-                                {/* Improved Clickable Title Hook */}
-                                <Link
-                                    to={`/blogs/${post.slug || generateSlug(post.title) || post.id}`}
-                                    className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-bloom-blue transition-colors cursor-pointer leading-tight block"
-                                >
-                                    {post.title}
-                                </Link>
-
-                                <p className="text-bloom-text-muted mb-6 line-clamp-3 text-sm leading-relaxed">
-                                    {post.excerpt}
-                                </p>
-
-                                <div className="mt-auto">
-                                    <Link to={`/blogs/${post.slug || generateSlug(post.title) || post.id}`} className="text-bloom-secondary font-bold text-sm uppercase tracking-wider flex items-center gap-2 group-hover:text-white transition-colors">
-                                        Explore <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-                    ))
+                        );
+                    })
                 ) : (
                     <div className="col-span-full text-center py-20">
                         <p className="text-bloom-text-muted text-lg">No blog posts found matching your criteria.</p>

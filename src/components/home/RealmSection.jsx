@@ -12,8 +12,8 @@ const RealmSection = () => {
                     Realm Of Intelligence
                 </h2>
                 
-                <p className="text-bloom-text-muted max-w-2xl mx-auto leading-relaxed">
-                   In our global operations, the expertise of our skilled professionals in India is pivotal. They deliver top-notch services that redefine outsourcing in the real estate industry by seamlessly integrating their knowledge with advanced systems, resulting in unparalleled service quality.
+                <p className="text-bloom-text-muted max-w-4xl mx-auto leading-relaxed">
+                  At the core of our global delivery model sits an elite team of knowledge professionals operating from the world's most proven hub for high-performance KPO. Powered by proprietary intelligent workflows, decades of combined domain expertise, and an unrelenting commitment to accuracy, our bench of domain-certified analysts, financial modellers, accountants, and strategic advisors does not simply process work. They think, strategize, and deliver Fortune-level intelligence to every engagement, at a fraction of the cost of building an in-house team. This is not outsourcing. This is your unfair advantage
                 </p>
             </div>
         </section>

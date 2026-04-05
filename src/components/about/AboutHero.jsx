@@ -20,7 +20,7 @@ const AboutHero = () => {
 
                 <Reveal delay={200}>
                     <p className="text-bloom-text-muted text-lg md:text-xl max-w-3xl mx-auto mb-10 leading-relaxed font-light">
-                        Your Trusted Real Estate and Accounting Knowledge Process Outsourcing Partner.
+                        The KPO Partner That Ambitious Businesses Worldwide Trust to Deliver.
                     </p>
                 </Reveal>
 

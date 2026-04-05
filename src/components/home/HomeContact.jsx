@@ -9,7 +9,7 @@ const HomeContact = () => {
         setResult("Sending...");
 
         const formData = new FormData(event.target);
-        formData.append("access_key", "b224d594-f4b3-4fa6-b8ce-363802a1b882");
+        formData.append("access_key", import.meta.env.VITE_WEB3FORMS_ACCESS_KEY);
 
         try {
             const response = await fetch("https://api.web3forms.com/submit", {
@@ -44,12 +44,12 @@ const HomeContact = () => {
                     <div className="text-white">
                         <div className="w-16 h-1 bg-bloom-secondary mb-8"></div>
                         <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-bloom-blue">
-                            Get Your Free <br /> Consultation
+                            The Smartest Business <br /> Decision You Will <br /> Make Today Is Free
                         </h2>
                         <p className="text-bloom-text-muted text-lg mb-8 max-w-lg leading-relaxed font-light">
-                            Ready to optimize your real estate operations? Connect with our experts to discuss your specific needs and how we can help you scale efficiently.
+                            Try Offshore Minds free for 30 days, zero risk, zero commitment, and 100% dedicated to delivering results for your business.
                         </p>
-                        <a href="https://calendly.com/gyan-offshoreminds/30min?month=2025-12" target="_blank" rel="noopener noreferrer" className="btn-glass px-8 py-3 rounded-full font-medium inline-block">Schedule Now</a>
+                        <a href="https://calendly.com/gyan-offshoreminds/30min?month=2025-12" target="_blank" rel="noopener noreferrer" className="btn-glass px-8 py-3 rounded-full font-medium inline-block tracking-wider">START FOR FREE TODAY</a>
                     </div>
 
                     {/* Right: Form */}

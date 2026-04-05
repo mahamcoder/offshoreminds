@@ -71,7 +71,32 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-      <Toaster position="bottom-right" reverseOrder={false} />
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          style: {
+            background: '#161331',
+            color: '#EAEAEA',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '1rem',
+            padding: '1rem',
+            backdropFilter: 'blur(10px)',
+          },
+          success: {
+            iconTheme: {
+              primary: '#5D5CDE',
+              secondary: '#fff',
+            },
+          },
+          loading: {
+            iconTheme: {
+              primary: '#5D5CDE',
+              secondary: '#161331',
+            },
+          }
+        }}
+      />
       <RouterProvider router={router} />
     </>
   );

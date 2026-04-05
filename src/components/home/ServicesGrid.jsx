@@ -10,7 +10,8 @@ const ServicesGrid = () => {
                     <h2 className="text-4xl md:text-5xl font-bold mb-4 font-heading">
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-bloom-blue">Our Services</span>
                     </h2>
-                    <p className="text-bloom-text-muted text-lg max-w-2xl mx-auto">Your Strategic partner in specialized and efficient real estate knowledge process outsourcing (KPO) services.</p>
+                    <p className="text-bloom-text-muted text-lg max-w-3xl mx-auto"> Intelligent KPO Services Built to Drive Results and Dominate Markets.
+Your most trusted strategic partner in AI-powered, expert-led KPO — built to give serious investors an unrivalled edge.</p>
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

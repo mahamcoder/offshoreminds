@@ -20,9 +20,9 @@ const WhoWeAre = () => {
                                 </div>
                             </Reveal>
                             <Reveal delay={200}>
-                                <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
-                                    Premier Destination for <br />
-                                    <span className="text-bloom-primary">Real Estate KPO</span>
+                                <h2 className="text-4xl md:text-2xl font-bold text-white leading-tight">
+                                    Premier Intelligent <br /> Automation-Powered KPO Partner <br />
+                                    <span className="text-bloom-primary">for Real Estate & Accounting Firms</span>
                                 </h2>
                             </Reveal>
                         </div>
@@ -30,12 +30,13 @@ const WhoWeAre = () => {
                         <div className="space-y-6 text-lg text-bloom-text-muted font-light leading-relaxed">
                             <Reveal delay={300}>
                                 <p>
-                                    Welcome to Offshore Minds. With a wealth of experience and expertise, our dedicated team specializes in a wide range of services including accounting, financial analysis, statement preparation, lease administration, and asset management.
+                                   Welcome to Offshore Minds — a premier KPO for Commercial Real Estate and Accounting firms. Our expert team combines advanced offshore talent with deep financial and real estate knowledge to deliver accurate, actionable insights that drive smarter, faster growth.
                                 </p>
                             </Reveal>
                             <Reveal delay={400}>
                                 <p>
-                                    We pride ourselves on our innovative approach to offshore services, continually striving to redefine industry standards and exceed client expectations with solutions tailored to your specific needs.
+                                    By harnessing cognitive automation and skilled professionals, we become a seamless extension of your organisation, helping you cut costs, boost efficiency, and focus on growth.<br/>
+We don't follow industry benchmarks. We redefine them
                                 </p>
                             </Reveal>
                         </div>
@@ -45,7 +46,7 @@ const WhoWeAre = () => {
                     <div className="relative">
                         <div className="absolute inset-0 bg-gradient-to-tr from-bloom-blue/20 to-purple-500/20 rounded-3xl blur-2xl"></div>
                         <Reveal delay={200}>
-                            <div className="relative bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl p-10 shadow-2xl hover:border-white/20 transition-all duration-500 group">
+                            <div className="relative bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl p-16 shadow-2xl hover:border-white/20 transition-all duration-500 group">
                                 <div className="flex flex-col gap-8">
                                     <div className="flex items-start justify-between">
                                         <div>

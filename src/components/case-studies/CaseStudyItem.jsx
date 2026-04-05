@@ -12,8 +12,10 @@ const CaseStudyItem = ({ study, isReversed }) => {
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-bloom-dark/30 mix-blend-multiply"></div>
-                <div className="absolute top-6 left-6 bg-bloom-dark/90 text-bloom-primary px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest backdrop-blur-sm border border-white/10">
-                    {study.category || "Case Study"}
+                <div className="absolute top-6 left-6 flex flex-col gap-2">
+                    <div className="bg-bloom-dark/90 text-bloom-primary px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest backdrop-blur-sm border border-white/10 whitespace-nowrap w-fit">
+                        {Array.isArray(study.category) ? study.category.join(" / ") : (study.category || "Case Study")}
+                    </div>
                 </div>
             </div>
 
@@ -67,12 +69,16 @@ const CaseStudyItem = ({ study, isReversed }) => {
                     ))}
                 </div>
 
-                <Link
-                    to={`/case-studies/${study.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-                    className="flex items-center gap-2 text-white font-bold text-sm uppercase tracking-wider hover:text-bloom-primary transition-all w-fit group-hover:translate-x-2 duration-300"
-                >
-                    Read Full Case Study <ArrowRight size={16} />
-                </Link>
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <Link
+                        to={`/case-studies/${study.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                        className="flex items-center gap-2 text-white font-bold text-sm uppercase tracking-wider hover:text-bloom-primary transition-all w-fit group-hover:translate-x-2 duration-300"
+                    >
+                        Read Full Case Study <ArrowRight size={16} />
+                    </Link>
+
+
+                </div>
             </div>
         </div>
     );

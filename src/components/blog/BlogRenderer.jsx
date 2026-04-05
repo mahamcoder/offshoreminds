@@ -4,21 +4,57 @@ import DOMPurify from 'dompurify';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
     ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell,
-    AreaChart, Area
+    AreaChart, Area, ComposedChart
 } from 'recharts';
+import React, { Component } from 'react';
 import Reveal from '../common/Reveal';
+
+class ChartErrorBoundary extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false, error: null };
+    }
+
+    static getDerivedStateFromError(error) {
+        return { hasError: true, error };
+    }
+
+    componentDidCatch(error, errorInfo) {
+        console.error("Chart Rendering Error:", error, errorInfo);
+    }
+
+    render() {
+        if (this.state.hasError) {
+            return (
+                <div className="my-12 p-8 bg-red-500/10 border border-red-500/20 rounded-3xl text-center">
+                    <h4 className="text-red-400 font-bold mb-2">Error Displaying Chart</h4>
+                    <p className="text-sm text-gray-400">There was an issue rendering this interactive chart data.</p>
+                </div>
+            );
+        }
+        return this.props.children;
+    }
+}
 
 const ChartCard = ({ chartData }) => {
     const [viewMode, setViewMode] = useState('chart');
-    const { type, title, data } = chartData;
+    const { type, title, data, seriesConfig = {}, isStacked = false } = chartData;
 
     // Premium Color Palette
     const COLORS = ['#FF385C', '#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899'];
     const gridColor = "rgba(255,255,255,0.05)";
     const textColor = "#94A3B8";
 
+    const dataKeys = data.length > 0 ? Object.keys(data[0]).filter(key => key !== 'name') : ['value'];
+    const isMultiSeries = dataKeys.length > 1;
+
+    // Determine if we need a Composed chart (mixed types or specific config)
+    const hasMixedTypes = Object.values(seriesConfig).some(c => c.type && c.type !== type);
+    const hasSecondaryAxis = Object.values(seriesConfig).some(c => c.yAxisId === 'right');
+    const isComposed = type === 'composed' || hasMixedTypes || hasSecondaryAxis;
+
     return (
-        <div className="my-12 p-1 md:p-8 bg-white/[0.03] backdrop-blur-md rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden group">
+        <div className="my-12 p-1 md:p-8 bg-white/[0.03] backdrop-blur-md rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden group text-left">
             <div className="absolute top-0 right-0 w-32 h-32 bg-bloom-primary/5 blur-[60px] rounded-full group-hover:bg-bloom-primary/10 transition-colors"></div>
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 px-4 md:px-0">
@@ -48,7 +84,53 @@ const ChartCard = ({ chartData }) => {
             <div className="h-[400px] w-full px-4 md:px-0">
                 {viewMode === 'chart' ? (
                     <ResponsiveContainer width="100%" height="100%">
-                        {type === 'bar' ? (
+                        {isComposed ? (
+                            <ComposedChart data={data} margin={{ top: 10, right: hasSecondaryAxis ? 10 : 30, left: -20, bottom: 0 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
+                                <XAxis dataKey="name" stroke={textColor} fontSize={12} tickLine={false} axisLine={false} tick={{ dy: 10 }} />
+                                <YAxis yAxisId="left" stroke={textColor} fontSize={12} tickLine={false} axisLine={false} />
+                                {hasSecondaryAxis && <YAxis yAxisId="right" orientation="right" stroke={textColor} fontSize={12} tickLine={false} axisLine={false} />}
+                                <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: '#1E1B4B',
+                                        border: '1px solid rgba(255,255,255,0.2)',
+                                        borderRadius: '12px',
+                                        boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)',
+                                        padding: '8px 12px'
+                                    }}
+                                    itemStyle={{ fontWeight: 'bold', fontSize: '14px' }}
+                                    labelStyle={{ color: '#94A3B8', marginBottom: '4px', fontWeight: 'bold' }}
+                                />
+                                <Legend verticalAlign="top" height={36} wrapperStyle={{ paddingBottom: '20px', fontSize: '12px', fontWeight: 'bold' }} />
+                                
+                                {dataKeys.map((key, index) => {
+                                    const config = seriesConfig[key] || { type: type || 'bar' };
+                                    const sType = config.type || type || 'bar';
+                                    const yAxisId = config.yAxisId || 'left';
+                                    const color = COLORS[index % COLORS.length];
+
+                                    if (sType === 'bar') {
+                                        return <Bar key={key} dataKey={key} name={key} yAxisId={yAxisId} fill={color} radius={[6, 6, 0, 0]} stackId={isStacked ? 'a' : undefined} />;
+                                    } else if (sType === 'area') {
+                                        return (
+                                            <Area 
+                                                key={key} 
+                                                type="monotone" 
+                                                dataKey={key} 
+                                                name={key} 
+                                                yAxisId={yAxisId} 
+                                                stroke={color} 
+                                                fill={color} 
+                                                fillOpacity={0.3} 
+                                                stackId={isStacked ? 'a' : undefined} 
+                                            />
+                                        );
+                                    } else {
+                                        return <Line key={key} type="monotone" dataKey={key} name={key} yAxisId={yAxisId} stroke={color} strokeWidth={4} dot={{ r: 6, fill: color, strokeWidth: 2, stroke: '#fff' }} />;
+                                    }
+                                })}
+                            </ComposedChart>
+                        ) : type === 'bar' ? (
                             <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                 <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
                                 <XAxis dataKey="name" stroke={textColor} fontSize={12} tickLine={false} axisLine={false} tick={{ dy: 10 }} />
@@ -62,14 +144,21 @@ const ChartCard = ({ chartData }) => {
                                         boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)',
                                         padding: '8px 12px'
                                     }}
-                                    itemStyle={{ color: '#ffffff', fontWeight: 'bold', fontSize: '14px' }}
+                                    itemStyle={{ fontWeight: 'bold', fontSize: '14px' }}
                                     labelStyle={{ color: '#94A3B8', marginBottom: '4px', fontWeight: 'bold' }}
                                 />
-                                <Bar dataKey="value" name="Value" radius={[6, 6, 0, 0]} barSize={40}>
-                                    {data.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} fillOpacity={0.8} />
-                                    ))}
-                                </Bar>
+                                {isMultiSeries && <Legend verticalAlign="top" height={36} wrapperStyle={{ paddingBottom: '20px', fontSize: '12px', fontWeight: 'bold' }} />}
+                                {dataKeys.map((key, index) => (
+                                    <Bar 
+                                        key={key} 
+                                        dataKey={key} 
+                                        name={key} 
+                                        fill={COLORS[index % COLORS.length]} 
+                                        radius={[6, 6, 0, 0]} 
+                                        barSize={isMultiSeries ? undefined : 40} 
+                                        stackId={isStacked ? 'a' : undefined}
+                                    />
+                                ))}
                             </BarChart>
                         ) : type === 'line' ? (
                             <LineChart data={data} margin={{ top: 10, right: 30, left: -20, bottom: 0 }}>
@@ -84,18 +173,23 @@ const ChartCard = ({ chartData }) => {
                                         boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)',
                                         padding: '8px 12px'
                                     }}
-                                    itemStyle={{ color: '#ffffff', fontWeight: 'bold', fontSize: '14px' }}
+                                    itemStyle={{ fontWeight: 'bold', fontSize: '14px' }}
                                     labelStyle={{ color: '#94A3B8', marginBottom: '4px', fontWeight: 'bold' }}
                                     cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 2 }}
                                 />
-                                <Line
-                                    type="monotone"
-                                    dataKey="value"
-                                    stroke="#3B82F6"
-                                    strokeWidth={4}
-                                    dot={{ r: 6, fill: '#3B82F6', strokeWidth: 2, stroke: '#fff' }}
-                                    activeDot={{ r: 8, strokeWidth: 0 }}
-                                />
+                                {isMultiSeries && <Legend verticalAlign="top" height={36} wrapperStyle={{ paddingBottom: '20px', fontSize: '12px', fontWeight: 'bold' }} />}
+                                {dataKeys.map((key, index) => (
+                                    <Line
+                                        key={key}
+                                        type="monotone"
+                                        dataKey={key}
+                                        name={key}
+                                        stroke={COLORS[index % COLORS.length]}
+                                        strokeWidth={4}
+                                        dot={{ r: 6, fill: COLORS[index % COLORS.length], strokeWidth: 2, stroke: '#fff' }}
+                                        activeDot={{ r: 8, strokeWidth: 0 }}
+                                    />
+                                ))}
                             </LineChart>
                         ) : type === 'pie' ? (
                             <PieChart>
@@ -106,7 +200,7 @@ const ChartCard = ({ chartData }) => {
                                     innerRadius={80}
                                     outerRadius={120}
                                     paddingAngle={5}
-                                    dataKey="value"
+                                    dataKey={dataKeys[0]}
                                     stroke="none"
                                 >
                                     {data.map((entry, index) => (
@@ -128,10 +222,12 @@ const ChartCard = ({ chartData }) => {
                         ) : (
                             <AreaChart data={data} margin={{ top: 10, right: 30, left: -20, bottom: 0 }}>
                                 <defs>
-                                    <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3} />
-                                        <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0} />
-                                    </linearGradient>
+                                    {dataKeys.map((key, index) => (
+                                        <linearGradient key={`grad-${key}`} id={`color-${key}`} x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor={COLORS[index % COLORS.length]} stopOpacity={0.3} />
+                                            <stop offset="95%" stopColor={COLORS[index % COLORS.length]} stopOpacity={0} />
+                                        </linearGradient>
+                                    ))}
                                 </defs>
                                 <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
                                 <XAxis dataKey="name" stroke={textColor} fontSize={12} tickLine={false} axisLine={false} tick={{ dy: 10 }} />
@@ -144,10 +240,23 @@ const ChartCard = ({ chartData }) => {
                                         boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)',
                                         padding: '8px 12px'
                                     }}
-                                    itemStyle={{ color: '#ffffff', fontWeight: 'bold', fontSize: '14px' }}
+                                    itemStyle={{ fontWeight: 'bold', fontSize: '14px' }}
                                     labelStyle={{ color: '#94A3B8', marginBottom: '4px', fontWeight: 'bold' }}
                                 />
-                                <Area type="monotone" dataKey="value" stroke="#8B5CF6" strokeWidth={3} fillOpacity={1} fill="url(#colorValue)" />
+                                {isMultiSeries && <Legend verticalAlign="top" height={36} wrapperStyle={{ paddingBottom: '20px', fontSize: '12px', fontWeight: 'bold' }} />}
+                                {dataKeys.map((key, index) => (
+                                    <Area 
+                                        key={key}
+                                        type="monotone" 
+                                        dataKey={key} 
+                                        name={key}
+                                        stroke={COLORS[index % COLORS.length]} 
+                                        strokeWidth={3} 
+                                        fillOpacity={1} 
+                                        fill={`url(#color-${key})`} 
+                                        stackId={isStacked ? 'a' : undefined}
+                                    />
+                                ))}
                             </AreaChart>
                         )}
                     </ResponsiveContainer>
@@ -157,14 +266,20 @@ const ChartCard = ({ chartData }) => {
                             <thead>
                                 <tr className="border-b border-white/10 text-gray-400">
                                     <th className="py-4 font-bold uppercase tracking-wider">Category</th>
-                                    <th className="py-4 font-bold uppercase tracking-wider text-right">Value</th>
+                                    {dataKeys.map(key => (
+                                        <th key={key} className="py-4 font-bold uppercase tracking-wider text-right">{key}</th>
+                                    ))}
                                 </tr>
                             </thead>
                             <tbody>
                                 {data.map((item, i) => (
                                     <tr key={i} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                                        <td className="py-4 text-white font-medium">{item.name}</td>
-                                        <td className="py-4 text-bloom-primary font-bold text-right">{item.value}</td>
+                                        <td className="py-4 text-white font-medium">{typeof item.name === 'object' ? JSON.stringify(item.name) : item.name}</td>
+                                        {dataKeys.map(key => (
+                                            <td key={key} className="py-4 text-bloom-primary font-bold text-right">
+                                                {typeof item[key] === 'object' ? JSON.stringify(item[key]) : item[key]}
+                                            </td>
+                                        ))}
                                     </tr>
                                 ))}
                             </tbody>
@@ -251,7 +366,11 @@ const BlogRenderer = ({ content }) => {
                                 return <></>;
                             }
 
-                            return <ChartCard chartData={chartData} />;
+                            return (
+                                <ChartErrorBoundary>
+                                    <ChartCard chartData={chartData} />
+                                </ChartErrorBoundary>
+                            );
                         } catch (e) {
                             console.error("General chart error:", e);
                             return null;

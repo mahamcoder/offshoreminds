@@ -7,14 +7,40 @@ import {
 import { Link } from 'react-router-dom';
 
 const OffshoreMindsAI = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
+  const [result, setResult] = useState("");
 
-  const handleJoinWaitlist = (e) => {
+  const handleJoinWaitlist = async (e) => {
     e.preventDefault();
-    // In a real app, you'd handle the form submission here
-    console.log('Waitlist joined with email:', email);
-    setEmail('');
-    alert('Thank you for joining the waitlist! We will be in touch soon.');
+    setResult("Sending...");
+    
+    const formData = new FormData(e.target);
+    formData.append("access_key", import.meta.env.VITE_WEB3FORMS_ACCESS_KEY);
+    formData.append("subject", "New Private Beta Waitlist Joiner");
+    formData.append("from_name", "Offshore Minds AI");
+    formData.append("message", `A new user has joined the waitlist for Offshore Minds AI.\n\nUser Email: ${email}`);
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setResult("Thank you for joining! We'll be in touch soon.");
+        setEmail("");
+        // Clear status after 5 seconds
+        setTimeout(() => setResult(""), 5000);
+      } else {
+        console.error("Error", data);
+        setResult("Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error", error);
+      setResult("Connection error. Please try again.");
+    }
   };
 
   return (
@@ -191,6 +217,7 @@ const OffshoreMindsAI = () => {
               <form onSubmit={handleJoinWaitlist} className="w-full max-w-md flex flex-col sm:flex-row gap-3">
                 <input 
                   type="email" 
+                  name="email"
                   required
                   placeholder="Enter your email address"
                   value={email}
@@ -205,6 +232,15 @@ const OffshoreMindsAI = () => {
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </form>
+              {result && (
+                <motion.p 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`mt-4 text-sm font-medium ${result.includes("Error") || result.includes("wrong") ? "text-red-400" : "text-bloom-secondary"}`}
+                >
+                  {result}
+                </motion.p>
+              )}
             </div>
           </motion.div>
         </section>
