@@ -4,6 +4,7 @@ import { jobsData } from '../data/jobs'; // Keep as fallback/initial state if ne
 import { db } from '../firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { Briefcase, MapPin, Clock, ArrowRight, X, Globe, Zap, TrendingUp, Heart } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const toSlug = (text) => {
     return text
@@ -127,6 +128,12 @@ const Careers = () => {
 
     return (
         <div className="pt-20 min-h-screen bg-bloom-dark">
+            <SEO
+                title={selectedJob ? `${selectedJob.title} — Careers` : 'Careers'}
+                description={selectedJob ? `Join Offshore Minds as ${selectedJob.title}. Location: ${selectedJob.location}. Apply now.` : 'Join Offshore Minds — explore career opportunities in real estate financial analysis, accounting, and asset management.'}
+                path={selectedJob ? `/careers/${id}` : '/careers'}
+                keywords="offshore minds careers, real estate jobs, financial analyst careers, accounting jobs"
+            />
             {/* Hero Section */}
             <section className="relative py-20 overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-bloom-primary/10 to-transparent"></div>

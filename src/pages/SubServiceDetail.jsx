@@ -6,6 +6,7 @@ import Reveal from '../components/common/Reveal';
 import HomeContact from '../components/home/HomeContact';
 import ServiceTeam from '../components/services/ServiceTeam';
 import ServiceCard from '../components/ServiceCard';
+import SEO from '../components/SEO';
 
 const SubServiceDetail = () => {
     const { serviceId, subServiceId } = useParams();
@@ -18,6 +19,7 @@ const SubServiceDetail = () => {
     if (!service || !subService) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-bloom-dark text-white">
+                <SEO title="Service Not Found" description="The requested service page was not found." path={`/services/${serviceId}/sub/${subServiceId}`} />
                 <div className="text-center">
                     <h2 className="text-2xl font-bold mb-4">Service Not Found</h2>
                     <Link to="/services" className="text-bloom-blue hover:text-white transition-colors">Back to Services</Link>
@@ -26,8 +28,34 @@ const SubServiceDetail = () => {
         );
     }
 
+    const subServiceSchema = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": subService.title,
+        "description": subService.description,
+        "url": `https://offshoreminds.com/services/${serviceId}/sub/${subServiceId}`,
+        "provider": {
+            "@type": "Organization",
+            "name": "Offshore Minds",
+            "url": "https://offshoreminds.com"
+        },
+        "serviceType": subService.title,
+        "isPartOf": {
+            "@type": "Service",
+            "name": service.title,
+            "url": `https://offshoreminds.com/services/${serviceId}`
+        }
+    };
+
     return (
         <div className="bg-bloom-dark min-h-screen text-white">
+            <SEO
+                title={`${subService.title} — ${service.title}`}
+                description={subService.description}
+                path={`/services/${serviceId}/sub/${subServiceId}`}
+                keywords={`${subService.title}, ${service.title}, offshore minds, real estate outsourcing`}
+                schema={subServiceSchema}
+            />
             {/* Hero Section */}
             <section className="relative min-h-[100vh] flex items-center overflow-hidden">
                 {/* Background Image & Effects */}

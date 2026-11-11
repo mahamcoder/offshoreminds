@@ -1,8 +1,14 @@
 import Reveal from '../components/common/Reveal';
+import SEO from '../components/SEO';
 
 const PrivacyPolicy = () => {
     return (
         <div className="bg-bloom-dark min-h-screen text-white pt-20">
+            <SEO
+                title="Privacy Policy"
+                description="Privacy Policy for Offshore Minds — how we collect, use, and protect your personal information."
+                path="/privacy-policy"
+            />
             {/* Hero Section */}
             <div className="relative py-20 overflow-hidden">
                 <div className="absolute inset-0 bg-bloom-primary/5"></div>

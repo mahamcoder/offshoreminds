@@ -7,6 +7,7 @@ import ServiceCard from '../components/ServiceCard';
 import { servicesData } from '../data/services';
 import { caseStudiesData, caseStudyCategories } from '../data/caseStudies';
 import { ChevronDown } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const CaseStudies = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -36,6 +37,12 @@ const CaseStudies = () => {
 
   return (
     <div className="bg-bloom-dark min-h-screen text-white">
+      <SEO
+        title="Case Studies"
+        description="Explore real-world case studies demonstrating how Offshore Minds delivers real estate financial modeling, underwriting, and asset management support."
+        path="/case-studies"
+        keywords="commercial real estate case studies, financial modeling examples, ARGUS modeling results, real estate underwriting portfolio"
+      />
       {/* Bloom Theme Hero */}
       <section className="relative pt-32 pb-20 overflow-hidden">
         {/* Background Effects */}

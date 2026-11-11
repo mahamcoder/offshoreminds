@@ -1,8 +1,14 @@
 import Reveal from '../components/common/Reveal';
+import SEO from '../components/SEO';
 
 const Terms = () => {
     return (
         <div className="bg-bloom-dark min-h-screen text-white pt-20">
+            <SEO
+                title="Terms & Conditions"
+                description="Terms and conditions for using Offshore Minds website and services."
+                path="/terms-and-conditions"
+            />
             {/* Hero Section */}
             <div className="relative py-20 overflow-hidden">
                 <div className="absolute inset-0 bg-bloom-dark"></div>

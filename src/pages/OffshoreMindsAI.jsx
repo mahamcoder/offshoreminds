@@ -5,6 +5,7 @@ import {
   Database, UserCheck, Briefcase, Landmark, ArrowRight, ChevronRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const OffshoreMindsAI = () => {
   const [email, setEmail] = useState("");
@@ -45,6 +46,12 @@ const OffshoreMindsAI = () => {
 
   return (
     <div className="min-h-screen bg-bloom-dark text-white pt-24 pb-20 overflow-hidden relative selection:bg-bloom-primary/30">
+      <SEO
+        title="Offshore Minds AI — Cognitive Intelligence for CRE"
+        description="Experience the future of real estate decision-making. Offshore Minds AI automates underwriting, lease abstraction, and market intelligence."
+        path="/offshoreminds-ai"
+        keywords="real estate AI, CRE automation, AI underwriting, cognitive intelligence real estate"
+      />
       
       {/* Space Background Effects */}
       <div className="absolute inset-0 z-0 pointer-events-none">

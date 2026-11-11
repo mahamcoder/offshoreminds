@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import Reveal from '../components/common/Reveal';
 import { caseStudiesData } from '../data/caseStudies';
+import SEO from '../components/SEO';
 
 const CaseStudyDetail = () => {
     const { id } = useParams();
@@ -236,6 +237,20 @@ Downloaded from: ${window.location.href}
 
     return (
         <div className="bg-bloom-dark min-h-screen text-white pt-24 pb-20">
+            <SEO
+                title={study.title}
+                description={study.atGlance || study.challenge}
+                path={`/case-studies/${study.id}`}
+                keywords={study.keywords ? study.keywords.join(', ') : 'case study, real estate modeling'}
+                schema={{
+                    "@context": "https://schema.org",
+                    "@type": "Article",
+                    "headline": study.title,
+                    "description": study.atGlance || study.challenge,
+                    "publisher": { "@type": "Organization", "name": "Offshore Minds" },
+                    "url": `https://offshoreminds.com/case-studies/${study.id}`
+                }}
+            />
             {/* Hero Section */}
             <div className="w-full h-[400px] md:h-[600px] relative overflow-hidden">
                 <img

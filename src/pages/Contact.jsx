@@ -3,6 +3,7 @@ import ContactInfo from '../components/contact/ContactInfo';
 import FAQ from '../components/contact/FAQ';
 import { Send } from 'lucide-react';
 import Reveal from '../components/common/Reveal';
+import SEO from '../components/SEO';
 
 const Contact = () => {
     const [result, setResult] = useState("");
@@ -35,6 +36,12 @@ const Contact = () => {
 
     return (
         <div className="bg-bloom-dark min-h-screen text-white">
+            <SEO
+                title="Contact Us"
+                description="Get in touch with Offshore Minds. We provide specialized real estate outsourcing services — financial analysis, accounting, asset management, and more."
+                path="/contact"
+                keywords="contact offshore minds, real estate outsourcing inquiries, CRE support"
+            />
             {/* Bloom Theme Hero & Form Section */}
             <section className="relative pt-32 pb-20 lg:pb-32 overflow-hidden">
                 {/* Background Effects */}

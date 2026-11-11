@@ -1,9 +1,15 @@
 import Reveal from '../components/common/Reveal';
 import { AlertCircle } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const Disclaimers = () => {
     return (
         <div className="bg-bloom-dark min-h-screen text-white pt-20">
+            <SEO
+                title="Disclaimers"
+                description="Important disclaimers and legal terms regarding the use and availability of Offshore Minds website."
+                path="/disclaimers"
+            />
             {/* Hero Section */}
             <div className="relative py-20 overflow-hidden text-center">
                 <div className="absolute inset-0 bg-gradient-to-b from-bloom-primary/5 to-transparent"></div>

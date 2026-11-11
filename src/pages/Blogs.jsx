@@ -6,6 +6,7 @@ import Reveal from '../components/common/Reveal';
 import { blogCategories } from '../data/blogs';
 import ServiceCard from '../components/ServiceCard';
 import { servicesData } from '../data/services';
+import SEO from '../components/SEO';
 
 const Blogs = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -15,6 +16,12 @@ const Blogs = () => {
 
   return (
     <div className="bg-bloom-dark min-h-screen text-white">
+      <SEO
+        title="Blog"
+        description="Read the latest insights on commercial real estate, financial modeling, accounting trends, and AI in CRE from the Offshore Minds team."
+        path="/blogs"
+        keywords="real estate blog, CRE insights, financial modeling articles, accounting trends, AI in real estate"
+      />
       {/* Bloom Theme Hero */}
       <section className="relative pt-32 pb-20 overflow-hidden">
         {/* Background Effects */}

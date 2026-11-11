@@ -8,6 +8,7 @@ import WhyChooseUs from '../components/services/WhyChooseUs';
 import HomeContact from '../components/home/HomeContact';
 import { ArrowLeft } from 'lucide-react';
 import Reveal from '../components/common/Reveal';
+import SEO from '../components/SEO';
 
 const ServiceDetail = () => {
   const { serviceId } = useParams();
@@ -16,6 +17,7 @@ const ServiceDetail = () => {
   if (!service) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bloom-dark text-white">
+        <SEO title="Service Not Found" description="The requested service page was not found." path={`/services/${serviceId}`} />
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">Service Not Found</h2>
           <Link to="/services" className="text-bloom-blue hover:text-white transition-colors">Back to Services</Link>
@@ -24,8 +26,31 @@ const ServiceDetail = () => {
     );
   }
 
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": service.title,
+    "description": service.shortDescription,
+    "url": `https://offshoreminds.com/services/${service.id}`,
+    "provider": {
+      "@type": "Organization",
+      "name": "Offshore Minds",
+      "url": "https://offshoreminds.com"
+    },
+    "serviceType": service.title,
+    "areaServed": "Worldwide"
+  };
+
   return (
     <div className="bg-bloom-dark min-h-screen text-white">
+      <SEO
+        title={service.title}
+        description={service.shortDescription}
+        path={`/services/${service.id}`}
+        keywords={`${service.title}, offshore minds, real estate outsourcing, CRE services`}
+        schema={serviceSchema}
+      />
+
       {/* Bloom Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
         {/* Background Effects */}

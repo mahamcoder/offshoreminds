@@ -10,10 +10,17 @@ import CaseStudyPreview from '../components/home/CaseStudyPreview';
 import LogoStrip from '../components/home/LogoStrip';
 import Testimonials from '../components/home/Testimonials';
 import HomeContact from '../components/home/HomeContact';
+import SEO from '../components/SEO';
 
 const Home = () => {
   return (
     <>
+      <SEO
+        title={null}
+        description="Offshore Minds provides specialized Knowledge Process Outsourcing (KPO) services for the real estate industry — financial analysis, asset management, accounting, ARGUS modeling, and lease administration."
+        path="/"
+        keywords="real estate outsourcing, KPO, financial analysis, asset management, accounting services, ARGUS modeling, underwriting, commercial real estate, CRE outsourcing, offshore real estate services"
+      />
       <HeroModern />
 
       {/* <Hero 

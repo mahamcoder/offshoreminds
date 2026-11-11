@@ -15,6 +15,7 @@ import { generateSlug } from '../utils/slug';
 import Reveal from '../components/common/Reveal';
 import BlogRenderer from '../components/blog/BlogRenderer';
 import { blogsData } from '../data/blogs';
+import SEO from '../components/SEO';
 
 // ── helpers ────────────────────────────────────────────────────────────────────
 
@@ -418,6 +419,22 @@ const BlogDetail = () => {
 
     return (
         <div className="bg-bloom-dark min-h-screen text-white pt-24 pb-20">
+            <SEO
+                title={blog.title}
+                description={blog.excerpt}
+                path={`/blogs/${blog.id}`}
+                keywords={blog.keywords ? blog.keywords.join(', ') : ''}
+                schema={{
+                    "@context": "https://schema.org",
+                    "@type": "BlogPosting",
+                    "headline": blog.title,
+                    "description": blog.excerpt,
+                    "author": { "@type": "Person", "name": blog.author },
+                    "datePublished": blog.date,
+                    "publisher": { "@type": "Organization", "name": "Offshore Minds" },
+                    "url": `https://offshoreminds.com/blogs/${blog.id}`
+                }}
+            />
             {/* Hero Image */}
             <div className="w-full h-[400px] md:h-[500px] relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-bloom-dark to-transparent z-10"></div>

@@ -5,10 +5,17 @@ import Reveal from '../components/common/Reveal';
 import ServiceTeam from '../components/services/ServiceTeam';
 import HorizontalTools from '../components/services/HorizontalTools';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const Services = () => {
     return (
         <div className="bg-bloom-dark min-h-screen text-white">
+            <SEO
+                title="Services"
+                description="Explore Offshore Minds' comprehensive real estate outsourcing services — financial analysis, accounting, analytics, asset management, financial modeling, and marketing for CRE firms."
+                path="/services"
+                keywords="real estate services, CRE outsourcing, financial analysis, accounting, asset management, financial modeling, analytics, marketing, underwriting"
+            />
             {/* Bloom Theme Hero */}
             <section className="relative pt-32 pb-20 overflow-hidden">
                 {/* Background Effects */}
