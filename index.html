@@ -14,6 +14,8 @@
     content="real estate outsourcing, KPO, financial analysis, asset management, accounting services, lease administration, ARGUS modeling, underwriting, commercial real estate, CRE outsourcing" />
   <meta name="author" content="Offshore Minds" />
   <link rel="canonical" href="https://offshoreminds.com/" />
+  <!-- RSS Feed Autodiscovery for LinkedIn & Feed Readers -->
+  <link rel="alternate" type="application/rss+xml" title="Offshore Minds Blog" href="https://offshoreminds.com/rss.xml" />
 
   <!-- Open Graph / Facebook / LinkedIn -->
   <meta property="og:type" content="website" />
@@ -193,42 +195,6 @@
       padding: 0;
       background-color: #0D0B21;
     }
-
-    #initial-loader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #0D0B21;
-      /* bloom-dark */
-      z-index: 9999;
-      transition: opacity 0.5s ease-out;
-    }
-
-    .spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid rgba(93, 92, 222, 0.3);
-      /* bloom-primary with opacity */
-      border-top: 4px solid #5D5CDE;
-      /* bloom-primary */
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-    }
   </style>
 </head>
 
@@ -259,11 +225,7 @@
     </div>
   </noscript>
 
-  <div id="root">
-    <div id="initial-loader">
-      <div class="spinner"></div>
-    </div>
-  </div>
+  <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 

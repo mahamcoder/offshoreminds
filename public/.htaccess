@@ -1,0 +1,20 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1. RSS Feed rewrites - serve feed.php directly with application/rss+xml
+  RewriteRule ^rss\.xml$ feed.php [L]
+  RewriteRule ^feed/?$ feed.php [L]
+  RewriteRule ^feed\.xml$ feed.php [L]
+
+  # 2. Dynamic Open Graph tags for single blog posts (/blogs/{slug})
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^blogs/([^/]+)/?$ og.php?slug=$1 [L,QSA]
+
+  # 3. Standard SPA fallback for other React routes
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>

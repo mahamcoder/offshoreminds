@@ -218,9 +218,7 @@ Downloaded from: ${window.location.href}
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-bloom-dark flex items-center justify-center text-white">
-                <div className="w-12 h-12 border-4 border-bloom-primary border-t-transparent rounded-full animate-spin"></div>
-            </div>
+            <div className="min-h-screen bg-bloom-dark" />
         );
     }
 

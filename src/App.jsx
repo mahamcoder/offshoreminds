@@ -22,18 +22,11 @@ const Disclaimers = lazy(() => import('./pages/Disclaimers'));
 const Login = lazy(() => import('./pages/admin/Login'));
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const OffshoreMindsAI = lazy(() => import('./pages/OffshoreMindsAI'));
-// Loading Component - Matches index.html styling exactly
-const PageLoader = () => (
-  <div className="min-h-screen bg-bloom-dark flex items-center justify-center">
-    <div className="w-12 h-12 border-4 border-bloom-primary/30 border-t-bloom-primary rounded-full animate-spin"></div>
-  </div>
-);
-
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <Suspense fallback={<PageLoader />}>
+      <Suspense fallback={<div className="min-h-screen bg-bloom-dark" />}>
         <ScrollRestoration />
         <Layout />
       </Suspense>

@@ -186,9 +186,7 @@ const Careers = () => {
 
                     <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm">
                         {loading ? (
-                            <div className="flex justify-center p-12">
-                                <div className="w-8 h-8 border-4 border-bloom-primary border-t-transparent rounded-full animate-spin"></div>
-                            </div>
+                            <div className="flex justify-center p-12 text-bloom-text-muted">Loading openings...</div>
                         ) : (
                             <table className="w-full text-left">
                                 <thead>
