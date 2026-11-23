@@ -22,12 +22,12 @@ const WhoWeServe = () => {
                         <span className="text-bloom-blue font-semibold tracking-wider uppercase text-sm">Our Clients</span>
                     </Reveal>
                     <Reveal delay={100}>
-                        <h2 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
+                        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mt-3 mb-6">
                             Who We Serve
                         </h2>
                     </Reveal>
                     <Reveal delay={200}>
-                        <p className="text-bloom-text-muted text-lg max-w-2xl mx-auto">
+                        <p className="text-slate-600 dark:text-bloom-text-muted text-lg max-w-2xl mx-auto">
                             Specialist KPO partner embedded within your teams.
                         </p>
                     </Reveal>
@@ -41,12 +41,12 @@ const WhoWeServe = () => {
                                     {/* Glow Effect */}
                                     <div className="absolute inset-0 bg-gradient-to-br from-bloom-blue/0 to-bloom-blue/0 group-hover:from-bloom-blue/20 group-hover:to-purple-500/20 rounded-2xl transition-all duration-500 blur-xl opacity-0 group-hover:opacity-100"></div>
 
-                                    <div className="relative bg-white/5 border border-white/10 p-8 rounded-2xl backdrop-blur-md hover:bg-white/10 transition-colors duration-300 h-full flex flex-col items-center text-center">
-                                        <div className="shrink-0 w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-6 text-bloom-blue group-hover:scale-110 group-hover:bg-bloom-blue group-hover:text-white transition-all duration-300">
+                                    <div className="relative bg-white dark:bg-white/5 border border-slate-200/90 dark:border-white/10 p-8 rounded-2xl backdrop-blur-md hover:bg-slate-50 dark:hover:bg-white/10 transition-colors duration-300 h-full flex flex-col items-center text-center shadow-sm hover:shadow-lg dark:shadow-none">
+                                        <div className="shrink-0 w-16 h-16 bg-bloom-blue/10 dark:bg-white/5 rounded-2xl flex items-center justify-center mb-6 text-bloom-blue group-hover:scale-110 group-hover:bg-bloom-blue group-hover:text-white transition-all duration-300">
                                             <client.icon className="w-8 h-8" />
                                         </div>
-                                        <h3 className="text-xl font-bold text-white mb-2">{client.name}</h3>
-                                        <p className="text-bloom-text-muted text-sm mt-auto">
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{client.name}</h3>
+                                        <p className="text-slate-600 dark:text-bloom-text-muted text-sm mt-auto">
                                             Tailored solutions for {client.name.toLowerCase()}.
                                         </p>
                                     </div>

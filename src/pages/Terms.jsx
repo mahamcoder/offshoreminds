@@ -3,7 +3,7 @@ import SEO from '../components/SEO';
 
 const Terms = () => {
     return (
-        <div className="bg-bloom-dark min-h-screen text-white pt-20">
+        <div className="bg-bloom-dark min-h-screen text-slate-900 dark:text-white pt-20 transition-colors duration-300">
             <SEO
                 title="Terms & Conditions"
                 description="Terms and conditions for using Offshore Minds website and services."
@@ -35,12 +35,12 @@ const Terms = () => {
                     <div className="space-y-10">
 
                         <Reveal delay={200}>
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 hover:border-bloom-primary/20 transition-colors">
-                                <p className="text-gray-300 leading-relaxed mb-6">
+                            <div className="bg-white dark:bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-slate-200/90 dark:border-white/10 hover:border-bloom-primary/20 transition-colors shadow-sm dark:shadow-none">
+                                <p className="text-slate-600 dark:text-gray-300 leading-relaxed mb-6">
                                     These terms and conditions apply between you, the User of this Website (including any sub-domains, unless expressly excluded by their own terms and conditions), and
-                                    <strong className="text-white"> Offshore Minds</strong>, the owner and operator of this Website. Your agreement to comply with and be bound by these terms and conditions is deemed to occur upon your first use of the Website. If you do not agree to be bound by these terms and conditions, you should stop using the Website immediately.
+                                    <strong className="text-slate-900 dark:text-white"> Offshore Minds</strong>, the owner and operator of this Website. Your agreement to comply with and be bound by these terms and conditions is deemed to occur upon your first use of the Website. If you do not agree to be bound by these terms and conditions, you should stop using the Website immediately.
                                 </p>
-                                <p className="text-gray-300 leading-relaxed mb-6">
+                                <p className="text-slate-600 dark:text-gray-300 leading-relaxed mb-6">
                                     In these terms and conditions, “User” or “Users” means any third party that accesses the Website and is not either (i) employed by Offshore Minds and acting in the course of their employment or (ii) engaged as a consultant or otherwise providing services to Offshore Minds and accessing the Website in connection with the provision of such services.
                                 </p>
                                 <div className="p-4 bg-bloom-primary/10 rounded-xl border border-bloom-primary/20">
@@ -115,15 +115,15 @@ const Terms = () => {
                         </Reveal>
 
                         <Reveal>
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10">
-                                <h2 className="text-xl font-bold text-white mb-4">Availability of the Website and Disclaimers</h2>
-                                <p className="text-gray-300 leading-relaxed mb-4">
+                            <div className="bg-white dark:bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-slate-200/90 dark:border-white/10 shadow-sm dark:shadow-none">
+                                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Availability of the Website and Disclaimers</h2>
+                                <p className="text-slate-600 dark:text-gray-300 leading-relaxed mb-4">
                                     Any online facilities, tools, services, or information that Offshore Minds makes available through the Website (the “Service”) is provided “as is” and on an “as available” basis. We give no warranty that the Service will be free of defects and/or faults. To the maximum extent permitted by law, we provide no warranties (express or implied) of fitness for a particular purpose, accuracy of information, compatibility, and satisfactory quality. Offshore Minds is under no obligation to update information on the Website.
                                 </p>
-                                <p className="text-gray-300 leading-relaxed mb-4">
+                                <p className="text-slate-600 dark:text-gray-300 leading-relaxed mb-4">
                                     Whilst Offshore Minds uses reasonable endeavours to ensure that the Website is secure and free of errors, viruses and other malware, we give no warranty or guarantee in that regard and all Users take responsibility for their own security, that of their personal details, and their computers.
                                 </p>
-                                <p className="text-gray-300 leading-relaxed mb-4">
+                                <p className="text-slate-600 dark:text-gray-300 leading-relaxed mb-4">
                                     Offshore Minds accepts no liability for any disruption or non-availability of the Website. Offshore Minds reserves the right to alter, suspend or discontinue any part (or the whole) of the Website including, but not limited to, any products and/or services available.
                                 </p>
                             </div>
@@ -159,23 +159,23 @@ const Terms = () => {
                         </Reveal>
 
                         <Reveal>
-                            <div className="bg-gradient-to-br from-bloom-dark to-black p-8 rounded-3xl border border-white/5">
-                                <h3 className="text-xl font-bold text-white mb-6">Offshore Minds Details</h3>
-                                <p className="text-gray-400 mb-6">
+                            <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-bloom-dark dark:to-black p-8 rounded-3xl border border-slate-200/90 dark:border-white/5 shadow-sm dark:shadow-none">
+                                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Offshore Minds Details</h3>
+                                <p className="text-slate-500 dark:text-gray-400 mb-6">
                                     Offshore Minds is a company operating under applicable laws, and it operates the Website www.offshoreminds.com.
                                 </p>
                                 <div className="grid md:grid-cols-2 gap-8 text-sm">
                                     <div>
                                         <h4 className="text-bloom-primary font-bold mb-2">US Headquarters</h4>
-                                        <p className="text-gray-400">205 W 37th St, Fl 8,<br />New York, NY 10018</p>
+                                        <p className="text-slate-500 dark:text-gray-400">205 W 37th St, Fl 8,<br />New York, NY 10018</p>
                                     </div>
                                     <div>
                                         <h4 className="text-bloom-primary font-bold mb-2">India Headquarters</h4>
-                                        <p className="text-gray-400">H-41 Lal Market, Vikas Puri,<br />New Delhi 110018</p>
+                                        <p className="text-slate-500 dark:text-gray-400">H-41 Lal Market, Vikas Puri,<br />New Delhi 110018</p>
                                     </div>
                                 </div>
-                                <div className="mt-8 pt-6 border-t border-white/10 text-center">
-                                    <a href="mailto:info@offshoreminds.com" className="text-white hover:text-bloom-primary transition-colors">info@offshoreminds.com</a>
+                                <div className="mt-8 pt-6 border-t border-slate-200 dark:border-white/10 text-center">
+                                    <a href="mailto:info@offshoreminds.com" className="text-slate-900 dark:text-white hover:text-bloom-primary transition-colors">info@offshoreminds.com</a>
                                 </div>
                             </div>
                         </Reveal>
@@ -188,8 +188,8 @@ const Terms = () => {
 };
 
 const TermsSection = ({ title, children }) => (
-    <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 hover:border-bloom-primary/20 transition-all duration-300">
-        <h3 className="text-xl font-bold text-white mb-6 border-b border-white/5 pb-4">{title}</h3>
+    <div className="bg-white dark:bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-slate-200/90 dark:border-white/10 hover:border-bloom-primary/20 transition-all duration-300 shadow-sm dark:shadow-none">
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6 border-b border-slate-200 dark:border-white/5 pb-4">{title}</h3>
         {children}
     </div>
 );

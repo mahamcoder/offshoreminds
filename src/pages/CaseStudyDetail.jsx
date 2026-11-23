@@ -234,7 +234,7 @@ Downloaded from: ${window.location.href}
     }
 
     return (
-        <div className="bg-bloom-dark min-h-screen text-white pt-24 pb-20">
+        <div className="bg-bloom-dark min-h-screen text-slate-900 dark:text-white pt-24 pb-20 transition-colors duration-300">
             <SEO
                 title={study.title}
                 description={study.atGlance || study.challenge}
@@ -266,7 +266,7 @@ Downloaded from: ${window.location.href}
                             </span>
                         </Reveal>
                         <Reveal delay={100}>
-                            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight max-w-4xl text-white">
+                            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight max-w-4xl text-slate-900 dark:text-white">
                                 {study.title}
                             </h1>
                         </Reveal>
@@ -290,7 +290,7 @@ Downloaded from: ${window.location.href}
                                     <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-bloom-blue">
                                         <CheckCircle /> At a Glance
                                     </h2>
-                                    <p className="text-gray-300 text-lg leading-relaxed">
+                                    <p className="text-slate-600 dark:text-gray-300 text-lg leading-relaxed">
                                         {study.atGlance}
                                     </p>
                                 </div>
@@ -298,11 +298,11 @@ Downloaded from: ${window.location.href}
                         )}
 
                         <Reveal delay={300}>
-                            <div className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12 backdrop-blur-sm">
-                                <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
+                            <div className="bg-white dark:bg-white/5 border border-slate-200/90 dark:border-white/10 rounded-3xl p-8 md:p-12 backdrop-blur-sm shadow-sm dark:shadow-none">
+                                <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-slate-900 dark:text-white">
                                     <Clock className="text-red-400" /> The Challenge
                                 </h2>
-                                <p className="text-gray-300 text-lg leading-relaxed">
+                                <p className="text-slate-600 dark:text-gray-300 text-lg leading-relaxed">
                                     {study.challenge}
                                 </p>
                             </div>
@@ -313,7 +313,7 @@ Downloaded from: ${window.location.href}
                                 <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-bloom-primary">
                                     <Building2 /> Our Solution
                                 </h2>
-                                <p className="text-gray-300 text-lg leading-relaxed">
+                                <p className="text-slate-600 dark:text-gray-300 text-lg leading-relaxed">
                                     {study.solution}
                                 </p>
                             </div>
@@ -329,7 +329,7 @@ Downloaded from: ${window.location.href}
                                         {study.benefits.map((benefit, idx) => (
                                             <li key={idx} className="flex items-start gap-4">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-bloom-secondary mt-2.5 shrink-0" />
-                                                <span className="text-gray-300 text-lg leading-relaxed">{benefit}</span>
+                                                <span className="text-slate-600 dark:text-gray-300 text-lg leading-relaxed">{benefit}</span>
                                             </li>
                                         ))}
                                     </ul>
@@ -338,19 +338,19 @@ Downloaded from: ${window.location.href}
                         )}
 
                         <Reveal delay={500}>
-                            <div className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12 backdrop-blur-sm">
-                                <h2 className="text-2xl font-bold mb-10 text-white">Key Metrics</h2>
+                            <div className="bg-white dark:bg-white/5 border border-slate-200/90 dark:border-white/10 rounded-3xl p-8 md:p-12 backdrop-blur-sm shadow-sm dark:shadow-none">
+                                <h2 className="text-2xl font-bold mb-10 text-slate-900 dark:text-white">Key Metrics</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
                                     {(study.keyMetrics || []).map((metric, idx) => (
                                         <div key={idx} className="flex items-start gap-6 group">
-                                            <div className="bg-white/5 rounded-2xl group-hover:bg-bloom-primary/20 transition-colors shrink-0">
+                                            <div className="bg-bloom-primary/10 dark:bg-white/5 rounded-2xl group-hover:bg-bloom-primary/20 transition-colors shrink-0">
                                                 {getMetricIcon(metric.icon)}
                                             </div>
                                             <div>
-                                                <div className="text-xl font-bold text-white leading-none mb-2">
+                                                <div className="text-xl font-bold text-slate-900 dark:text-white leading-none mb-2">
                                                     {metric.value}
                                                 </div>
-                                                <div className="text-gray-400 text-sm  leading-snug">
+                                                <div className="text-slate-500 dark:text-gray-400 text-sm leading-snug">
                                                     {metric.label}
                                                 </div>
                                             </div>
@@ -363,16 +363,16 @@ Downloaded from: ${window.location.href}
 
                     {/* Sidebar */}
                     <div className="space-y-8">
-                        <div className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-10 sticky top-32">
-                            <h3 className="text-2xl font-bold mb-8 text-white text-left">Study Details</h3>
+                        <div className="bg-white dark:bg-white/5 border border-slate-200/90 dark:border-white/10 rounded-3xl p-8 md:p-10 sticky top-32 shadow-sm dark:shadow-none">
+                            <h3 className="text-2xl font-bold mb-8 text-slate-900 dark:text-white text-left">Study Details</h3>
                             <div className="space-y-6 text-sm text-left">
-                                <div className="flex flex-col gap-2 pb-5 border-b border-white/10">
-                                    <span className="text-gray-400 text-xs uppercase tracking-wider">Industry</span>
-                                    <span className="text-white font-semibold text-base">Real Estate Finance</span>
+                                <div className="flex flex-col gap-2 pb-5 border-b border-slate-200 dark:border-white/10">
+                                    <span className="text-slate-500 dark:text-gray-400 text-xs uppercase tracking-wider">Industry</span>
+                                    <span className="text-slate-900 dark:text-white font-semibold text-base">Real Estate Finance</span>
                                 </div>
-                                <div className="flex flex-col gap-2 pb-5 border-b border-white/10">
-                                    <span className="text-gray-400 text-xs uppercase tracking-wider">Service</span>
-                                    <span className="text-white font-semibold text-base leading-snug">{study.category}</span>
+                                <div className="flex flex-col gap-2 pb-5 border-b border-slate-200 dark:border-white/10">
+                                    <span className="text-slate-500 dark:text-gray-400 text-xs uppercase tracking-wider">Service</span>
+                                    <span className="text-slate-900 dark:text-white font-semibold text-base leading-snug">{study.category}</span>
                                 </div>
                                 <div className="flex flex-col gap-2 pb-5">
                                     <span className="text-gray-400 text-xs uppercase tracking-wider">Timeline</span>

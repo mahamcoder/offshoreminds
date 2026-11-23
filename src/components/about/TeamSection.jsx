@@ -69,7 +69,7 @@ const TeamSection = () => {
                         <span className="text-bloom-primary font-semibold tracking-wider uppercase text-sm">Our Team</span>
                     </Reveal>
                     <Reveal delay={100}>
-                        <h2 className="text-4xl md:text-5xl font-bold font-heading mt-3 mb-6 text-white">
+                        <h2 className="text-4xl md:text-5xl font-bold font-heading mt-3 mb-6 text-slate-900 dark:text-white">
                             Meet the Experts
                         </h2>
                     </Reveal>
@@ -102,8 +102,8 @@ const TeamSection = () => {
                                     </div>
 
                                     <div className="mt-auto">
-                                        <h3 className="text-lg font-bold text-white mb-1 group-hover:text-bloom-blue transition-colors">{member.name}</h3>
-                                        <p className="text-bloom-text-muted text-sm font-medium">{member.role}</p>
+                                        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-bloom-blue transition-colors">{member.name}</h3>
+                                        <p className="text-slate-600 dark:text-bloom-text-muted text-sm font-medium">{member.role}</p>
                                     </div>
                                 </div>
                             </Reveal>
@@ -117,21 +117,21 @@ const TeamSection = () => {
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
                     {/* Backdrop */}
                     <div
-                        className="absolute inset-0 bg-bloom-dark/80 backdrop-blur-md"
+                        className="absolute inset-0 bg-slate-900/60 dark:bg-bloom-dark/80 backdrop-blur-md"
                         onClick={() => setSelectedMember(null)}
                     ></div>
 
                     {/* Modal Content */}
-                    <div className="bg-white/5 border border-white/10 rounded-3xl p-8 max-w-2xl w-full relative z-10 backdrop-blur-2xl shadow-2xl animate-in fade-in zoom-in duration-300">
+                    <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-8 max-w-2xl w-full relative z-10 backdrop-blur-2xl shadow-2xl animate-in fade-in zoom-in duration-300">
                         <button
                             onClick={() => setSelectedMember(null)}
-                            className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors"
+                            className="absolute top-6 right-6 text-slate-400 hover:text-slate-700 dark:text-white/50 dark:hover:text-white transition-colors"
                         >
                             <X className="w-6 h-6" />
                         </button>
 
                         <div className="flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left">
-                            <div className="w-40 h-40 rounded-3xl overflow-hidden shrink-0 border-2 border-white/10 shadow-xl">
+                            <div className="w-40 h-40 rounded-3xl overflow-hidden shrink-0 border-2 border-slate-200 dark:border-white/10 shadow-xl">
                                 <img
                                     src={selectedMember.image}
                                     alt={selectedMember.name}
@@ -141,11 +141,11 @@ const TeamSection = () => {
 
                             <div className="flex flex-col h-full">
                                 <div className="mb-4">
-                                    <h3 className="text-3xl font-bold text-white mb-2">{selectedMember.name}</h3>
+                                    <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">{selectedMember.name}</h3>
                                     <p className="text-bloom-blue font-semibold">{selectedMember.role}</p>
                                 </div>
 
-                                <p className="text-bloom-text-muted leading-relaxed mb-6 font-light">
+                                <p className="text-slate-600 dark:text-bloom-text-muted leading-relaxed mb-6 font-light">
                                     {selectedMember.bio}
                                 </p>
 

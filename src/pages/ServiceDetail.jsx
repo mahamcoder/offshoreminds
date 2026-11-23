@@ -42,7 +42,7 @@ const ServiceDetail = () => {
   };
 
   return (
-    <div className="bg-bloom-dark min-h-screen text-white">
+    <div className="bg-bloom-dark min-h-screen text-slate-900 dark:text-white transition-colors duration-300">
       <SEO
         title={service.title}
         description={service.shortDescription}
@@ -55,7 +55,7 @@ const ServiceDetail = () => {
       <section className="relative pt-32 pb-20 overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-bloom-primary/20 rounded-full blur-[120px] animate-pulse float-soft"></div>
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-bloom-primary/10 dark:bg-bloom-primary/20 rounded-full blur-[120px] animate-pulse float-soft"></div>
           <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-bloom-blue/10 rounded-full blur-[100px] pointer-events-none"></div>
         </div>
 
@@ -67,7 +67,7 @@ const ServiceDetail = () => {
               <span className="text-bloom-blue font-semibold tracking-wider uppercase text-sm mb-2 block">Our Expertise</span>
             </Reveal>
             <Reveal delay={100} width="100%">
-              <h1 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-bloom-blue mb-6 leading-tight">
+              <h1 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-bloom-blue dark:from-white dark:to-bloom-blue mb-6 leading-tight">
                 {service.title}
               </h1>
             </Reveal>

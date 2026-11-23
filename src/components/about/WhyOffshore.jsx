@@ -37,7 +37,7 @@ const WhyOffshore = () => {
     ];
 
     return (
-        <section className="py-24 bg-bloom-dark relative overflow-hidden">
+        <section className="py-24 bg-bloom-dark relative overflow-hidden transition-colors duration-300">
             {/* Decorative Background */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-bloom-primary/5 via-bloom-dark to-bloom-dark pointer-events-none"></div>
 
@@ -47,12 +47,12 @@ const WhyOffshore = () => {
                         <span className="text-bloom-blue font-semibold tracking-wider uppercase text-sm">Why Choose Us</span>
                     </Reveal>
                     <Reveal delay={100}>
-                        <h2 className="text-4xl md:text-5xl font-bold font-heading mt-3 mb-6 text-white">
-                            Why <span className="text-transparent bg-clip-text bg-gradient-to-r from-bloom-blue to-purple-400">Offshore Minds?</span>
+                        <h2 className="text-4xl md:text-5xl font-bold font-heading mt-3 mb-6 text-slate-900 dark:text-white">
+                            Why <span className="text-transparent bg-clip-text bg-gradient-to-r from-bloom-blue to-purple-600 dark:to-purple-400">Offshore Minds?</span>
                         </h2>
                     </Reveal>
                     <Reveal delay={200}>
-                        <p className="text-bloom-text-muted text-lg">
+                        <p className="text-slate-600 dark:text-bloom-text-muted text-lg">
                             Unique blend of expertise, technology, and dedication.
                         </p>
                     </Reveal>
@@ -62,14 +62,14 @@ const WhyOffshore = () => {
                     {benefits.map((benefit, index) => (
                         <div key={index} className="h-full">
                             <Reveal delay={index * 100} width="100%" height="100%">
-                                <div className="bg-white/5 border border-white/10 p-8 rounded-2xl hover:bg-white/10 transition-all duration-300 hover:border-bloom-blue/30 group h-full flex flex-col">
+                                <div className="bg-white dark:bg-white/5 border border-slate-200/90 dark:border-white/10 p-8 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/10 transition-all duration-300 hover:border-bloom-blue/40 group h-full flex flex-col shadow-sm hover:shadow-xl">
                                     <div className="flex items-start gap-5 flex-1">
                                         <div className="mt-1 shrink-0">
                                             <benefit.icon className="w-6 h-6 text-bloom-primary group-hover:text-bloom-blue transition-colors" />
                                         </div>
                                         <div>
-                                            <h3 className="text-xl font-bold text-white mb-2">{benefit.title}</h3>
-                                            <p className="text-bloom-text-muted text-sm leading-relaxed">
+                                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{benefit.title}</h3>
+                                            <p className="text-slate-600 dark:text-bloom-text-muted text-sm leading-relaxed">
                                                 {benefit.description}
                                             </p>
                                         </div>

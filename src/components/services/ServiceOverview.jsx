@@ -8,14 +8,14 @@ const ServiceOverview = ({ overview, title }) => {
 
             <div className="container mx-auto px-4 max-w-4xl relative z-10 flex flex-col items-center">
                 <Reveal>
-                    <h2 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-bloom-blue mb-8 font-heading">
+                    <h2 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-bloom-blue dark:from-white dark:to-bloom-blue mb-8 font-heading">
                         Overview
                     </h2>
                 </Reveal>
 
                 <Reveal delay={200} width="100%">
                     <div className="">
-                        <p className="text-bloom-text-muted leading-relaxed text-xl md:text-xl font-light ">
+                        <p className="text-slate-600 dark:text-bloom-text-muted leading-relaxed text-xl md:text-xl font-light ">
                             {overview || "We provide comprehensive solutions tailored to your real estate needs, ensuring efficiency, accuracy, and strategic growth."}
                         </p>
                     </div>

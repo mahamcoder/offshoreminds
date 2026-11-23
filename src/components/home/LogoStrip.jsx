@@ -14,9 +14,9 @@ const LogoStrip = () => {
     ];
 
     return (
-        <section className="py-20 bg-bloom-dark text-center border-t border-white/5 section-fade animate-on-scroll">
+        <section className="py-20 bg-bloom-dark text-center border-t border-slate-200 dark:border-white/5 section-fade animate-on-scroll transition-colors duration-300">
             <div className="container mx-auto px-4">
-                <h2 className="text-3xl font-bold text-white mb-12 font-heading">Powering Global Brands</h2>
+                <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-12 font-heading">Powering Global Brands</h2>
 
                 <div className="flex flex-wrap justify-center items-center gap-12 md:gap-16">
                     {brands.map((brand, index) => (
@@ -25,7 +25,7 @@ const LogoStrip = () => {
                             <img
                                 src={brand.logo}
                                 alt={brand.name}
-                                className="h-10 md:h-12 w-auto object-contain opacity-80 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-300 filter brightness-200 contrast-0 group-hover:filter-none"
+                                className="h-10 md:h-12 w-auto object-contain opacity-70 dark:opacity-80 grayscale dark:grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300 dark:filter dark:brightness-200 dark:contrast-0 dark:group-hover:filter-none"
                             />
                         </div>
                     ))}

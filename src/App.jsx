@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast';
 import { lazy, Suspense } from 'react';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/admin/ProtectedRoute';
+import { useTheme } from './context/ThemeContext';
 
 // Lazy Load Pages
 const Home = lazy(() => import('./pages/Home'));
@@ -22,6 +23,7 @@ const Disclaimers = lazy(() => import('./pages/Disclaimers'));
 const Login = lazy(() => import('./pages/admin/Login'));
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const OffshoreMindsAI = lazy(() => import('./pages/OffshoreMindsAI'));
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -62,6 +64,9 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   return (
     <>
       <Toaster
@@ -69,12 +74,13 @@ function App() {
         reverseOrder={false}
         toastOptions={{
           style: {
-            background: '#161331',
-            color: '#EAEAEA',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: isDark ? '#161331' : '#ffffff',
+            color: isDark ? '#EAEAEA' : '#0f172a',
+            border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e2e8f0',
             borderRadius: '1rem',
             padding: '1rem',
             backdropFilter: 'blur(10px)',
+            boxShadow: isDark ? '0 10px 25px rgba(0,0,0,0.4)' : '0 10px 25px rgba(0,0,0,0.08)',
           },
           success: {
             iconTheme: {
@@ -85,7 +91,7 @@ function App() {
           loading: {
             iconTheme: {
               primary: '#5D5CDE',
-              secondary: '#161331',
+              secondary: isDark ? '#161331' : '#ffffff',
             },
           }
         }}

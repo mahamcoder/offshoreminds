@@ -128,8 +128,8 @@ const Testimonials = () => {
         <section className="py-20 bg-bloom-dark section-fade animate-on-scroll overflow-hidden">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl font-bold text-white mb-4">What Our Clients Say</h2>
-                    <p className="text-bloom-text-muted">Trusted by industry leaders worldwide</p>
+                    <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">What Our Clients Say</h2>
+                    <p className="text-slate-600 dark:text-bloom-text-muted">Trusted by industry leaders worldwide</p>
                 </div>
 
                 {/* Carousel Container */}
@@ -150,19 +150,19 @@ const Testimonials = () => {
                             >
                                 <div
                                     onClick={() => setSelectedReview(review)}
-                                    className="bg-white/5 backdrop-blur-md p-8 rounded-2xl border border-white/10 hover:border-bloom-primary/30 transition-all duration-300 h-full flex flex-col justify-between group cursor-pointer hover:bg-white/10"
+                                    className="bg-white dark:bg-white/5 backdrop-blur-md p-8 rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-bloom-primary/50 dark:hover:border-bloom-primary/40 shadow-sm hover:shadow-[0_20px_35px_-4px_rgba(93,92,222,0.12),0_8px_16px_-2px_rgba(15,23,42,0.06)] dark:hover:shadow-none hover:-translate-y-2 transition-all duration-300 h-full flex flex-col justify-between group cursor-pointer hover:bg-slate-50/50 dark:hover:bg-white/10"
                                 >
                                     <div>
                                         <div className="flex gap-1 text-yellow-400 mb-4">
                                             {[...Array(review.rating)].map((_, i) => <Star key={i} size={16} fill="currentColor" />)}
                                         </div>
                                         <div className="relative">
-                                            <p className="text-gray-300 mb-4 italic leading-relaxed line-clamp-4">"{review.text}"</p>
+                                            <p className="text-slate-600 dark:text-gray-300 mb-4 italic leading-relaxed line-clamp-4">"{review.text}"</p>
                                         </div>
                                     </div>
                                     <div className="mt-auto">
-                                        <h4 className="font-bold text-white text-lg">{review.name}</h4>
-                                        <p className="text-sm text-bloom-text-muted">{review.role}</p>
+                                        <h4 className="font-bold text-slate-900 dark:text-white group-hover:text-bloom-primary transition-colors text-lg">{review.name}</h4>
+                                        <p className="text-sm text-slate-500 dark:text-bloom-text-muted">{review.role}</p>
                                     </div>
                                 </div>
                             </div>
@@ -175,15 +175,15 @@ const Testimonials = () => {
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
                         {/* Backdrop */}
                         <div
-                            className="absolute inset-0 bg-bloom-dark/80 backdrop-blur-md animate-in fade-in duration-300"
+                            className="absolute inset-0 bg-slate-900/60 dark:bg-bloom-dark/80 backdrop-blur-md animate-in fade-in duration-300"
                             onClick={() => setSelectedReview(null)}
                         ></div>
 
                         {/* Modal Content */}
-                        <div className="relative w-full max-w-2xl bg-bloom-dark/90 border border-white/10 p-8 sm:p-12 rounded-3xl shadow-2xl animate-in zoom-in-95 fade-in duration-300 backdrop-blur-2xl">
+                        <div className="relative w-full max-w-2xl bg-white dark:bg-bloom-dark/95 border border-slate-200 dark:border-white/10 p-8 sm:p-12 rounded-3xl shadow-2xl animate-in zoom-in-95 fade-in duration-300 backdrop-blur-2xl">
                             <button
                                 onClick={() => setSelectedReview(null)}
-                                className="absolute top-6 right-6 text-bloom-text-muted hover:text-white transition-colors p-2"
+                                className="absolute top-6 right-6 text-slate-400 hover:text-slate-700 dark:text-bloom-text-muted dark:hover:text-white transition-colors p-2"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                             </button>
@@ -192,17 +192,17 @@ const Testimonials = () => {
                                 {[...Array(selectedReview.rating)].map((_, i) => <Star key={i} size={20} fill="currentColor" />)}
                             </div>
 
-                            <p className="text-xl sm:text-2xl text-white italic leading-relaxed mb-10 font-light">
+                            <p className="text-xl sm:text-2xl text-slate-800 dark:text-white italic leading-relaxed mb-10 font-light">
                                 "{selectedReview.text}"
                             </p>
 
-                            <div className="flex items-center gap-4 border-t border-white/5 pt-8">
-                                <div className="w-12 h-12 rounded-full bg-bloom-primary/20 flex items-center justify-center text-bloom-primary font-bold text-xl">
+                            <div className="flex items-center gap-4 border-t border-slate-200 dark:border-white/5 pt-8">
+                                <div className="w-12 h-12 rounded-full bg-bloom-primary/10 dark:bg-bloom-primary/20 flex items-center justify-center text-bloom-primary font-bold text-xl">
                                     {selectedReview.name.charAt(0)}
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-white text-xl">{selectedReview.name}</h4>
-                                    <p className="text-bloom-text-muted">{selectedReview.role}</p>
+                                    <h4 className="font-bold text-slate-900 dark:text-white text-xl">{selectedReview.name}</h4>
+                                    <p className="text-slate-500 dark:text-bloom-text-muted">{selectedReview.role}</p>
                                 </div>
                             </div>
                         </div>
@@ -220,7 +220,7 @@ const Testimonials = () => {
                             }}
                             className={`w-2 h-2 rounded-full transition-all duration-300 ${(currentIndex % originalReviews.length) === idx
                                 ? 'bg-bloom-primary w-6'
-                                : 'bg-white/20 hover:bg-white/40'
+                                : 'bg-slate-300 dark:bg-white/20 hover:bg-slate-400 dark:hover:bg-white/40'
                                 }`}
                             aria-label={`Go to slide ${idx + 1}`}
                         />

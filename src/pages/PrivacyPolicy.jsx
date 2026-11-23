@@ -3,7 +3,7 @@ import SEO from '../components/SEO';
 
 const PrivacyPolicy = () => {
     return (
-        <div className="bg-bloom-dark min-h-screen text-white pt-20">
+        <div className="bg-bloom-dark min-h-screen text-slate-900 dark:text-white pt-20 transition-colors duration-300">
             <SEO
                 title="Privacy Policy"
                 description="Privacy Policy for Offshore Minds — how we collect, use, and protect your personal information."
@@ -31,20 +31,20 @@ const PrivacyPolicy = () => {
                     <div className="space-y-12">
                         {/* 1. Who We Are */}
                         <Reveal delay={200}>
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10">
-                                <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <div className="bg-white dark:bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-slate-200/90 dark:border-white/10 shadow-sm dark:shadow-none">
+                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-bloom-primary/20 flex items-center justify-center text-bloom-primary text-sm">01</span>
                                     Who We Are
                                 </h2>
-                                <p className="text-gray-300 mb-4 leading-relaxed">This Privacy Policy applies to Offshore Minds Pvt Ltd (“Offshore Minds”, “we”, “our”, “us”) and our website www.offshoreminds.com. We operate from:</p>
-                                <ul className="space-y-3 text-gray-400">
+                                <p className="text-slate-600 dark:text-gray-300 mb-4 leading-relaxed">This Privacy Policy applies to Offshore Minds Pvt Ltd (“Offshore Minds”, “we”, “our”, “us”) and our website www.offshoreminds.com. We operate from:</p>
+                                <ul className="space-y-3 text-slate-500 dark:text-gray-400">
                                     <li className="flex gap-3">
                                         <div className="w-1.5 h-1.5 rounded-full bg-bloom-primary mt-2 flex-shrink-0"></div>
-                                        <span><strong className="text-white">US HQ:</strong> 205 W 37th St, Fl 8, New York, NY 10018, USA</span>
+                                        <span><strong className="text-slate-900 dark:text-white">US HQ:</strong> 205 W 37th St, Fl 8, New York, NY 10018, USA</span>
                                     </li>
                                     <li className="flex gap-3">
                                         <div className="w-1.5 h-1.5 rounded-full bg-bloom-primary mt-2 flex-shrink-0"></div>
-                                        <span><strong className="text-white">India HQ:</strong> H-41 Lal Market, Vikas Puri, New Delhi 110018, India</span>
+                                        <span><strong className="text-slate-900 dark:text-white">India HQ:</strong> H-41 Lal Market, Vikas Puri, New Delhi 110018, India</span>
                                     </li>
                                 </ul>
                             </div>
@@ -52,8 +52,8 @@ const PrivacyPolicy = () => {
 
                         {/* 2. Data We Collect */}
                         <Reveal delay={300} width="100%">
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10">
-                                <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <div className="bg-white dark:bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-slate-200/90 dark:border-white/10 shadow-sm dark:shadow-none">
+                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-bloom-primary/20 flex items-center justify-center text-bloom-primary text-sm">02</span>
                                     Data We Collect
                                 </h2>
@@ -61,24 +61,24 @@ const PrivacyPolicy = () => {
                                     <table className="w-full text-left border-collapse">
                                         <thead>
                                             <tr>
-                                                <th className="p-4 border-b border-white/10 text-bloom-primary font-bold w-1/4">Category</th>
-                                                <th className="p-4 border-b border-white/10 text-bloom-primary font-bold w-1/3">Examples</th>
-                                                <th className="p-4 border-b border-white/10 text-bloom-primary font-bold w-1/3">Why we collect it</th>
+                                                <th className="p-4 border-b border-slate-200 dark:border-white/10 text-bloom-primary font-bold w-1/4">Category</th>
+                                                <th className="p-4 border-b border-slate-200 dark:border-white/10 text-bloom-primary font-bold w-1/3">Examples</th>
+                                                <th className="p-4 border-b border-slate-200 dark:border-white/10 text-bloom-primary font-bold w-1/3">Why we collect it</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="text-sm text-gray-300">
+                                        <tbody className="text-sm text-slate-600 dark:text-gray-300">
                                             <tr>
-                                                <td className="p-4 border-b border-white/5 font-semibold text-white">Information you give us</td>
-                                                <td className="p-4 border-b border-white/5">Name, business e-mail, phone, company, messages sent through forms or e-mail</td>
-                                                <td className="p-4 border-b border-white/5">To answer enquiries, deliver services, create project accounts</td>
+                                                <td className="p-4 border-b border-slate-100 dark:border-white/5 font-semibold text-slate-900 dark:text-white">Information you give us</td>
+                                                <td className="p-4 border-b border-slate-100 dark:border-white/5">Name, business e-mail, phone, company, messages sent through forms or e-mail</td>
+                                                <td className="p-4 border-b border-slate-100 dark:border-white/5">To answer enquiries, deliver services, create project accounts</td>
                                             </tr>
                                             <tr>
-                                                <td className="p-4 border-b border-white/5 font-semibold text-white">Automatic data</td>
-                                                <td className="p-4 border-b border-white/5">IP address, browser/device info, pages visited, time on site</td>
-                                                <td className="p-4 border-b border-white/5">Site security, analytics, service improvement</td>
+                                                <td className="p-4 border-b border-slate-100 dark:border-white/5 font-semibold text-slate-900 dark:text-white">Automatic data</td>
+                                                <td className="p-4 border-b border-slate-100 dark:border-white/5">IP address, browser/device info, pages visited, time on site</td>
+                                                <td className="p-4 border-b border-slate-100 dark:border-white/5">Site security, analytics, service improvement</td>
                                             </tr>
                                             <tr>
-                                                <td className="p-4 font-semibold text-white">Cookies & similar tech</td>
+                                                <td className="p-4 font-semibold text-slate-900 dark:text-white">Cookies & similar tech</td>
                                                 <td className="p-4">Small files placed in your browser; includes Google Analytics cookies</td>
                                                 <td className="p-4">Remember preferences, measure traffic; you can block cookies in your browser settings</td>
                                             </tr>
@@ -91,8 +91,8 @@ const PrivacyPolicy = () => {
 
                         {/* 3. How We Use Your Data */}
                         <Reveal width="100%">
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 w-full">
-                                <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <div className="bg-white dark:bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-slate-200/90 dark:border-white/10 w-full shadow-sm dark:shadow-none">
+                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-bloom-primary/20 flex items-center justify-center text-bloom-primary text-sm">03</span>
                                     How We Use Your Data
                                 </h2>
@@ -104,7 +104,7 @@ const PrivacyPolicy = () => {
                                         "Analyse usage to enhance performance and security",
                                         "Comply with legal or regulatory obligations"
                                     ].map((item, i) => (
-                                        <li key={i} className="flex gap-3 text-gray-300">
+                                        <li key={i} className="flex gap-3 text-slate-600 dark:text-gray-300">
                                             <div className="w-1.5 h-1.5 rounded-full bg-bloom-primary mt-2 flex-shrink-0"></div>
                                             <span>{item}</span>
                                         </li>
@@ -115,13 +115,13 @@ const PrivacyPolicy = () => {
 
                         {/* 4. Sharing Your Data */}
                         <Reveal width="100%">
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 w-full">
-                                <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <div className="bg-white dark:bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-slate-200/90 dark:border-white/10 w-full shadow-sm dark:shadow-none">
+                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-bloom-primary/20 flex items-center justify-center text-bloom-primary text-sm">04</span>
                                     Sharing Your Data
                                 </h2>
-                                <p className="text-gray-300 mb-4">We share personal information only:</p>
-                                <ul className="space-y-3 text-gray-400 mb-4">
+                                <p className="text-slate-600 dark:text-gray-300 mb-4">We share personal information only:</p>
+                                <ul className="space-y-3 text-slate-500 dark:text-gray-400 mb-4">
                                     <li className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-bloom-primary mt-2 flex-shrink-0"></div> with trusted service providers who perform functions such as hosting, analytics, payment, or e-mail on our behalf;</li>
                                     <li className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-bloom-primary mt-2 flex-shrink-0"></div> within our US and India offices for internal administration;</li>
                                     <li className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-bloom-primary mt-2 flex-shrink-0"></div> if required by law, court order, or to protect rights and safety;</li>
@@ -133,12 +133,12 @@ const PrivacyPolicy = () => {
 
                         {/* 5. International Transfers */}
                         <Reveal width="100%">
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 w-full">
-                                <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <div className="bg-white dark:bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-slate-200/90 dark:border-white/10 w-full shadow-sm dark:shadow-none">
+                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-bloom-primary/20 flex items-center justify-center text-bloom-primary text-sm">05</span>
                                     International Transfers
                                 </h2>
-                                <p className="text-gray-300 leading-relaxed">
+                                <p className="text-slate-600 dark:text-gray-300 leading-relaxed">
                                     Because we serve clients globally, your information may be processed in the United States, India, or other countries with adequate safeguards (standard contractual clauses where required).
                                 </p>
                             </div>
@@ -146,12 +146,12 @@ const PrivacyPolicy = () => {
 
                         {/* 6. Security & Retention */}
                         <Reveal width="100%">
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 w-full">
-                                <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <div className="bg-white dark:bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-slate-200/90 dark:border-white/10 w-full shadow-sm dark:shadow-none">
+                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-bloom-primary/20 flex items-center justify-center text-bloom-primary text-sm">06</span>
                                     Security & Retention
                                 </h2>
-                                <p className="text-gray-300 leading-relaxed">
+                                <p className="text-slate-600 dark:text-gray-300 leading-relaxed">
                                     We use reasonable administrative, technical, and physical measures to protect data. Information is kept only as long as necessary for the purposes above or as required by law.
                                 </p>
                             </div>
@@ -159,29 +159,29 @@ const PrivacyPolicy = () => {
 
                         {/* 7. Your Choices & Rights */}
                         <Reveal width="100%">
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 w-full">
-                                <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <div className="bg-white dark:bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-slate-200/90 dark:border-white/10 w-full shadow-sm dark:shadow-none">
+                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-bloom-primary/20 flex items-center justify-center text-bloom-primary text-sm">07</span>
                                     Your Choices & Rights
                                 </h2>
-                                <ul className="space-y-3 text-gray-400 mb-4">
+                                <ul className="space-y-3 text-slate-500 dark:text-gray-400 mb-4">
                                     <li className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-bloom-primary mt-2 flex-shrink-0"></div> Access, correct, or delete your personal data</li>
                                     <li className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-bloom-primary mt-2 flex-shrink-0"></div> Object to marketing at any time</li>
                                     <li className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-bloom-primary mt-2 flex-shrink-0"></div> Withdraw consent where processing is based on consent</li>
                                     <li className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-bloom-primary mt-2 flex-shrink-0"></div> Lodge a complaint with your local data-protection authority</li>
                                 </ul>
-                                <p className="text-gray-300">Contact us to exercise these rights; we will respond promptly.</p>
+                                <p className="text-slate-600 dark:text-gray-300">Contact us to exercise these rights; we will respond promptly.</p>
                             </div>
                         </Reveal>
 
                         {/* 8. Cookies & Analytics */}
                         <Reveal width="100%">
-                            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 w-full">
-                                <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <div className="bg-white dark:bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-slate-200/90 dark:border-white/10 w-full shadow-sm dark:shadow-none">
+                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-bloom-primary/20 flex items-center justify-center text-bloom-primary text-sm">08</span>
                                     Cookies & Analytics
                                 </h2>
-                                <p className="text-gray-300 leading-relaxed">
+                                <p className="text-slate-600 dark:text-gray-300 leading-relaxed">
                                     We use Google Analytics to understand site traffic. Google may set its own cookies—see Google’s policy for details and opt-out tools. Blocking cookies may affect site functionality.
                                 </p>
                             </div>
@@ -190,12 +190,12 @@ const PrivacyPolicy = () => {
 
                         {/* 9. Contact Us */}
                         <Reveal width="100%">
-                            <div className="bg-gradient-to-br from-bloom-primary/20 to-transparent p-8 rounded-3xl border border-bloom-primary/30 text-center w-full">
-                                <h2 className="text-2xl font-bold text-white mb-6">Contact Us</h2>
-                                <p className="text-gray-300 mb-2">Questions or requests?</p>
-                                <a href="mailto:info@offshoreminds.com" className="text-bloom-blue hover:text-white transition-colors text-lg font-bold block mb-4">info@offshoreminds.com</a>
+                            <div className="bg-gradient-to-br from-bloom-primary/10 dark:from-bloom-primary/20 to-transparent p-8 rounded-3xl border border-bloom-primary/20 dark:border-bloom-primary/30 text-center w-full shadow-sm dark:shadow-none">
+                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Contact Us</h2>
+                                <p className="text-slate-600 dark:text-gray-300 mb-2">Questions or requests?</p>
+                                <a href="mailto:info@offshoreminds.com" className="text-bloom-blue hover:text-bloom-primary dark:hover:text-white transition-colors text-lg font-bold block mb-4">info@offshoreminds.com</a>
                                 <p className="text-sm text-bloom-text-muted">Offshore Minds Pvt Ltd, H-41 Lal Market, Vikas Puri, New Delhi 110018, India.</p>
-                                <p className="text-xs text-bloom-text-muted mt-6 pt-4 border-t border-white/10">This condensed notice highlights how we handle your information. For additional details, please contact us.</p>
+                                <p className="text-xs text-bloom-text-muted mt-6 pt-4 border-t border-slate-200 dark:border-white/10">This condensed notice highlights how we handle your information. For additional details, please contact us.</p>
                             </div>
                         </Reveal>
                     </div>

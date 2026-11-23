@@ -4,23 +4,23 @@ import ServiceCard from '../components/ServiceCard';
 import Reveal from '../components/common/Reveal';
 import ServiceTeam from '../components/services/ServiceTeam';
 import HorizontalTools from '../components/services/HorizontalTools';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import SEO from '../components/SEO';
 
 const Services = () => {
     return (
-        <div className="bg-bloom-dark min-h-screen text-white">
+        <div className="bg-bloom-dark min-h-screen text-slate-900 dark:text-white transition-colors duration-300">
             <SEO
                 title="Services"
                 description="Explore Offshore Minds' comprehensive real estate outsourcing services — financial analysis, accounting, analytics, asset management, financial modeling, and marketing for CRE firms."
                 path="/services"
                 keywords="real estate services, CRE outsourcing, financial analysis, accounting, asset management, financial modeling, analytics, marketing, underwriting"
             />
-            {/* Bloom Theme Hero */}
+            {/* Hero */}
             <section className="relative pt-32 pb-20 overflow-hidden">
                 {/* Background Effects */}
                 <div className="absolute inset-0 z-0">
-                    <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-bloom-primary/20 rounded-full blur-[120px] animate-pulse float-soft"></div>
+                    <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-bloom-primary/10 dark:bg-bloom-primary/20 rounded-full blur-[120px] animate-pulse float-soft"></div>
                     <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-bloom-blue/10 rounded-full blur-[100px] float-soft" style={{ animationDelay: '2s' }}></div>
                 </div>
 
@@ -29,12 +29,12 @@ const Services = () => {
                         <span className="text-bloom-blue font-semibold tracking-wider uppercase text-sm mb-4 block">Our Expertise</span>
                     </Reveal>
                     <Reveal delay={100} width="100%">
-                        <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+                        <h1 className="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
                             Comprehensive <span className="text-bloom-primary">Real Estate Solutions</span>
                         </h1>
                     </Reveal>
                     <Reveal delay={200} width="100%">
-                        <p className="text-xl text-bloom-text-muted font-light leading-relaxed max-w-3xl mx-auto">
+                        <p className="text-xl text-slate-600 dark:text-bloom-text-muted font-light leading-relaxed max-w-3xl mx-auto">
                             From financial modeling to lease administration, we provide the back-office engine that powers your front-office success.
                         </p>
                     </Reveal>
@@ -60,7 +60,7 @@ const Services = () => {
             </section>
 
             {/* Process Section */}
-            <section className="py-24 bg-bloom-dark relative overflow-hidden">
+            <section className="py-24 bg-bloom-dark relative overflow-hidden transition-colors duration-300">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-bloom-primary/5 via-bloom-dark to-bloom-dark pointer-events-none"></div>
 
                 <div className="container mx-auto px-4 relative z-10">
@@ -69,10 +69,10 @@ const Services = () => {
                             <span className="text-bloom-blue font-semibold uppercase tracking-wider text-sm">How We Work</span>
                         </Reveal>
                         <Reveal delay={100}>
-                            <h2 className="text-3xl md:text-5xl font-bold mt-2 mb-4 text-white">Seamless Integration</h2>
+                            <h2 className="text-3xl md:text-5xl font-bold mt-2 mb-4 text-slate-900 dark:text-white">Seamless Integration</h2>
                         </Reveal>
                         <Reveal delay={200}>
-                            <p className="text-bloom-text-muted text-lg">We adapt to your workflows and systems, acting as a natural extension of your team.</p>
+                            <p className="text-slate-600 dark:text-bloom-text-muted text-lg">We adapt to your workflows and systems, acting as a natural extension of your team.</p>
                         </Reveal>
                     </div>
 
@@ -114,112 +114,71 @@ const Services = () => {
                     {
                         title: "Real Estate Financial Analysis & Modeling",
                         details: ["Underwriting & deal screening",
-
                             "Financial forecasting & predictive modeling",
-
                             "IRR / NPV / Equity multiple analysis",
-
                             "DSCR & lender-focused metrics",
-
                             "Capital stack & waterfall modeling",
-
                             "Project finance (infrastructure & development)",
-
                             "Renewable & energy project modeling",
                         ]
                     },
                     {
                         title: "Underwriting, Due Diligence & Deal Evaluation",
                         details: ["Market, tenant & sponsor analysis",
-
                             "Rent roll & lease review and validation",
-
                             "Expense audits, TTM vs Proforma comparisons",
-
                             "Sales/rent comps & tax projections",
-
                             "Risk and stress-test scenarios",
-
                             "Lender/credit alignment & covenant checks"]
                     },
                     {
                         title: "Lease, Asset & Portfolio Performance Management",
                         details: ["Lease abstraction, summaries & administration",
-
                             "Asset KPIs, NOI/CapEx/OpEx performance",
-
                             "Investor reporting (monthly/quarterly)",
-
                             "Rent roll & occupancy monitoring",
                             "CAM/TI/OpEx verification & variance checks",
-
                             "Portfolio benchmarking vs market",
-
                             "Dashboarding & portfolio health reviews"]
                     },
                     {
                         title: "Bookkeeping, Financial Reporting & Operational Accounting",
                         details: ["Monthly/quarterly close processes",
-
                             "P&L, Balance Sheet, Cash Flow reporting",
-
                             "Bank & ledger reconciliation",
-
                             "Budget vs actuals & variance monitoring",
-
                             "Capital improvement & construction cost tracking",
-
                             "Cost audits & procurement oversight",
-
                         ]
                     },
                     {
                         title: "Tax Strategy, Compliance & Transaction Support",
                         details: ["1031 exchange advisory coordination",
-
                             "Cost segregation study readiness & data prep",
-
                             "Real estate tax planning & compliance",
-
                             "Purchase/sale transaction accounting support",
-
                             "Regulatory & compliance audits",
-
                             "Lender/tax authority communication support",
-
-
                         ]
                     },
                     {
                         title: "Market Intelligence, Research & Location Analysis",
                         details: ["Submarket & location analysis (macro & micro)",
-
                             "Demographic & economic indicators review",
-
                             "Demand, supply & affordability metrics",
-
                             "Market comps & industry benchmarking",
-
                             "Growth forecasting & trend mapping",
-
                             "Competitive landscape & rent positioning",
-
                         ]
                     },
                     {
                         title: "Investor Communications & Deal Materials",
                         details: ["Sub-Services Covered:Offering Memorandums (OMs) & pitch decks",
-
                             "Investor reports & quarterly presentations",
-
                             "Property flyers, brochures & marketing kits",
-
                             "Capital raise support packages",
-
                             "Development and construction trackers",
-
-                            "Portfolio summary & executive briefs",
-
+                            "Portfolio summary & executive briefs",
                         ]
                     }
                 ]}
@@ -230,13 +189,13 @@ const Services = () => {
                 <div className="absolute inset-0 bg-gradient-to-b from-bloom-dark to-bloom-primary/10 text-center"></div>
                 <div className="container mx-auto px-4 max-w-4xl flex flex-col items-center justify-center relative z-10">
                     <Reveal>
-                        <h2 className="text-3xl md:text-5xl font-bold mb-6 text-white leading-tight">Need a custom solution?</h2>
+                        <h2 className="text-3xl md:text-5xl font-bold mb-6 text-slate-900 dark:text-white leading-tight">Need a custom solution?</h2>
                     </Reveal>
                     <Reveal delay={200}>
-                        <p className="text-bloom-text-muted mb-10 text-xl font-light text-center">We understand every real estate firm is unique. Let's discuss a tailored engagement model that fits your needs.</p>
+                        <p className="text-slate-600 dark:text-bloom-text-muted mb-10 text-xl font-light text-center">We understand every real estate firm is unique. Let's discuss a tailored engagement model that fits your needs.</p>
                     </Reveal>
                     <Reveal delay={300} className="mx-auto">
-                        <a href="https://calendly.com/gyan-offshoreminds/30min?month=2025-12" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-bloom-primary text-white font-bold py-4 px-10 rounded-full hover:bg-white hover:text-bloom-dark transition-all duration-300 shadow-[0_0_20px_rgba(93,92,222,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">
+                        <a href="https://calendly.com/gyan-offshoreminds/30min?month=2025-12" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-bloom-primary text-white font-bold py-4 px-10 rounded-full hover:bg-slate-900 dark:hover:bg-white dark:hover:text-bloom-dark transition-all duration-300 shadow-[0_0_20px_rgba(93,92,222,0.3)] hover:shadow-xl">
                             Schedule a Call <ArrowRight size={18} />
                         </a>
                     </Reveal>
@@ -249,12 +208,12 @@ const Services = () => {
 const ProcessStep = ({ number, title, desc, delay }) => (
     <Reveal delay={delay} width="100%" height="100%">
         <div className="text-center relative z-10 group h-full">
-            <div className="w-24 h-24 bg-bloom-dark border-4 border-white/5 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:border-bloom-primary transition-colors duration-500 shadow-xl relative">
-                <span className="text-3xl font-bold text-white/20 group-hover:text-bloom-primary transition-colors">{number}</span>
-                <div className="absolute inset-0 rounded-full border border-white/10 scale-110 group-hover:scale-125 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+            <div className="w-24 h-24 bg-white dark:bg-bloom-dark border-4 border-slate-200/90 dark:border-white/5 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:border-bloom-primary transition-colors duration-500 shadow-md relative">
+                <span className="text-3xl font-bold text-slate-300 dark:text-white/20 group-hover:text-bloom-primary transition-colors">{number}</span>
+                <div className="absolute inset-0 rounded-full border border-slate-200 dark:border-white/10 scale-110 group-hover:scale-125 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
             </div>
-            <h3 className="text-xl font-bold text-white mb-3 group-hover:text-bloom-blue transition-colors">{title}</h3>
-            <p className="text-bloom-text-muted px-4 leading-relaxed">{desc}</p>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-bloom-blue transition-colors">{title}</h3>
+            <p className="text-slate-600 dark:text-bloom-text-muted px-4 leading-relaxed">{desc}</p>
         </div>
     </Reveal>
 );

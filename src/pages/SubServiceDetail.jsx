@@ -48,7 +48,7 @@ const SubServiceDetail = () => {
     };
 
     return (
-        <div className="bg-bloom-dark min-h-screen text-white">
+        <div className="bg-bloom-dark min-h-screen text-slate-900 dark:text-white transition-colors duration-300">
             <SEO
                 title={`${subService.title} — ${service.title}`}
                 description={subService.description}
@@ -89,12 +89,12 @@ const SubServiceDetail = () => {
                                 </span>
                             </div>
 
-                            <h1 className="text-2xl md:text-3xl lg:text-5xl  text-white mb-8 leading-[1.1] tracking-tight">
+                            <h1 className="text-2xl md:text-3xl lg:text-5xl text-slate-900 dark:text-white mb-8 leading-[1.1] tracking-tight font-bold">
                                 {subService.title}
 
                             </h1>
 
-                            <p className="text-lg md:text-xl text-gray-300 font-light leading-relaxed mb-10 max-w-2xl text-balance">
+                            <p className="text-lg md:text-xl text-slate-600 dark:text-gray-300 font-light leading-relaxed mb-10 max-w-2xl text-balance">
                                 {specificData.heroDescription || subService.description}
                             </p>
 
@@ -175,11 +175,11 @@ const SubServiceDetail = () => {
             </section>
 
             {/* Comprehensive Services Section */}
-            <section className="py-24 relative overflow-hidden bg-white/5">
+            <section className="py-24 relative overflow-hidden bg-slate-50/80 dark:bg-white/5">
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="max-w-4xl mx-auto">
                         <Reveal>
-                            <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Comprehensive Services</h2>
+                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-12 text-center">Comprehensive Services</h2>
                         </Reveal>
 
                         <div className="grid md:grid-cols-2 gap-8">
@@ -202,9 +202,9 @@ const SubServiceDetail = () => {
                                 }
                             ]).map((feature, idx) => (
                                 <Reveal key={idx} delay={(idx + 1) * 100}>
-                                    <div className="bg-bloom-dark/50 backdrop-blur-sm border border-white/10 p-8 rounded-2xl hover:border-bloom-primary/50 transition-all duration-300 h-full">
+                                    <div className="bg-white dark:bg-bloom-dark/50 backdrop-blur-sm border border-slate-200/90 dark:border-white/10 p-8 rounded-2xl hover:border-bloom-primary/50 transition-all duration-300 h-full shadow-sm hover:shadow-md dark:shadow-none">
                                         <h3 className="text-xl font-bold text-bloom-blue mb-4">{feature.title}</h3>
-                                        <p className="text-bloom-text-muted leading-relaxed">
+                                        <p className="text-slate-600 dark:text-bloom-text-muted leading-relaxed">
                                             {feature.description}
                                         </p>
                                     </div>
@@ -227,14 +227,14 @@ const SubServiceDetail = () => {
                 customHighlight={specificData.expertise?.highlight} // Added Prop
             />
             {/* Services Links Section */}
-            <section className="py-24 relative overflow-hidden bg-bloom-dark/50 border-y border-white/5">
+            <section className="py-24 relative overflow-hidden bg-bloom-dark/50 border-y border-slate-200 dark:border-white/5">
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="text-center max-w-3xl mx-auto mb-16">
                         <Reveal width="100%">
                             <span className="text-bloom-blue font-semibold uppercase tracking-widest text-sm mb-4 block">Take the Next Step</span>
                         </Reveal>
                         <Reveal delay={100} width="100%">
-                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Explore Our <span className="text-bloom-primary">Services</span></h2>
+                            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">Explore Our <span className="text-bloom-primary">Services</span></h2>
                         </Reveal>
                         <Reveal delay={200} width="100%">
                             <p className="text-bloom-text-muted text-lg">

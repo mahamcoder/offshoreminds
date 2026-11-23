@@ -22,7 +22,7 @@ const WhyChooseUs = () => {
                         <span className="text-bloom-blue font-semibold tracking-wider uppercase text-sm">Our Advantage</span>
                     </Reveal>
                     <Reveal delay={100}>
-                        <h2 className="text-3xl md:text-5xl font-bold font-heading mt-2 text-white">Why Choose Offshore Minds?</h2>
+                        <h2 className="text-3xl md:text-5xl font-bold font-heading mt-2 text-slate-900 dark:text-white">Why Choose Offshore Minds?</h2>
                     </Reveal>
                 </div>
 
@@ -30,12 +30,12 @@ const WhyChooseUs = () => {
                     {reasons.map((reason, index) => (
                         <div key={index} className="h-full">
                             <Reveal delay={index * 50} width="100%">
-                                <div className="group bg-white/5 border border-white/10 p-8 rounded-2xl hover:bg-white/10 transition-all duration-300 hover:border-bloom-primary/30 text-center h-full">
-                                    <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-bloom-primary group-hover:scale-110 transition-all duration-300 shadow-inner">
-                                        <reason.icon className="text-bloom-text group-hover:text-white w-8 h-8 transition-colors" />
+                                <div className="group bg-white dark:bg-white/5 border border-slate-200/90 dark:border-white/10 p-8 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/10 transition-all duration-300 hover:border-bloom-primary/30 text-center h-full shadow-sm hover:shadow-lg dark:shadow-none">
+                                    <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-bloom-blue/10 dark:bg-white/5 flex items-center justify-center group-hover:bg-bloom-primary group-hover:scale-110 transition-all duration-300 shadow-inner">
+                                        <reason.icon className="text-bloom-blue dark:text-bloom-text group-hover:text-white w-8 h-8 transition-colors" />
                                     </div>
-                                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-bloom-blue transition-colors">{reason.title}</h3>
-                                    <p className="text-bloom-text-muted text-sm leading-relaxed">{reason.desc}</p>
+                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-bloom-blue transition-colors">{reason.title}</h3>
+                                    <p className="text-slate-600 dark:text-bloom-text-muted text-sm leading-relaxed">{reason.desc}</p>
                                 </div>
                             </Reveal>
                         </div>

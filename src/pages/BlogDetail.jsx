@@ -416,7 +416,7 @@ const BlogDetail = () => {
     // ── render ────────────────────────────────────────────────────────────────
 
     return (
-        <div className="bg-bloom-dark min-h-screen text-white pt-24 pb-20">
+        <div className="bg-bloom-dark min-h-screen text-slate-900 dark:text-white pt-24 pb-20 transition-colors duration-300">
             <SEO
                 title={blog.title}
                 description={blog.excerpt}
@@ -441,7 +441,7 @@ const BlogDetail = () => {
 
             <div className="container mx-auto px-4 relative z-20 -mt-32">
                 <Reveal width="100%">
-                    <div className="max-w-6xl mx-auto bg-bloom-dark/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-12 shadow-2xl">
+                    <div className="max-w-6xl mx-auto bg-white dark:bg-bloom-dark/80 backdrop-blur-xl border border-slate-200/90 dark:border-white/10 rounded-3xl p-6 md:p-12 shadow-xl dark:shadow-2xl">
 
                         {/* Meta */}
                         <div className="flex flex-wrap items-center gap-4 mb-6">
@@ -452,7 +452,7 @@ const BlogDetail = () => {
                             <div className="flex items-center gap-2 text-bloom-text-muted text-sm"><User size={16} /> {blog.author}</div>
                         </div>
 
-                        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-white leading-tight">{blog.title}</h1>
+                        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-slate-900 dark:text-white leading-tight">{blog.title}</h1>
 
                         <BlogRenderer content={blog.content} />
 

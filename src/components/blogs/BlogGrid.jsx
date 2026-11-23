@@ -24,7 +24,6 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
 
                 let firestoreBlogs = [];
                 try {
-                    // Strategy 1: Ordered by creation time
                     const q = query(collection(db, "blogs"), orderBy("createdAt", "desc"));
                     const querySnapshot = await getDocs(q);
                     firestoreBlogs = querySnapshot.docs.map(doc => ({
@@ -33,13 +32,8 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
                         isDynamic: true
                     }));
                 } catch (orderErr) {
-                    if (orderErr.code === 'permission-denied') {
-                        toast.error("Public blog access is blocked by database rules. Please update Firestore rules.");
-                        console.error("FIREBASE PERMISSION ERROR: Please ensure your Firestore rules allow public reads for the 'blogs' collection.");
-                    }
                     console.warn("Ordered fetch failed, falling back to simple fetch:", orderErr.message);
                     try {
-                        // Strategy 2: Simple fetch (resilient to missing indexes/fields)
                         const querySnapshot = await getDocs(collection(db, "blogs"));
                         firestoreBlogs = querySnapshot.docs.map(doc => ({
                             id: doc.id,
@@ -47,33 +41,21 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
                             isDynamic: true
                         }));
                     } catch (fetchErr) {
-                        if (fetchErr.code === 'permission-denied') {
-                            toast.error("Could not load blogs. Permission denied.");
-                        }
                         console.error("Critical fetch error:", fetchErr);
                     }
                 }
 
-                // switch-over Logic: If user has their own blogs, show ONLY those. 
-                // If the DB is empty, show the original examples.
                 let finalBlogs = [];
                 if (firestoreBlogs.length > 0) {
                     finalBlogs = firestoreBlogs;
                 } else {
-                    finalBlogs = blogsData.map(b => ({ ...b, isDynamic: false }));
+                    finalBlogs = blogsData;
                 }
-
-                // Strategy 3: In-memory sorting (ensures newest content is always first)
-                finalBlogs.sort((a, b) => {
-                    const timeA = a.createdAt?.seconds ? a.createdAt.seconds * 1000 : new Date(a.date).getTime();
-                    const timeB = b.createdAt?.seconds ? b.createdAt.seconds * 1000 : new Date(b.date).getTime();
-                    return timeB - timeA;
-                });
 
                 setBlogs(finalBlogs);
             } catch (err) {
-                console.error("Error initializing Firebase fetch", err);
-                setBlogs(blogsData.map(b => ({ ...b, isDynamic: false })));
+                console.error("Error fetching blogs:", err);
+                setBlogs(blogsData);
             } finally {
                 setLoading(false);
             }
@@ -86,9 +68,7 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
         const matchesCategory = selectedCategory === "All" || post.category === selectedCategory;
         const matchesSearch = searchQuery === "" ||
             post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (post.keywords && post.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase())));
-
+            post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
     });
 
@@ -96,7 +76,7 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
     const hasMore = visibleCount < filteredPosts.length;
 
     const handleShowMore = () => {
-        setVisibleCount(filteredPosts.length); // Show ALL remaining on click
+        setVisibleCount(prev => prev + 3);
     };
 
     if (loading) {
@@ -116,7 +96,7 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
                         const isLinkedIn = !!post.linkedInUrl;
 
                         return (
-                            <div key={post.id} className="group bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden border border-white/10 hover:border-bloom-primary/50 transition-all duration-300 hover:-translate-y-2 h-full flex flex-col">
+                            <div key={post.id} className="group bg-white dark:bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden border border-slate-200/90 dark:border-white/10 hover:border-bloom-primary/50 transition-all duration-300 hover:-translate-y-2 h-full flex flex-col shadow-sm hover:shadow-xl">
                                 {/* Improved Clickable Image Hook */}
                                 <div className="h-56 overflow-hidden relative shrink-0">
                                     {isLinkedIn ? (
@@ -136,14 +116,14 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
                                             />
                                         </Link>
                                     )}
-                                    <div className="absolute inset-0 bg-bloom-dark/20 mix-blend-multiply transition-opacity group-hover:opacity-0 pointer-events-none"></div>
-                                    <div className="absolute top-4 left-4 bg-bloom-dark/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-bloom-primary border border-white/10">
+                                    <div className="absolute inset-0 bg-slate-900/10 dark:bg-bloom-dark/20 mix-blend-multiply transition-opacity group-hover:opacity-0 pointer-events-none"></div>
+                                    <div className="absolute top-4 left-4 bg-white/90 dark:bg-bloom-dark/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-bloom-primary border border-slate-200 dark:border-white/10 shadow-sm">
                                         {post.category}
                                     </div>
                                 </div>
 
                                 <div className="p-8 flex flex-col flex-1">
-                                    <div className="flex items-center gap-3 text-xs text-bloom-text-muted mb-4 flex-wrap">
+                                    <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-bloom-text-muted mb-4 flex-wrap">
                                         <div className="flex items-center gap-1">
                                             <Calendar size={14} /> {post.date}
                                         </div>
@@ -153,13 +133,13 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
                                         {(post.likesCount > 0 || post.commentsCount > 0) && (
                                             <div className="flex items-center gap-2 ml-auto">
                                                 {post.likesCount > 0 && (
-                                                    <span className="flex items-center gap-1 text-red-400/70">
-                                                        <Heart size={12} className="fill-red-400/70" />
+                                                    <span className="flex items-center gap-1 text-red-500/80">
+                                                        <Heart size={12} className="fill-red-500/80" />
                                                         {post.likesCount}
                                                     </span>
                                                 )}
                                                 {post.commentsCount > 0 && (
-                                                    <span className="flex items-center gap-1 text-bloom-blue/70">
+                                                    <span className="flex items-center gap-1 text-bloom-blue">
                                                         <MessageCircle size={12} />
                                                         {post.commentsCount}
                                                     </span>
@@ -168,37 +148,37 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
                                         )}
                                     </div>
 
-                                    {/* Improved Clickable Title Hook */}
+                                    {/* Clickable Title */}
                                     {isLinkedIn ? (
                                         <a
                                             href={post.linkedInUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-bloom-blue transition-colors cursor-pointer leading-tight block"
+                                            className="text-xl font-bold text-slate-900 dark:text-white mb-3 line-clamp-2 group-hover:text-bloom-blue transition-colors cursor-pointer leading-tight block"
                                         >
                                             {post.title}
                                         </a>
                                     ) : (
                                         <Link
                                             to={detailLink}
-                                            className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-bloom-blue transition-colors cursor-pointer leading-tight block"
+                                            className="text-xl font-bold text-slate-900 dark:text-white mb-3 line-clamp-2 group-hover:text-bloom-blue transition-colors cursor-pointer leading-tight block"
                                         >
                                             {post.title}
                                         </Link>
                                     )}
 
-                                    <p className="text-bloom-text-muted mb-6 line-clamp-3 text-sm leading-relaxed">
+                                    <p className="text-slate-600 dark:text-bloom-text-muted mb-6 line-clamp-3 text-sm leading-relaxed">
                                         {post.excerpt}
                                     </p>
 
                                     <div className="mt-auto">
                                         {isLinkedIn ? (
-                                            <a href={post.linkedInUrl} target="_blank" rel="noopener noreferrer" className="text-bloom-secondary font-bold text-sm uppercase tracking-wider flex items-center gap-2 group-hover:text-white transition-colors">
+                                            <a href={post.linkedInUrl} target="_blank" rel="noopener noreferrer" className="text-bloom-primary dark:text-bloom-secondary font-bold text-sm uppercase tracking-wider flex items-center gap-2 hover:text-bloom-blue dark:hover:text-white transition-colors">
                                                 Explore <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                                             </a>
                                         ) : (
-                                            <Link to={detailLink} className="text-bloom-secondary font-bold text-sm uppercase tracking-wider flex items-center gap-2 group-hover:text-white transition-colors">
-                                                Explore <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                            <Link to={detailLink} className="text-bloom-primary dark:text-bloom-secondary font-bold text-sm uppercase tracking-wider flex items-center gap-2 hover:text-bloom-blue dark:hover:text-white transition-colors">
+                                                Read More <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                                             </Link>
                                         )}
                                     </div>
@@ -208,7 +188,7 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
                     })
                 ) : (
                     <div className="col-span-full text-center py-20">
-                        <p className="text-bloom-text-muted text-lg">No blog posts found matching your criteria.</p>
+                        <p className="text-slate-500 dark:text-bloom-text-muted text-lg">No blog posts found matching your criteria.</p>
                     </div>
                 )}
             </div>
@@ -218,7 +198,7 @@ const BlogGrid = ({ selectedCategory = "All", searchQuery = "" }) => {
                 <div className="flex justify-center mt-12">
                     <button
                         onClick={handleShowMore}
-                        className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-bloom-primary/20 to-bloom-blue/20 border border-bloom-primary/40 rounded-full text-white font-bold hover:from-bloom-primary hover:to-bloom-primary hover:text-bloom-dark transition-all duration-300 shadow-lg hover:shadow-bloom-primary/30"
+                        className="group inline-flex items-center gap-3 px-8 py-4 bg-white dark:bg-transparent dark:bg-gradient-to-r dark:from-bloom-primary/20 dark:to-bloom-blue/20 border border-slate-300 dark:border-bloom-primary/40 rounded-full text-slate-800 dark:text-white font-bold hover:bg-slate-100 dark:hover:from-bloom-primary dark:hover:to-bloom-primary dark:hover:text-white transition-all duration-300 shadow-md"
                     >
                         Read More Articles
                         <ChevronDown size={20} className="group-hover:translate-y-1 transition-transform" />

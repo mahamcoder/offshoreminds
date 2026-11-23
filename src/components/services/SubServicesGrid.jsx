@@ -10,7 +10,7 @@ const SubServicesGrid = ({ subServices, serviceId }) => {
             <div className="container mx-auto px-4">
                 <div className="mb-12">
                     <Reveal>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Specialized Services</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">Specialized Services</h2>
                         <div className="w-16 h-1 bg-bloom-primary rounded-full"></div>
                     </Reveal>
                 </div>
@@ -19,7 +19,7 @@ const SubServicesGrid = ({ subServices, serviceId }) => {
                     {subServices.map((sub, index) => (
                         <div key={index} className="h-full">
                             <Reveal delay={index * 100} width="100%" height="100%">
-                                <div className="group relative overflow-hidden rounded-2xl bg-white/5 border border-white/10 hover:border-bloom-primary/50 transition-all duration-300 h-full flex flex-col">
+                                <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-white/5 border border-slate-200/90 dark:border-white/10 hover:border-bloom-primary/50 transition-all duration-300 h-full flex flex-col shadow-sm hover:shadow-xl dark:shadow-none">
                                     {/* Hover Glow */}
                                     <div className="absolute inset-0 bg-gradient-to-t from-bloom-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
@@ -30,19 +30,19 @@ const SubServicesGrid = ({ subServices, serviceId }) => {
                                             alt={sub.title}
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         />
-                                        <div className="absolute inset-0 bg-bloom-dark/20 mix-blend-multiply"></div>
+                                        <div className="absolute inset-0 bg-slate-900/10 dark:bg-bloom-dark/20 mix-blend-multiply"></div>
                                     </div>
 
                                     {/* Content */}
                                     <div className="p-8 relative z-10 flex flex-col flex-1">
-                                        <h3 className="text-xl font-bold text-white mb-3 group-hover:text-bloom-blue transition-colors">
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-bloom-blue transition-colors">
                                             {sub.title}
                                         </h3>
-                                        <p className="text-bloom-text-muted text-sm leading-relaxed mb-6">
+                                        <p className="text-slate-600 dark:text-bloom-text-muted text-sm leading-relaxed mb-6">
                                             {sub.description}
                                         </p>
                                         <div className="mt-auto">
-                                            <Link to={`/services/${serviceId}/sub/${sub.id}`} className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-white hover:text-bloom-primary transition-colors">
+                                            <Link to={`/services/${serviceId}/sub/${sub.id}`} className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-bloom-primary hover:text-bloom-blue dark:text-white dark:hover:text-bloom-primary transition-colors">
                                                 Explore <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                                             </Link>
                                         </div>

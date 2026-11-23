@@ -4,11 +4,49 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    /* Light Theme (Default) */
+    --color-bloom-dark: 250 252 255;          /* Crisp clean slate-50 background #fafcff */
+    --color-bloom-card: 255 255 255;          /* Pure white #ffffff for cards */
+    --color-bloom-card-border: 226 232 240;   /* Slate-200 border #e2e8f0 */
+    --color-bloom-primary: 93 92 222;         /* Vibrant indigo purple #5D5CDE */
+    --color-bloom-secondary: 79 70 229;       /* Rich indigo #4F46E5 */
+    --color-bloom-blue: 0 93 228;             /* Bright blue #005de4 */
+    --color-bloom-text: 15 23 42;             /* Slate-900 #0F172A */
+    --color-bloom-text-muted: 71 85 105;      /* Slate-600 #475569 */
+    --color-border: 226 232 240;
+}
+
+html.dark {
+    /* Dark Theme */
+    --color-bloom-dark: 13 11 33;             /* #0D0B21 */
+    --color-bloom-card: 22 19 49;             /* #161331 */
+    --color-bloom-card-border: 255 255 255;
+    --color-bloom-primary: 93 92 222;         /* #5D5CDE */
+    --color-bloom-secondary: 192 183 232;     /* #C0B7E8 */
+    --color-bloom-blue: 0 93 228;             /* #005de4 */
+    --color-bloom-text: 234 234 234;          /* #EAEAEA */
+    --color-bloom-text-muted: 156 163 175;    /* #9CA3AF */
+    --color-border: 255 255 255;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
-    @apply antialiased;
-    color: #EAEAEA;
-    background-color: #0D0B21;
+    @apply antialiased transition-colors duration-300;
+    color: rgb(var(--color-bloom-text));
+    background-color: rgb(var(--color-bloom-dark));
+}
+
+/* Light Theme Ambient Gradient Mesh (Zero effect on dark mode) */
+html:not(.dark) body {
+    background-color: #f8faff;
+    background-image: 
+        radial-gradient(circle at 12% 10%, rgba(93, 92, 222, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 88% 15%, rgba(0, 93, 228, 0.07) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 45%),
+        radial-gradient(circle at 15% 80%, rgba(59, 130, 246, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 85% 92%, rgba(93, 92, 222, 0.07) 0%, transparent 45%);
+    background-attachment: fixed;
 }
 
 h1,
@@ -18,7 +56,18 @@ h4,
 h5,
 h6 {
     font-family: 'Poppins', sans-serif;
-    @apply text-white font-bold;
+    font-weight: 700;
+    color: #0f172a;
+    transition: color 0.3s ease;
+}
+
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+    color: #ffffff !important;
 }
 
 /* Custom Base Styles */
@@ -39,12 +88,97 @@ h6 {
 }
 
 .btn-glass {
-    @apply bg-white/20 backdrop-blur-md border border-white/30 text-white transition-all duration-300 shadow-lg;
+    @apply transition-all duration-300 shadow-lg;
 }
 
-.btn-glass:hover {
+.dark .btn-glass {
+    @apply bg-white/20 backdrop-blur-md border border-white/30 text-white;
+}
+
+.dark .btn-glass:hover {
     @apply bg-white/30;
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+html:not(.dark) .btn-glass {
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #0f172a;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+}
+
+html:not(.dark) .btn-glass:hover {
+    background-color: #f8fafc;
+    border-color: #94a3b8;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.1);
+}
+
+/* Light Theme Card and Surface Elevation */
+html:not(.dark) .service-card,
+html:not(.dark) [class*="bg-white/5"] {
+    background-color: #ffffff;
+    border-color: rgba(226, 232, 240, 0.95);
+    box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+}
+
+html:not(.dark) .service-card:hover,
+html:not(.dark) [class*="bg-white/5"]:hover {
+    background-color: #ffffff;
+    border-color: rgba(93, 92, 222, 0.4);
+    box-shadow: 0 20px 35px -4px rgba(15, 23, 42, 0.09), 0 8px 16px -2px rgba(15, 23, 42, 0.05);
+}
+
+html:not(.dark) [class*="bg-white/10"]:not(button):not(.btn) {
+    background-color: rgba(241, 245, 249, 0.85);
+    border-color: rgba(226, 232, 240, 0.9);
+}
+
+html:not(.dark) [class*="border-white/5"],
+html:not(.dark) [class*="border-white/10"],
+html:not(.dark) [class*="border-white/20"] {
+    border-color: rgba(226, 232, 240, 0.85);
+}
+
+/* Text overrides in Light Mode */
+html:not(.dark) .text-gray-200 {
+    color: #334155;
+}
+html:not(.dark) .text-gray-300 {
+    color: #475569;
+}
+html:not(.dark) .text-gray-400 {
+    color: #64748b;
+}
+
+/* In Light Mode, prevent headings and titles with text-white from becoming invisible white-on-white */
+html:not(.dark) h1.text-white:not(button *):not(.btn *):not([class*="bg-bloom-primary"] *):not([class*="bg-primary"] *),
+html:not(.dark) h2.text-white:not(button *):not(.btn *):not([class*="bg-bloom-primary"] *):not([class*="bg-primary"] *),
+html:not(.dark) h3.text-white:not(button *):not(.btn *):not([class*="bg-bloom-primary"] *):not([class*="bg-primary"] *),
+html:not(.dark) h4.text-white:not(button *):not(.btn *):not([class*="bg-bloom-primary"] *):not([class*="bg-primary"] *),
+html:not(.dark) h5.text-white:not(button *):not(.btn *):not([class*="bg-bloom-primary"] *):not([class*="bg-primary"] *),
+html:not(.dark) h6.text-white:not(button *):not(.btn *):not([class*="bg-bloom-primary"] *):not([class*="bg-primary"] *) {
+    color: #0f172a !important;
+}
+
+/* In Light Mode, gradient text that starts with from-white must start with slate-900 so it is crisp and readable */
+html:not(.dark) [class*="bg-clip-text"].from-white {
+    --tw-gradient-from: #0f172a var(--tw-gradient-from-position) !important;
+    --tw-gradient-to: rgb(15 23 42 / 0) var(--tw-gradient-to-position) !important;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+
+/* Form inputs in Light Mode */
+html:not(.dark) input:not([type="checkbox"]):not([type="radio"]),
+html:not(.dark) textarea,
+html:not(.dark) select {
+    background-color: #ffffff !important;
+    border-color: #cbd5e1 !important;
+    color: #0f172a !important;
+}
+
+html:not(.dark) input::placeholder,
+html:not(.dark) textarea::placeholder {
+    color: #94a3b8 !important;
 }
 
 /* Global animation helpers */
@@ -82,7 +216,7 @@ h6 {
 }
 
 .marquee-item {
-    color: #EAEAEA;
+    color: rgb(var(--color-bloom-text));
     font-weight: 600;
     letter-spacing: 0.01em;
     white-space: nowrap;
@@ -104,6 +238,9 @@ h6 {
     position: relative;
     isolation: isolate;
     transition: transform 0.5s ease, box-shadow 0.5s ease, border-color 0.4s ease;
+}
+
+.dark .service-card {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
@@ -117,10 +254,14 @@ h6 {
     z-index: 0;
 }
 
-.service-card:hover {
+.dark .service-card:hover {
     transform: translateY(-10px);
     border-color: rgba(192, 183, 232, 0.5);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+html:not(.dark) .service-card:hover {
+    transform: translateY(-8px);
 }
 
 .service-card:hover::after {
@@ -131,17 +272,33 @@ h6 {
     transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
-.service-card:hover .service-title {
+html:not(.dark) .service-title {
+    color: #0f172a;
+}
+
+.dark .service-card:hover .service-title {
     color: #ffffff;
     text-shadow: 0 0 18px rgba(192, 183, 232, 0.6);
+}
+
+html:not(.dark) .service-card:hover .service-title {
+    color: #ffffff !important;
 }
 
 .service-desc {
     transition: color 0.3s ease;
 }
 
-.service-card:hover .service-desc {
+html:not(.dark) .service-desc {
+    color: #475569;
+}
+
+.dark .service-card:hover .service-desc {
     color: #e5e7ff;
+}
+
+html:not(.dark) .service-card:hover .service-desc {
+    color: #e2e8f0 !important;
 }
 
 /* Scroll reveal */
@@ -191,7 +348,6 @@ h6 {
 }
 
 @keyframes floatSoft {
-
     0%,
     100% {
         transform: translateY(0);
@@ -246,39 +402,36 @@ h6 {
 }
 
 /* Quill Editor Dark Theme Overrides */
-.ql-snow .ql-stroke {
+.dark .ql-snow .ql-stroke {
     stroke: #EAEAEA !important;
 }
 
-.ql-snow .ql-fill {
+.dark .ql-snow .ql-fill {
     fill: #EAEAEA !important;
 }
 
-.ql-snow .ql-picker {
+.dark .ql-snow .ql-picker {
     color: #EAEAEA !important;
 }
 
-.ql-snow .ql-picker-options {
+.dark .ql-snow .ql-picker-options {
     background-color: #1a1a2e !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: #EAEAEA !important;
 }
 
-.ql-snow .ql-picker-item:hover {
+.dark .ql-snow .ql-picker-item:hover {
     color: #5D5CDE !important;
 }
 
-.ql-editor {
+.dark .ql-editor {
     color: #EAEAEA !important;
+}
+
+.ql-editor {
     font-size: 1.125rem;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
 .ql-editor h1,
 .ql-editor h2,
 .ql-editor h3,
@@ -286,6 +439,17 @@ h6,
 .prose h2,
 .prose h3,
 .prose-headings {
+    color: #0f172a;
+    font-weight: 700;
+}
+
+.dark .ql-editor h1,
+.dark .ql-editor h2,
+.dark .ql-editor h3,
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose-headings {
     color: #ffffff !important;
     font-weight: 700 !important;
 }

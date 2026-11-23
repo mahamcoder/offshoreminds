@@ -24,16 +24,16 @@ const TickerBar = () => {
                 {/* Outer Glow wrapper */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-bloom-primary/20 via-bloom-blue/20 to-bloom-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-1000"></div>
 
-                <div className="relative flex items-center gap-3 md:gap-5 bg-[#1a1638]/80 backdrop-blur-xl border border-white/10 rounded-full pl-2 pr-2 py-1.5 md:py-2 md:pl-3 md:pr-3 shadow-2xl transition-all duration-500 hover:border-white/20 hover:shadow-[0_0_30px_rgba(93,92,222,0.2)] z-20">
+                <div className="relative flex items-center gap-3 md:gap-5 bg-white/90 dark:bg-[#1a1638]/80 backdrop-blur-xl border border-slate-200/90 dark:border-white/10 rounded-full pl-2 pr-2 py-1.5 md:py-2 md:pl-3 md:pr-3 shadow-md dark:shadow-2xl transition-all duration-500 hover:border-bloom-primary/30 dark:hover:border-white/20 hover:shadow-[0_0_30px_rgba(93,92,222,0.2)] z-20">
 
                     {/* Left Icon Capsule */}
-                    <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-bloom-primary/20 border border-bloom-primary/30 group-hover:scale-110 transition-transform duration-500 shadow-inner">
+                    <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-bloom-primary/10 dark:bg-bloom-primary/20 border border-bloom-primary/20 dark:border-bloom-primary/30 group-hover:scale-110 transition-transform duration-500 shadow-inner">
                         <MessageCircleHeart size={18} className="text-[#5D5CDE] group-hover:animate-pulse" />
                     </div>
 
                     {/* Content Text */}
                     <div className="flex flex-col md:flex-row md:items-center gap-0 md:gap-3 pr-2">
-                        <span className="text-white/60 font-bold text-[13px] md:text-sm tracking-wide">
+                        <span className="text-slate-700 dark:text-white/60 font-bold text-[13px] md:text-sm tracking-wide">
                             Smarter Outsourcing, Unfair Advantage
                         </span>
 

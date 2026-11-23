@@ -8,10 +8,10 @@ const HorizontalTools = () => {
             <div className="container mx-auto px-4 mb-16">
                 <Reveal width="100%">
                     <div className="text-center max-w-3xl mx-auto">
-                        <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">
                             Tools of the <span className="bg-gradient-to-r from-bloom-primary to-bloom-blue bg-clip-text text-transparent">Trade</span>
                         </h2>
-                        <p className="text-bloom-text-muted text-lg">
+                        <p className="text-slate-600 dark:text-bloom-text-muted text-lg">
                             We leverage industry-leading technologies and specialized platforms to deliver
                             precision, efficiency, and actionable insights across every project.
                         </p>
@@ -28,11 +28,11 @@ const HorizontalTools = () => {
                             <Reveal width="100%" delay={sIndex * 100}>
                                 <div className="container mx-auto px-4 mb-10">
                                     <div className="flex items-center gap-4">
-                                        <div className="h-px flex-grow bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                                        <div className="h-px flex-grow bg-gradient-to-r from-transparent via-slate-300 dark:via-white/10 to-transparent"></div>
                                         <h3 className="text-bloom-blue text-sm font-bold uppercase tracking-[0.3em] whitespace-nowrap">
                                             {service.title}
                                         </h3>
-                                        <div className="h-px flex-grow bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                                        <div className="h-px flex-grow bg-gradient-to-r from-transparent via-slate-300 dark:via-white/10 to-transparent"></div>
                                     </div>
                                 </div>
                             </Reveal>
@@ -45,7 +45,7 @@ const HorizontalTools = () => {
                                                 key={`${service.id}-${tIndex}`}
                                                 className="flex flex-col items-center justify-center group"
                                             >
-                                                <div className="w-32 h-20 flex items-center justify-center p-2 mb-3 bg-white/5 rounded-xl border border-white/10 group-hover:bg-white/10 group-hover:border-bloom-primary/50 transition-all duration-300">
+                                                <div className="w-32 h-20 flex items-center justify-center p-2 mb-3 bg-white dark:bg-white/5 rounded-xl border border-slate-200/90 dark:border-white/10 group-hover:bg-slate-50 dark:group-hover:bg-white/10 group-hover:border-bloom-primary/50 transition-all duration-300 shadow-sm">
                                                     <img
                                                         src={tool.logo}
                                                         alt={tool.name}
@@ -53,7 +53,7 @@ const HorizontalTools = () => {
                                                         className="max-h-full max-w-full object-contain filter brightness-110 group-hover:scale-110 transition-transform duration-300"
                                                     />
                                                 </div>
-                                                <span className="text-[10px] font-bold text-bloom-text-muted uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                <span className="text-[10px] font-bold text-slate-700 dark:text-bloom-text-muted uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                                     {tool.name}
                                                 </span>
                                             </div>

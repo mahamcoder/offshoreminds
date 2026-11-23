@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -11,14 +12,16 @@ export default {
         secondary: '#4175FC',  // Bright Blue
         accent: '#F2ACEC',     // Soft Pink
         'bg-light': '#F4F6F9',
-        border: '#E5E7EB',
-        // New BloomFi Inspired Dark Theme Colors
-        'bloom-dark': '#0D0B21',     // Deepest purple/black background
-        'bloom-primary': '#5D5CDE',  // Primary purple
-        'bloom-secondary': '#C0B7E8',// Light lavender/white
-        'bloom-blue': '#005de4',     // New Blue for headings
-        'bloom-text': '#EAEAEA',     // Light text
-        'bloom-text-muted': '#9CA3AF', // Muted text
+        border: 'rgb(var(--color-border) / <alpha-value>)',
+        // Dynamic Bloom Theme Colors (Light & Dark)
+        'bloom-dark': 'rgb(var(--color-bloom-dark) / <alpha-value>)',
+        'bloom-primary': 'rgb(var(--color-bloom-primary) / <alpha-value>)',
+        'bloom-secondary': 'rgb(var(--color-bloom-secondary) / <alpha-value>)',
+        'bloom-blue': 'rgb(var(--color-bloom-blue) / <alpha-value>)',
+        'bloom-text': 'rgb(var(--color-bloom-text) / <alpha-value>)',
+        'bloom-text-muted': 'rgb(var(--color-bloom-text-muted) / <alpha-value>)',
+        'bloom-card': 'rgb(var(--color-bloom-card) / <alpha-value>)',
+        'bloom-card-border': 'rgb(var(--color-bloom-card-border) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['Roboto', 'sans-serif'],

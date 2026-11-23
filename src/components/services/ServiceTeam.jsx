@@ -76,27 +76,27 @@ const ServiceTeam = ({
                             </span>
                         </Reveal>
                         <Reveal delay={100}>
-                            <h2 className="text-4xl font-bold text-white mb-6 font-heading">
+                            <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-6 font-heading">
                                 {displayTitle}
                             </h2>
                         </Reveal>
                         <Reveal delay={200}>
-                            <p className="text-bloom-text-muted leading-relaxed text-lg mb-8 font-light">
+                            <p className="text-slate-600 dark:text-bloom-text-muted leading-relaxed text-lg mb-8 font-light">
                                 {displayDescription}
                             </p>
                         </Reveal>
 
                         <Reveal delay={300}>
                             {customHighlight ? (
-                                <div className="p-6 rounded-2xl bg-gradient-to-br from-bloom-primary/20 to-bloom-blue/10 border border-bloom-primary/30 backdrop-blur-sm relative overflow-hidden group">
+                                <div className="p-6 rounded-2xl bg-gradient-to-br from-indigo-50 to-blue-50/60 dark:from-bloom-primary/20 dark:to-bloom-blue/10 border border-slate-200 dark:border-bloom-primary/30 backdrop-blur-sm relative overflow-hidden group shadow-sm">
                                     <div className="absolute inset-0 bg-bloom-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                     <div className="relative z-10 flex items-start gap-4">
-                                        <div className="w-12 h-12 bg-bloom-primary/20 rounded-xl flex items-center justify-center text-bloom-primary flex-shrink-0">
+                                        <div className="w-12 h-12 bg-bloom-primary/10 dark:bg-bloom-primary/20 rounded-xl flex items-center justify-center text-bloom-primary flex-shrink-0">
                                             <CheckCircle2 size={24} />
                                         </div>
                                         <div>
-                                            <h3 className="text-base  text-white mb-2">{customHighlight.title}</h3>
-                                            <p className="text-bloom-text-muted text-sm leading-relaxed">{customHighlight.description}</p>
+                                            <h3 className="text-base text-slate-900 dark:text-white mb-2 font-bold">{customHighlight.title}</h3>
+                                            <p className="text-slate-600 dark:text-bloom-text-muted text-sm leading-relaxed">{customHighlight.description}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -105,8 +105,8 @@ const ServiceTeam = ({
                                     <div className="w-12 h-12 bg-bloom-blue rounded-lg flex items-center justify-center text-white font-bold text-xl">
                                         <CountUp end={parseInt(displayExpValue)} suffix="+" duration={2000} />
                                     </div>
-                                    <div className="text-sm text-bloom-text-muted leading-tight">
-                                        <span className="text-white font-bold block">{displayExpLabel}</span>
+                                    <div className="text-sm text-slate-600 dark:text-bloom-text-muted leading-tight">
+                                        <span className="text-slate-900 dark:text-white font-bold block">{displayExpLabel}</span>
                                         {customExpValue ? "" : "per team member"}
                                     </div>
                                 </div>
@@ -115,29 +115,29 @@ const ServiceTeam = ({
                     </div>
 
                     <Reveal width="100%">
-                        <div className="bg-white/5 p-8 md:p-10 rounded-3xl border border-white/10 backdrop-blur-xl relative group hover:border-bloom-primary/30 transition-colors duration-500">
+                        <div className="bg-white dark:bg-white/5 p-8 md:p-10 rounded-3xl border border-slate-200/90 dark:border-white/10 backdrop-blur-xl relative group hover:border-bloom-primary/30 transition-colors duration-500 shadow-md dark:shadow-none">
                             {/* Glow */}
                             <div className="absolute -inset-1 bg-gradient-to-r from-bloom-primary/20 to-bloom-blue/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                             <div className="relative z-10">
                                 <div className="relative mb-8" >
                                     {hideDropdown ? (
-                                        <div className="text-2xl font-bold text-white">
-                                            <span className="bg-gradient-to-r from-white to-bloom-blue bg-clip-text text-transparent">{displayHeading}</span>
+                                        <div className="text-2xl font-bold text-slate-900 dark:text-white">
+                                            <span className="bg-gradient-to-r from-slate-900 to-bloom-blue dark:from-white dark:to-bloom-blue bg-clip-text text-transparent">{displayHeading}</span>
                                         </div>
                                     ) : (
                                         <>
                                             <button
 
-                                                className="flex items-center gap-3 text-2xl font-bold text-white hover:text-bloom-primary transition-colors group/btn"
+                                                className="flex items-center gap-3 text-2xl font-bold text-slate-900 dark:text-white hover:text-bloom-primary transition-colors group/btn"
                                             >
-                                                <span className="bg-gradient-to-r from-white to-bloom-blue bg-clip-text text-transparent">{displayHeading}</span>
+                                                <span className="bg-gradient-to-r from-slate-900 to-bloom-blue dark:from-white dark:to-bloom-blue bg-clip-text text-transparent">{displayHeading}</span>
 
                                             </button>
 
                                             {/* Dropdown Menu */}
                                             {isDropdownOpen && (
-                                                <div className="absolute top-full left-0 mt-4 w-full sm:w-72 bg-bloom-dark border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+                                                <div className="absolute top-full left-0 mt-4 w-full sm:w-72 bg-white dark:bg-bloom-dark border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-200">
                                                     <div className="py-2">
                                                         {servicesData.map((service) => (
                                                             <button
@@ -147,8 +147,8 @@ const ServiceTeam = ({
                                                                     setIsDropdownOpen(false);
                                                                 }}
                                                                 className={`w-full text-left px-6 py-3 text-sm transition-colors flex items-center justify-between ${selectedServiceId === service.id
-                                                                    ? 'bg-bloom-primary/20 text-white font-bold'
-                                                                    : 'text-bloom-text-muted hover:bg-white/5 hover:text-white'
+                                                                    ? 'bg-bloom-primary/10 dark:bg-bloom-primary/20 text-bloom-primary dark:text-white font-bold'
+                                                                    : 'text-slate-600 dark:text-bloom-text-muted hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'
                                                                     }`}
                                                             >
                                                                 {service.title}
@@ -164,7 +164,7 @@ const ServiceTeam = ({
 
                                 <div className="space-y-4">
                                     {displayCapabilities.map((capability, index) => (
-                                        <div key={index} className="border-b border-white/5 last:border-0 pb-4 last:pb-0">
+                                        <div key={index} className="border-b border-slate-200 dark:border-white/5 last:border-0 pb-4 last:pb-0">
                                             <button
                                                 onClick={() => toggleAccordion(index)}
                                                 className="w-full flex items-start gap-4 text-left group/item"
@@ -175,7 +175,7 @@ const ServiceTeam = ({
                                                         size={20}
                                                     />
                                                 </div>
-                                                <span className={`text-lg font-bold transition-colors ${expandedCapabilities[index] ? 'text-white' : 'text-bloom-text-muted group-hover/item:text-white'}`}>
+                                                <span className={`text-lg font-bold transition-colors ${expandedCapabilities[index] ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-bloom-text-muted group-hover/item:text-slate-900 dark:group-hover/item:text-white'}`}>
                                                     {capability.title}
                                                 </span>
                                             </button>
@@ -184,7 +184,7 @@ const ServiceTeam = ({
                                                 <div className="overflow-hidden">
                                                     <ul className="space-y-3 pl-9">
                                                         {(capability.details || []).map((detail, dIndex) => (
-                                                            <li key={dIndex} className="flex items-center gap-3 text-bloom-text-muted/80 text-[15px] hover:text-white transition-colors">
+                                                            <li key={dIndex} className="flex items-center gap-3 text-slate-600 dark:text-bloom-text-muted/80 text-[15px] hover:text-slate-900 dark:hover:text-white transition-colors">
                                                                 <div className="w-1 h-1 rounded-full bg-bloom-primary/50"></div>
                                                                 {detail}
                                                             </li>

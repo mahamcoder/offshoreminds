@@ -27,7 +27,6 @@ const ExpandSection = () => {
             }
 
             if (!isDeleting && displayText === currentFullWord) {
-                // Pause at the end of the word
                 setTimeout(() => setIsDeleting(true), 2000);
             } else if (isDeleting && displayText === '') {
                 setIsDeleting(false);
@@ -40,13 +39,13 @@ const ExpandSection = () => {
     }, [displayText, isDeleting, wordIndex, typingSpeed, expandServices]);
 
     return (
-        <section className="bg-bloom-dark relative">
+        <section className="bg-bloom-dark relative transition-colors duration-300">
             <div className="container mx-auto px-4">
-                <div className="py-20 border-t border-white/5 text-center">
-                    <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
+                <div className="py-20 border-t border-slate-200 dark:border-white/5 text-center">
+                    <h3 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">
                         Expand with us for your{' '}
                         <span className="relative">
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-bloom-blue">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-bloom-blue dark:from-white dark:to-bloom-blue">
                                 {displayText}
                             </span>
                             <span className="inline-block w-[3px] h-[30px] md:h-[40px] bg-bloom-blue ml-1 animate-pulse align-middle"></span>
