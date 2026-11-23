@@ -7,6 +7,7 @@ import {
 import Reveal from '../components/common/Reveal';
 import { caseStudiesData } from '../data/caseStudies';
 import SEO from '../components/SEO';
+import { useTheme } from '../context/ThemeContext';
 
 const CaseStudyDetail = () => {
     const { id } = useParams();
@@ -15,6 +16,16 @@ const CaseStudyDetail = () => {
     const [isReading, setIsReading] = useState(false);
     const [showVideoModal, setShowVideoModal] = useState(false);
     const [isDownloading, setIsDownloading] = useState(false);
+    const { setTheme } = useTheme();
+
+    // ── default to light theme for first-time readers ──────────────────────────
+    useEffect(() => {
+        try {
+            if (!localStorage.getItem('om-reading-customized')) {
+                setTheme('light');
+            }
+        } catch (e) {}
+    }, [setTheme]);
 
     // Icon mapping for metrics
     const getMetricIcon = (iconName) => {
@@ -218,13 +229,13 @@ Downloaded from: ${window.location.href}
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-bloom-dark" />
+            <div className="min-h-screen bg-white dark:bg-bloom-dark" />
         );
     }
 
     if (!study) {
         return (
-            <div className="min-h-screen bg-bloom-dark flex flex-col items-center justify-center text-white p-4">
+            <div className="min-h-screen bg-white dark:bg-bloom-dark flex flex-col items-center justify-center text-slate-900 dark:text-white p-4">
                 <h2 className="text-2xl font-bold mb-4 text-center">Case Study Not Found</h2>
                 <Link to="/case-studies" className="text-bloom-primary hover:underline flex items-center gap-2">
                     <ArrowLeft size={18} /> Back to Case Studies
@@ -234,7 +245,7 @@ Downloaded from: ${window.location.href}
     }
 
     return (
-        <div className="bg-bloom-dark min-h-screen text-slate-900 dark:text-white pt-24 pb-20 transition-colors duration-300">
+        <div className="bg-white dark:bg-bloom-dark min-h-screen text-slate-900 dark:text-white pt-24 pb-20 transition-colors duration-300">
             <SEO
                 title={study.title}
                 description={study.atGlance || study.challenge}
@@ -256,7 +267,7 @@ Downloaded from: ${window.location.href}
                     alt={study.title}
                     className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-bloom-dark to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-bloom-dark to-transparent"></div>
 
                 <div className="absolute bottom-0 left-0 w-full p-8 md:p-16 z-10">
                     <div className="container mx-auto max-w-5xl text-left">
@@ -375,12 +386,12 @@ Downloaded from: ${window.location.href}
                                     <span className="text-slate-900 dark:text-white font-semibold text-base leading-snug">{study.category}</span>
                                 </div>
                                 <div className="flex flex-col gap-2 pb-5">
-                                    <span className="text-gray-400 text-xs uppercase tracking-wider">Timeline</span>
-                                    <span className="text-white font-semibold text-base">Completed 2024</span>
+                                    <span className="text-slate-500 dark:text-gray-400 text-xs uppercase tracking-wider">Timeline</span>
+                                    <span className="text-slate-900 dark:text-white font-semibold text-base">Completed 2024</span>
                                 </div>
                             </div>
 
-                            <div className="mt-10 pt-8 border-t border-white/10 space-y-4">
+                            <div className="mt-10 pt-8 border-t border-slate-200 dark:border-white/10 space-y-4">
                                 <button
                                     onClick={handleShare}
                                     className="w-full py-4 px-6 bg-gradient-to-r from-bloom-primary to-purple-600 text-white font-bold rounded-2xl hover:brightness-110 hover:shadow-[0_0_20px_rgba(93,92,222,0.3)] transition-all duration-300 flex items-center justify-between group shadow-lg"
@@ -412,7 +423,7 @@ Downloaded from: ${window.location.href}
                                     onClick={handleVoice}
                                     className={`w-full py-4 px-6 border-2 transition-all duration-300 flex items-center justify-between gap-2 group shadow-lg rounded-2xl ${isReading
                                             ? 'bg-bloom-primary/20 border-bloom-primary text-white'
-                                            : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'
+                                            : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-600 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-white/10'
                                         }`}
                                 >
                                     <span className="flex items-center gap-2">{isReading ? 'Reading...' : 'Read Aloud'}</span>
@@ -423,7 +434,7 @@ Downloaded from: ${window.location.href}
                                     href="https://calendly.com/gyan-offshoreminds/30min?month=2025-12"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-full py-4 px-6 border-2 border-white/10 text-white font-bold rounded-2xl hover:bg-white/5 hover:border-white/20 transition-all duration-300 flex items-center justify-center group"
+                                    className="w-full py-4 px-6 border-2 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-bold rounded-2xl hover:bg-slate-100 dark:hover:bg-white/5 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-300 flex items-center justify-center group"
                                 >
                                     Get Similar Results
                                 </a>
@@ -432,7 +443,7 @@ Downloaded from: ${window.location.href}
                     </div>
                 </div>
 
-                <div className="mt-20 pt-10 border-t border-white/10 flex justify-between items-center">
+                <div className="mt-20 pt-10 border-t border-slate-200 dark:border-white/10 flex justify-between items-center">
                     <Link to="/case-studies" className="inline-flex items-center gap-2 text-bloom-primary font-bold hover:translate-x-[-4px] transition-transform">
                         <ArrowLeft size={20} /> Back to All Case Studies
                     </Link>
@@ -446,7 +457,7 @@ Downloaded from: ${window.location.href}
                     onClick={() => setShowVideoModal(false)}
                 >
                     <div
-                        className="relative w-full max-w-4xl bg-bloom-dark rounded-3xl overflow-hidden shadow-2xl"
+                        className="relative w-full max-w-4xl bg-white dark:bg-bloom-dark rounded-3xl overflow-hidden shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button
@@ -465,9 +476,9 @@ Downloaded from: ${window.location.href}
                                 allowFullScreen
                             ></iframe>
                         </div>
-                        <div className="p-6 bg-white/5 border-t border-white/10">
-                            <h3 className="text-xl font-bold text-white mb-2">{study.title} - Video Presentation</h3>
-                            <p className="text-gray-400 text-sm">Learn more about this successful project implementation</p>
+                        <div className="p-6 bg-slate-50 dark:bg-white/5 border-t border-slate-200 dark:border-white/10">
+                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{study.title} - Video Presentation</h3>
+                            <p className="text-slate-500 dark:text-gray-400 text-sm">Learn more about this successful project implementation</p>
                         </div>
                     </div>
                 </div>

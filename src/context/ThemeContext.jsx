@@ -12,7 +12,7 @@ export const ThemeProvider = ({ children }) => {
     } catch (e) {
       console.error('Failed to read theme from localStorage', e);
     }
-    // Default to dark mode
+    // Default to dark mode across the site
     return 'dark';
   });
 
@@ -36,6 +36,12 @@ export const ThemeProvider = ({ children }) => {
   }, [theme]);
 
   const toggleTheme = () => {
+    try {
+      // Mark that user has explicitly customized their theme so reading pages don't auto-reset it
+      localStorage.setItem('om-reading-customized', 'true');
+    } catch (e) {
+      // ignore
+    }
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 

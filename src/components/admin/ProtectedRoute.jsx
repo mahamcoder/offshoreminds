@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../firebase';
 
 const ProtectedRoute = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -24,7 +25,14 @@ const ProtectedRoute = () => {
     );
   }
 
-  return user ? <Outlet /> : <Navigate to="/admin/login" />;
+  return user ? (
+    <Outlet />
+  ) : (
+    <Navigate
+      to={`/admin/login?redirect=${encodeURIComponent(location.pathname + location.search)}`}
+      replace
+    />
+  );
 };
 
 export default ProtectedRoute;

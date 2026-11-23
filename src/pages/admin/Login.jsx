@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
 import { auth } from '../../firebase';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Reveal from '../../components/common/Reveal';
 import { Lock, Mail, ArrowRight } from 'lucide-react';
 
@@ -12,6 +12,9 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const redirectTarget = searchParams.get('redirect') || '/admin/dashboard';
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,7 +25,7 @@ const Login = () => {
       const persistence = rememberMe ? browserLocalPersistence : browserSessionPersistence;
       await setPersistence(auth, persistence);
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/admin/dashboard');
+      navigate(redirectTarget);
     } catch (err) {
       console.error(err);
       setError('Failed to login. Please check your credentials.');

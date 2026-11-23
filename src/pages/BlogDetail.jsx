@@ -16,6 +16,7 @@ import Reveal from '../components/common/Reveal';
 import BlogRenderer from '../components/blog/BlogRenderer';
 import { blogsData } from '../data/blogs';
 import SEO from '../components/SEO';
+import { useTheme } from '../context/ThemeContext';
 
 // ── helpers ────────────────────────────────────────────────────────────────────
 
@@ -67,6 +68,7 @@ const avatarColor = (name = '') => {
 const BlogDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { setTheme } = useTheme();
     const commentSectionRef = useRef(null);
     const likePopoverRef    = useRef(null);
 
@@ -97,6 +99,15 @@ const BlogDetail = () => {
     // Share
     const [showShareMenu, setShowShareMenu] = useState(false);
     const [copied, setCopied]               = useState(false);
+
+    // ── default to light theme for first-time readers ──────────────────────────
+    useEffect(() => {
+        try {
+            if (!localStorage.getItem('om-reading-customized')) {
+                setTheme('light');
+            }
+        } catch (e) {}
+    }, [setTheme]);
 
     // ── fetch blog ─────────────────────────────────────────────────────────────
     useEffect(() => {
