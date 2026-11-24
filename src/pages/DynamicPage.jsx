@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { getPageBySlugOrId } from '../utils/pageStorage';
 import SEO from '../components/SEO';
 import BlockRenderer from '../components/cms/BlockRenderer';
 import WhatsAppButton from '../components/WhatsAppButton';
@@ -23,26 +22,11 @@ const DynamicPage = () => {
       setError(null);
 
       try {
-        // First try query by slug
-        const q = query(collection(db, 'pages'), where('slug', '==', slug));
-        const snap = await getDocs(q);
-
-        if (!snap.empty) {
-          const docData = snap.docs[0].data();
-          setPage({ id: snap.docs[0].id, ...docData });
+        const found = await getPageBySlugOrId(slug);
+        if (found) {
+          setPage(found);
         } else {
-          // Fallback: try by doc ID
-          try {
-            const dRef = doc(db, 'pages', slug);
-            const dSnap = await getDoc(dRef);
-            if (dSnap.exists()) {
-              setPage({ id: dSnap.id, ...dSnap.data() });
-            } else {
-              setError('Page not found');
-            }
-          } catch (_) {
-            setError('Page not found');
-          }
+          setError('Page not found');
         }
       } catch (err) {
         console.error('Error loading dynamic page:', err);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-hot-toast';
 import { db } from '../../firebase';
 import {
@@ -6,27 +6,37 @@ import {
 } from 'firebase/firestore';
 import { generateSlug } from '../../utils/slug';
 import { BLOCK_DEFINITIONS, createDefaultBlock } from '../cms/blockTypes';
-import { PAGE_TEMPLATES } from '../cms/templates';
-import BlockEditorCard from '../cms/BlockEditorCard';
 import BlockRenderer from '../cms/BlockRenderer';
+import { savePage } from '../../utils/pageStorage';
 import {
-  ArrowLeft, Save, Eye, Edit3, Settings, Plus, Sparkles,
-  Smartphone, Monitor, Tablet, Check, X, ExternalLink,
-  Layers, Globe, Shield, RefreshCw, LayoutTemplate
+  ArrowLeft, Save, Eye, Settings, Plus, Sparkles, Smartphone,
+  Monitor, Tablet, Check, X, ExternalLink, Layers, Globe, Shield,
+  RefreshCw, LayoutTemplate, Search, Trash2, Copy, MoveUp, MoveDown,
+  ChevronDown, ChevronUp, Undo, Redo, ZoomIn, ZoomOut, CheckCircle,
+  HelpCircle, MessageSquare, Rocket, Code, Play, Phone, Building2,
+  FileText, ArrowRight, Minus, EyeOff, Sliders
 } from 'lucide-react';
 
 const PageBuilder = ({ existingPage = null, onClose = null }) => {
   const [loading, setLoading] = useState(false);
-  const [viewMode, setViewMode] = useState('edit'); // 'edit' or 'preview'
+  const [leftTab, setLeftTab] = useState('blocks'); // 'blocks' | 'outline'
+  const [rightTab, setRightTab] = useState('element'); // 'element' | 'page'
+  const [searchQuery, setSearchQuery] = useState('');
   const [deviceViewport, setDeviceViewport] = useState('desktop'); // 'desktop' | 'tablet' | 'mobile'
+  const [zoomLevel, setZoomLevel] = useState(100); // 75, 100, 125
+  const [selectedBlockId, setSelectedBlockId] = useState(null);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [showTemplatesModal, setShowTemplatesModal] = useState(false);
-  const [showAddBlockModal, setShowAddBlockModal] = useState(false);
+  const [previewOnly, setPreviewOnly] = useState(false);
+  const [motionActive, setMotionActive] = useState(true);
+
+  // Undo / Redo history
+  const [history, setHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
 
   // Page level metadata state
   const [pageData, setPageData] = useState({
-    title: existingPage?.title || 'New Real Estate Service',
-    slug: existingPage?.slug || 'new-real-estate-service',
+    title: existingPage?.title || 'New Real Estate Advisory Service',
+    slug: existingPage?.slug || 'new-advisory-service',
     status: existingPage?.status || 'published', // 'published' | 'draft'
     category: existingPage?.category || 'Services',
     includeInNav: existingPage?.includeInNav || false,
@@ -37,108 +47,143 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
     blocks: existingPage?.blocks || []
   });
 
-  // If new page with 0 blocks, initialize with default Service Landing template
+  // Initialize canvas with default blocks if empty
   useEffect(() => {
     if (!existingPage && (!pageData.blocks || pageData.blocks.length === 0)) {
-      const defaultTemplate = PAGE_TEMPLATES[0];
-      setPageData((prev) => ({
-        ...prev,
-        blocks: defaultTemplate.blocksFactory()
-      }));
+      const defaultBlocks = [
+        createDefaultBlock('hero'),
+        createDefaultBlock('featureGrid'),
+        createDefaultBlock('stats'),
+        createDefaultBlock('cta')
+      ];
+      setPageData(prev => ({ ...prev, blocks: defaultBlocks }));
+      setSelectedBlockId(defaultBlocks[0].id);
+    } else if (pageData.blocks && pageData.blocks.length > 0 && !selectedBlockId) {
+      setSelectedBlockId(pageData.blocks[0].id);
     }
   }, [existingPage]);
 
-  // Handle title change & auto slug
-  const handleTitleChange = (val) => {
-    setPageData((prev) => {
-      const next = { ...prev, title: val };
-      if (!existingPage) {
-        next.slug = generateSlug(val);
-      }
-      return next;
+  // Push to history
+  const pushHistory = (newBlocks) => {
+    setHistory(prev => {
+      const sliced = prev.slice(0, historyIndex + 1);
+      return [...sliced, newBlocks];
     });
+    setHistoryIndex(prev => prev + 1);
   };
 
-  // Block management functions
-  const handleUpdateBlock = (updatedBlock) => {
-    setPageData((prev) => ({
-      ...prev,
-      blocks: prev.blocks.map((b) => (b.id === updatedBlock.id ? updatedBlock : b))
-    }));
+  const handleUndo = () => {
+    if (historyIndex > 0) {
+      const prevBlocks = history[historyIndex - 1];
+      setPageData(prev => ({ ...prev, blocks: prevBlocks }));
+      setHistoryIndex(prev => prev - 1);
+      toast.success('Undo action applied');
+    }
+  };
+
+  const handleRedo = () => {
+    if (historyIndex < history.length - 1) {
+      const nextBlocks = history[historyIndex + 1];
+      setPageData(prev => ({ ...prev, blocks: nextBlocks }));
+      setHistoryIndex(prev => prev + 1);
+      toast.success('Redo action applied');
+    }
+  };
+
+  // Block management
+  const handleSelectBlock = (block) => {
+    setSelectedBlockId(block.id);
+    setRightTab('element');
+  };
+
+  const handleAddBlock = (type, insertIndex = null) => {
+    const newBlock = createDefaultBlock(type);
+    setPageData(prev => {
+      const list = [...prev.blocks];
+      if (insertIndex !== null) {
+        list.splice(insertIndex + 1, 0, newBlock);
+      } else {
+        list.push(newBlock);
+      }
+      pushHistory(list);
+      return { ...prev, blocks: list };
+    });
+    setSelectedBlockId(newBlock.id);
+    setRightTab('element');
+    toast.success(`Added ${newBlock.name}`);
+  };
+
+  const handleUpdateBlockData = (blockId, field, value) => {
+    setPageData(prev => {
+      const updated = prev.blocks.map(b => {
+        if (b.id === blockId) {
+          return {
+            ...b,
+            data: {
+              ...b.data,
+              [field]: value
+            }
+          };
+        }
+        return b;
+      });
+      return { ...prev, blocks: updated };
+    });
   };
 
   const handleMoveUp = (index) => {
     if (index === 0) return;
-    setPageData((prev) => {
-      const newBlocks = [...prev.blocks];
-      const temp = newBlocks[index - 1];
-      newBlocks[index - 1] = newBlocks[index];
-      newBlocks[index] = temp;
-      return { ...prev, blocks: newBlocks };
+    setPageData(prev => {
+      const list = [...prev.blocks];
+      const temp = list[index - 1];
+      list[index - 1] = list[index];
+      list[index] = temp;
+      pushHistory(list);
+      return { ...prev, blocks: list };
     });
   };
 
   const handleMoveDown = (index) => {
-    setPageData((prev) => {
-      if (index === prev.blocks.length - 1) return prev;
-      const newBlocks = [...prev.blocks];
-      const temp = newBlocks[index + 1];
-      newBlocks[index + 1] = newBlocks[index];
-      newBlocks[index] = temp;
-      return { ...prev, blocks: newBlocks };
+    if (index === pageData.blocks.length - 1) return;
+    setPageData(prev => {
+      const list = [...prev.blocks];
+      const temp = list[index + 1];
+      list[index + 1] = list[index];
+      list[index] = temp;
+      pushHistory(list);
+      return { ...prev, blocks: list };
     });
   };
 
   const handleDuplicate = (index) => {
-    setPageData((prev) => {
+    setPageData(prev => {
       const target = prev.blocks[index];
       const clone = {
         ...JSON.parse(JSON.stringify(target)),
         id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
         name: `${target.name} (Copy)`
       };
-      const newBlocks = [...prev.blocks];
-      newBlocks.splice(index + 1, 0, clone);
-      return { ...prev, blocks: newBlocks };
+      const list = [...prev.blocks];
+      list.splice(index + 1, 0, clone);
+      pushHistory(list);
+      return { ...prev, blocks: list };
     });
     toast.success('Section duplicated');
   };
 
   const handleDeleteBlock = (index) => {
-    if (window.confirm('Are you sure you want to remove this section?')) {
-      setPageData((prev) => ({
-        ...prev,
-        blocks: prev.blocks.filter((_, i) => i !== index)
-      }));
-      toast.success('Section removed');
+    if (window.confirm('Delete this section from the canvas?')) {
+      setPageData(prev => {
+        const list = prev.blocks.filter((_, i) => i !== index);
+        pushHistory(list);
+        return { ...prev, blocks: list };
+      });
+      setSelectedBlockId(null);
+      toast.success('Section deleted');
     }
   };
 
-  const handleAddBlock = (type) => {
-    const newBlock = createDefaultBlock(type);
-    setPageData((prev) => ({
-      ...prev,
-      blocks: [...prev.blocks, newBlock]
-    }));
-    setShowAddBlockModal(false);
-    toast.success(`Added ${newBlock.name}`);
-  };
-
-  const handleApplyTemplate = (template) => {
-    if (pageData.blocks.length > 0) {
-      if (!window.confirm(`Load "${template.name}"? This will replace your current canvas blocks.`)) {
-        return;
-      }
-    }
-    setPageData((prev) => ({
-      ...prev,
-      blocks: template.blocksFactory()
-    }));
-    setShowTemplatesModal(false);
-    toast.success(`Loaded "${template.name}"`);
-  };
-
-  // Save to Firestore
+  // Save / Publish
   const handleSave = async (targetStatus = null) => {
     const finalStatus = targetStatus || pageData.status;
 
@@ -155,7 +200,7 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
     setLoading(true);
     try {
       const keywordsArray = pageData.seoKeywords
-        ? pageData.seoKeywords.split(',').map((k) => k.trim()).filter(Boolean)
+        ? (Array.isArray(pageData.seoKeywords) ? pageData.seoKeywords : pageData.seoKeywords.split(',').map(k => k.trim()).filter(Boolean))
         : [];
 
       const payload = {
@@ -168,148 +213,168 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
         seoDescription: pageData.seoDescription.trim(),
         seoKeywords: keywordsArray,
         ogImage: pageData.ogImage.trim(),
-        blocks: pageData.blocks || [],
-        updatedAt: serverTimestamp()
+        blocks: pageData.blocks || []
       };
 
-      if (existingPage?.id) {
-        await updateDoc(doc(db, 'pages', existingPage.id), payload);
-        toast.success(`Page updated successfully (${finalStatus})!`);
+      const result = await savePage(payload, existingPage?.id);
+      if (result.isCloudSynced) {
+        toast.success(`Page published & cloud synced (${finalStatus})!`);
       } else {
-        payload.createdAt = serverTimestamp();
-        await addDoc(collection(db, 'pages'), payload);
-        toast.success(`Page created and published (${finalStatus})!`);
+        toast.success(`Page saved & published!`);
       }
 
-      if (onClose) {
-        onClose();
-      }
+      if (onClose) onClose();
     } catch (err) {
       console.error('Error saving CMS page:', err);
-      toast.error(`Failed to save page: ${err.message || 'Unknown error'}`);
+      toast.error(`Save failed: ${err.message || 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
   };
 
+  // Filtered blocks for left sidebar
+  const filteredBlocks = BLOCK_DEFINITIONS.filter(b =>
+    b.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    b.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    b.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const selectedBlock = pageData.blocks.find(b => b.id === selectedBlockId);
+  const selectedIndex = pageData.blocks.findIndex(b => b.id === selectedBlockId);
+
   return (
-    <div className="min-h-screen bg-bloom-dark text-white font-sans relative flex flex-col">
+    <div className="fixed inset-0 z-50 bg-slate-900 text-white font-sans flex flex-col overflow-hidden select-none">
       {/* ─────────────────────────────────────────────────────────────────── */}
-      {/* STICKY TOP BUILDER BAR */}
+      {/* TOP STUDIO TOOLBAR (Matching Image 3) */}
       {/* ─────────────────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 bg-bloom-dark/95 backdrop-blur-xl border-b border-white/10 px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-xl">
-        {/* Left: Back & Title */}
+      <header className="h-16 bg-white dark:bg-bloom-dark border-b border-slate-200 dark:border-white/10 px-4 flex items-center justify-between text-slate-800 dark:text-white shrink-0 z-20 shadow-sm">
+        {/* Left: Back & Page Title / Slug */}
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-all"
-            title="Return to Dashboard"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
           >
-            <ArrowLeft size={20} />
+            <ArrowLeft size={16} />
+            <span>Pages</span>
           </button>
+
+          <div className="h-6 w-[1px] bg-slate-200 dark:bg-white/10 hidden sm:block"></div>
+
           <div>
             <div className="flex items-center gap-2">
-              <input
-                type="text"
-                value={pageData.title}
-                onChange={(e) => handleTitleChange(e.target.value)}
-                placeholder="Page Title..."
-                className="bg-transparent text-lg sm:text-xl font-extrabold text-white focus:outline-none focus:border-b-2 focus:border-bloom-primary max-w-xs sm:max-w-md truncate"
-              />
-              <span
-                className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
-                  pageData.status === 'published'
-                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                    : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                }`}
-              >
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                pageData.status === 'published'
+                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                  : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+              }`}>
                 {pageData.status}
               </span>
+              <span className="text-xs font-bold text-slate-900 dark:text-white truncate max-w-[180px] sm:max-w-xs">
+                {pageData.title}
+              </span>
             </div>
-            <div className="flex items-center gap-2 text-xs text-gray-400">
-              <span>URL:</span>
-              <code className="text-bloom-blue font-mono bg-white/5 px-1.5 py-0.5 rounded">
-                /p/{generateSlug(pageData.slug || pageData.title)}
-              </code>
+            <div className="text-[11px] text-slate-400 font-mono">
+              /p/{generateSlug(pageData.slug || pageData.title)}
             </div>
           </div>
         </div>
 
-        {/* Center: View Switcher (Edit vs Preview) */}
-        <div className="flex items-center gap-1 p-1 bg-black/40 border border-white/10 rounded-xl">
+        {/* Center: Viewport & Canvas Controls */}
+        <div className="hidden lg:flex items-center gap-3">
+          {/* Responsive device buttons */}
+          <div className="flex items-center p-1 bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl">
+            <button
+              type="button"
+              onClick={() => setDeviceViewport('mobile')}
+              className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all ${
+                deviceViewport === 'mobile'
+                  ? 'bg-white dark:bg-white/20 text-bloom-primary dark:text-white shadow-sm'
+                  : 'text-slate-500 dark:text-gray-400'
+              }`}
+            >
+              <Smartphone size={13} />
+              <span>Phone</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setDeviceViewport('tablet')}
+              className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all ${
+                deviceViewport === 'tablet'
+                  ? 'bg-white dark:bg-white/20 text-bloom-primary dark:text-white shadow-sm'
+                  : 'text-slate-500 dark:text-gray-400'
+              }`}
+            >
+              <Tablet size={13} />
+              <span>Tablet</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setDeviceViewport('desktop')}
+              className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all ${
+                deviceViewport === 'desktop'
+                  ? 'bg-white dark:bg-white/20 text-bloom-primary dark:text-white shadow-sm'
+                  : 'text-slate-500 dark:text-gray-400'
+              }`}
+            >
+              <Monitor size={13} />
+              <span>Desktop</span>
+            </button>
+          </div>
+
+          {/* Motion Status */}
           <button
             type="button"
-            onClick={() => setViewMode('edit')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
-              viewMode === 'edit'
-                ? 'bg-bloom-primary text-white shadow-md'
-                : 'text-gray-400 hover:text-white'
+            onClick={() => setMotionActive(!motionActive)}
+            className={`px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 border ${
+              motionActive
+                ? 'bg-bloom-primary/10 text-bloom-primary border-bloom-primary/30'
+                : 'bg-slate-100 dark:bg-white/5 text-slate-500 border-slate-200 dark:border-white/10'
             }`}
           >
-            <Edit3 size={14} />
-            <span>Editor</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode('preview')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
-              viewMode === 'preview'
-                ? 'bg-bloom-primary text-white shadow-md'
-                : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            <Eye size={14} />
-            <span>Preview</span>
+            <Sparkles size={13} />
+            <span>{motionActive ? 'Motion Active' : 'Motion Paused'}</span>
           </button>
         </div>
 
         {/* Right: Actions */}
         <div className="flex items-center gap-2">
-          {viewMode === 'preview' && (
-            <div className="hidden sm:flex items-center gap-1 bg-black/40 border border-white/10 p-1 rounded-xl mr-2">
-              <button
-                type="button"
-                onClick={() => setDeviceViewport('desktop')}
-                className={`p-1.5 rounded-lg transition-colors ${deviceViewport === 'desktop' ? 'bg-white/20 text-white' : 'text-gray-400'}`}
-                title="Desktop View"
-              >
-                <Monitor size={15} />
-              </button>
-              <button
-                type="button"
-                onClick={() => setDeviceViewport('tablet')}
-                className={`p-1.5 rounded-lg transition-colors ${deviceViewport === 'tablet' ? 'bg-white/20 text-white' : 'text-gray-400'}`}
-                title="Tablet View (768px)"
-              >
-                <Tablet size={15} />
-              </button>
-              <button
-                type="button"
-                onClick={() => setDeviceViewport('mobile')}
-                className={`p-1.5 rounded-lg transition-colors ${deviceViewport === 'mobile' ? 'bg-white/20 text-white' : 'text-gray-400'}`}
-                title="Mobile View (375px)"
-              >
-                <Smartphone size={15} />
-              </button>
-            </div>
-          )}
+          {/* Undo / Redo */}
+          <div className="hidden sm:flex items-center gap-1 mr-1">
+            <button
+              type="button"
+              onClick={handleUndo}
+              disabled={historyIndex <= 0}
+              className="p-1.5 text-slate-500 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10"
+              title="Undo"
+            >
+              <Undo size={15} />
+            </button>
+            <button
+              type="button"
+              onClick={handleRedo}
+              disabled={historyIndex >= history.length - 1}
+              className="p-1.5 text-slate-500 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10"
+              title="Redo"
+            >
+              <Redo size={15} />
+            </button>
+          </div>
 
           <button
             type="button"
-            onClick={() => setShowTemplatesModal(true)}
-            className="px-3 py-2 text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all flex items-center gap-1.5"
-            title="Pre-made page templates"
+            onClick={() => handleSave('draft')}
+            disabled={loading}
+            className="px-3.5 py-2 text-xs font-bold text-slate-700 dark:text-gray-200 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 rounded-xl transition-all"
           >
-            <LayoutTemplate size={14} />
-            <span className="hidden sm:inline">Templates</span>
+            Save Draft
           </button>
 
           <button
             type="button"
             onClick={() => setShowSettingsModal(true)}
-            className="px-3 py-2 text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all flex items-center gap-1.5"
-            title="Page SEO & Navigation Settings"
+            className="px-3 py-2 text-xs font-bold text-slate-700 dark:text-gray-200 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 rounded-xl transition-all flex items-center gap-1.5"
+            title="SEO & Navigation Settings"
           >
             <Settings size={14} />
             <span className="hidden sm:inline">Settings</span>
@@ -317,382 +382,615 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
 
           <button
             type="button"
+            onClick={() => setPreviewOnly(!previewOnly)}
+            className={`px-3 py-2 text-xs font-bold rounded-xl border transition-all flex items-center gap-1.5 ${
+              previewOnly
+                ? 'bg-bloom-primary text-white border-bloom-primary'
+                : 'text-slate-700 dark:text-gray-200 bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10'
+            }`}
+          >
+            <Eye size={14} />
+            <span className="hidden sm:inline">{previewOnly ? 'Exit Preview' : 'Preview'}</span>
+          </button>
+
+          <button
+            type="button"
             disabled={loading}
             onClick={() => handleSave('published')}
-            className="px-5 py-2 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-bloom-primary to-bloom-blue hover:shadow-lg hover:shadow-bloom-primary/25 rounded-xl transition-all flex items-center gap-2 hover:scale-105 active:scale-95 disabled:opacity-50"
+            className="px-5 py-2 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-bloom-primary to-bloom-blue hover:shadow-lg hover:shadow-bloom-primary/25 rounded-xl transition-all flex items-center gap-1.5 hover:scale-105 active:scale-95 disabled:opacity-50"
           >
             <Save size={15} />
-            <span>{loading ? 'Saving...' : 'Save & Publish'}</span>
+            <span>{loading ? 'Publishing...' : 'Publish Page'}</span>
           </button>
         </div>
       </header>
 
       {/* ─────────────────────────────────────────────────────────────────── */}
-      {/* MAIN BUILDER BODY */}
+      {/* 3-COLUMN STUDIO LAYOUT */}
       {/* ─────────────────────────────────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col">
-        {viewMode === 'edit' ? (
-          /* CANVAS EDIT MODE */
-          <div className="max-w-4xl w-full mx-auto px-4 py-8 flex-1">
-            {/* Quick Helper Banner */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl mb-8 backdrop-blur-md">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-bloom-primary/10 text-bloom-primary flex items-center justify-center shrink-0">
-                  <Sparkles size={18} />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-white">Visual Block Canvas</h4>
-                  <p className="text-xs text-gray-400">
-                    Arrange, re-order, and customize blocks. They render responsively with Dark/Light mode support.
-                  </p>
-                </div>
-              </div>
+      <div className="flex-1 flex overflow-hidden relative">
+        {/* ── LEFT SIDEBAR: BLOCKS LIBRARY & OUTLINE ─────────────────────── */}
+        {!previewOnly && (
+          <aside className="w-72 sm:w-80 bg-white dark:bg-bloom-dark border-r border-slate-200 dark:border-white/10 flex flex-col shrink-0 z-10 text-slate-800 dark:text-white">
+            {/* Sidebar Tabs */}
+            <div className="p-3 border-b border-slate-200 dark:border-white/10 flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => setShowAddBlockModal(true)}
-                className="px-4 py-2 bg-bloom-primary text-white font-bold text-xs rounded-xl hover:bg-bloom-primary/90 transition-all flex items-center justify-center gap-1.5 shrink-0 shadow-lg shadow-bloom-primary/20"
+                onClick={() => setLeftTab('blocks')}
+                className={`flex-1 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                  leftTab === 'blocks'
+                    ? 'bg-bloom-primary text-white shadow-md'
+                    : 'text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-white/5'
+                }`}
               >
-                <Plus size={15} /> Add Section
+                <Layers size={14} />
+                <span>Blocks</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setLeftTab('outline')}
+                className={`flex-1 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                  leftTab === 'outline'
+                    ? 'bg-bloom-primary text-white shadow-md'
+                    : 'text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-white/5'
+                }`}
+              >
+                <Sliders size={14} />
+                <span>Outline ({pageData.blocks.length})</span>
               </button>
             </div>
 
-            {/* Blocks List */}
-            {pageData.blocks && pageData.blocks.length > 0 ? (
-              <div className="space-y-4">
-                {pageData.blocks.map((block, idx) => (
-                  <BlockEditorCard
-                    key={block.id || idx}
-                    block={block}
-                    index={idx}
-                    totalBlocks={pageData.blocks.length}
-                    onUpdate={handleUpdateBlock}
-                    onMoveUp={() => handleMoveUp(idx)}
-                    onMoveDown={() => handleMoveDown(idx)}
-                    onDuplicate={() => handleDuplicate(idx)}
-                    onDelete={() => handleDeleteBlock(idx)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="py-24 text-center border-2 border-dashed border-white/10 rounded-3xl p-8 bg-white/[0.02]">
-                <Layers size={40} className="mx-auto text-gray-500 mb-4" />
-                <h3 className="text-lg font-bold text-white mb-2">Your canvas is empty</h3>
-                <p className="text-xs text-gray-400 max-w-sm mx-auto mb-6">
-                  Add pre-designed components like Hero headers, Feature cards, Pricing comparisons, and FAQs.
-                </p>
-                <div className="flex items-center justify-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setShowAddBlockModal(true)}
-                    className="px-5 py-2.5 bg-bloom-primary text-white text-xs font-bold rounded-xl hover:bg-bloom-primary/90 flex items-center gap-2"
-                  >
-                    <Plus size={15} /> Add First Section
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowTemplatesModal(true)}
-                    className="px-5 py-2.5 bg-white/5 border border-white/10 text-white text-xs font-bold rounded-xl hover:bg-white/10 flex items-center gap-2"
-                  >
-                    <LayoutTemplate size={15} /> Load Template
-                  </button>
+            {/* TAB: BLOCKS */}
+            {leftTab === 'blocks' ? (
+              <div className="flex-1 flex flex-col overflow-hidden">
+                {/* Search Input */}
+                <div className="p-3 border-b border-slate-200 dark:border-white/10">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search blocks (e.g. Button, Text...)"
+                      className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-bloom-primary"
+                    />
+                  </div>
+                </div>
+
+                {/* Blocks List Grouped by Category */}
+                <div className="flex-1 overflow-y-auto p-3 space-y-5">
+                  {['BASICS', 'SECTIONS', 'ADVANCED'].map((category) => {
+                    const catBlocks = filteredBlocks.filter(b => b.category === category);
+                    if (catBlocks.length === 0) return null;
+                    return (
+                      <div key={category}>
+                        <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500 px-2 mb-2">
+                          {category}
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          {catBlocks.map((b) => (
+                            <div
+                              key={b.type}
+                              onClick={() => handleAddBlock(b.type, selectedIndex !== -1 ? selectedIndex : null)}
+                              className="p-3 bg-slate-50 dark:bg-white/[0.03] hover:bg-slate-100 dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/10 hover:border-bloom-primary/50 rounded-xl cursor-pointer transition-all duration-200 group flex flex-col justify-between"
+                            >
+                              <div className="flex items-center justify-between mb-1.5">
+                                <span className="text-xs font-bold text-slate-800 dark:text-white group-hover:text-bloom-primary transition-colors truncate">
+                                  {b.name}
+                                </span>
+                                <Plus size={13} className="text-slate-400 group-hover:text-bloom-primary shrink-0" />
+                              </div>
+                              <p className="text-[10px] text-slate-500 dark:text-gray-400 line-clamp-1">
+                                {b.description}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
+            ) : (
+              /* TAB: OUTLINE */
+              <div className="flex-1 overflow-y-auto p-3 space-y-2">
+                <p className="text-[11px] text-slate-400 px-1 mb-2">
+                  Page Section Structure: Drag or re-order sections.
+                </p>
+                {pageData.blocks.map((b, idx) => {
+                  const isSelected = b.id === selectedBlockId;
+                  return (
+                    <div
+                      key={b.id || idx}
+                      onClick={() => handleSelectBlock(b)}
+                      className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
+                        isSelected
+                          ? 'bg-bloom-primary/10 border-bloom-primary text-bloom-primary dark:text-white'
+                          : 'bg-slate-50 dark:bg-white/[0.03] border-slate-200 dark:border-white/10 text-slate-700 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-white/5'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 truncate pr-2">
+                        <span className="text-[10px] font-mono text-slate-400 font-bold">#{idx + 1}</span>
+                        <span className="text-xs font-bold truncate">{b.name || b.type}</span>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); handleMoveUp(idx); }}
+                          disabled={idx === 0}
+                          className="p-1 hover:text-bloom-primary disabled:opacity-20"
+                        >
+                          <MoveUp size={13} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); handleMoveDown(idx); }}
+                          disabled={idx === pageData.blocks.length - 1}
+                          className="p-1 hover:text-bloom-primary disabled:opacity-20"
+                        >
+                          <MoveDown size={13} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); handleDeleteBlock(idx); }}
+                          className="p-1 text-rose-500 hover:text-rose-600"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             )}
+          </aside>
+        )}
 
-            {/* Bottom Add Section Button */}
-            {pageData.blocks && pageData.blocks.length > 0 && (
-              <div className="pt-6 pb-12 text-center">
+        {/* ── CENTER: INTERACTIVE LIVE CANVAS ─────────────────────────────── */}
+        <main className="flex-1 bg-slate-100 dark:bg-black/60 overflow-y-auto flex flex-col items-center p-4 sm:p-8 relative">
+          {/* Canvas Top Status Bar */}
+          <div className="mb-4 flex items-center justify-between w-full max-w-5xl px-2 text-xs text-slate-500 dark:text-gray-400">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-slate-700 dark:text-gray-300">{pageData.title}</span>
+              <span>•</span>
+              <span>{pageData.blocks.length} Sections</span>
+            </div>
+            <div className="flex items-center gap-2 font-mono">
+              <span>Zoom: {zoomLevel}%</span>
+              <button
+                type="button"
+                onClick={() => setZoomLevel(prev => Math.max(50, prev - 15))}
+                className="p-1 hover:text-slate-800 dark:hover:text-white"
+              >
+                <ZoomOut size={13} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setZoomLevel(100)}
+                className="p-1 hover:text-slate-800 dark:hover:text-white text-[10px]"
+              >
+                Reset
+              </button>
+              <button
+                type="button"
+                onClick={() => setZoomLevel(prev => Math.min(125, prev + 15))}
+                className="p-1 hover:text-slate-800 dark:hover:text-white"
+              >
+                <ZoomIn size={13} />
+              </button>
+            </div>
+          </div>
+
+          {/* Canvas Container with Device Dimensions */}
+          <div
+            style={{ transform: `scale(${zoomLevel / 100})`, transformOrigin: 'top center' }}
+            className={`transition-all duration-300 rounded-3xl overflow-hidden shadow-2xl bg-white dark:bg-bloom-dark border border-slate-300 dark:border-white/10 ${
+              deviceViewport === 'mobile'
+                ? 'w-[375px] min-h-[667px]'
+                : deviceViewport === 'tablet'
+                  ? 'w-[768px] min-h-[900px]'
+                  : 'w-full max-w-5xl'
+            }`}
+          >
+            {pageData.blocks && pageData.blocks.length > 0 ? (
+              pageData.blocks.map((block, idx) => {
+                const isSelected = block.id === selectedBlockId;
+                return (
+                  <div
+                    key={block.id || idx}
+                    className={`relative group/section transition-all duration-200 ${
+                      isSelected
+                        ? 'ring-2 ring-bloom-primary ring-inset'
+                        : 'hover:ring-1 hover:ring-bloom-primary/40'
+                    }`}
+                    onClick={() => handleSelectBlock(block)}
+                  >
+                    {/* Hover Floating Action Bar */}
+                    <div className="absolute top-2 right-2 z-30 opacity-0 group-hover/section:opacity-100 transition-opacity bg-slate-900/90 text-white backdrop-blur-md px-2.5 py-1 rounded-xl shadow-xl flex items-center gap-1.5 text-xs">
+                      <span className="font-bold text-[10px] text-bloom-primary mr-1">{block.name}</span>
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); handleMoveUp(idx); }}
+                        disabled={idx === 0}
+                        className="p-1 hover:text-bloom-primary disabled:opacity-30"
+                        title="Move Up"
+                      >
+                        <MoveUp size={13} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); handleMoveDown(idx); }}
+                        disabled={idx === pageData.blocks.length - 1}
+                        className="p-1 hover:text-bloom-primary disabled:opacity-30"
+                        title="Move Down"
+                      >
+                        <MoveDown size={13} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); handleDuplicate(idx); }}
+                        className="p-1 hover:text-bloom-primary"
+                        title="Duplicate Section"
+                      >
+                        <Copy size={13} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); handleDeleteBlock(idx); }}
+                        className="p-1 text-rose-400 hover:text-rose-300"
+                        title="Delete Section"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+
+                    {/* Section Component Render */}
+                    <BlockRenderer block={block} isSelected={isSelected} />
+
+                    {/* Quick + Add Section Beneath Button */}
+                    <div className="opacity-0 group-hover/section:opacity-100 transition-opacity flex justify-center -my-3 relative z-30">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddBlock('featureGrid', idx);
+                        }}
+                        className="px-3 py-1 bg-bloom-primary text-white rounded-full text-[10px] font-bold shadow-md hover:scale-105 transition-all flex items-center gap-1"
+                      >
+                        <Plus size={11} />
+                        <span>Add Section Beneath</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              /* Empty Canvas Drop Target */
+              <div className="p-16 text-center border-2 border-dashed border-slate-300 dark:border-white/10 m-6 rounded-2xl">
+                <Layers size={36} className="mx-auto text-slate-400 mb-3" />
+                <h4 className="text-base font-bold text-slate-800 dark:text-white mb-1">Canvas is empty</h4>
+                <p className="text-xs text-slate-500 mb-4">Click any block from the left panel to insert it here.</p>
                 <button
                   type="button"
-                  onClick={() => setShowAddBlockModal(true)}
-                  className="px-6 py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-bloom-primary/40 text-white text-xs sm:text-sm font-bold rounded-2xl transition-all duration-300 inline-flex items-center gap-2 shadow-lg"
+                  onClick={() => handleAddBlock('hero')}
+                  className="px-5 py-2.5 bg-bloom-primary text-white text-xs font-bold rounded-xl shadow-lg"
                 >
-                  <Plus size={18} className="text-bloom-primary" />
-                  <span>Insert New Section Here</span>
+                  Insert Hero Header
                 </button>
               </div>
             )}
           </div>
-        ) : (
-          /* LIVE INTERACTIVE PREVIEW MODE */
-          <div className="flex-1 bg-black/50 py-8 px-4 flex justify-center overflow-x-auto">
-            <div
-              className={`bg-white dark:bg-bloom-dark rounded-3xl overflow-hidden shadow-2xl transition-all duration-300 border border-white/10 ${
-                deviceViewport === 'mobile'
-                  ? 'w-[375px] min-h-[667px]'
-                  : deviceViewport === 'tablet'
-                    ? 'w-[768px] min-h-[900px]'
-                    : 'w-full max-w-7xl'
-              }`}
-            >
-              {pageData.blocks.map((block) => (
-                <BlockRenderer key={block.id} block={block} previewMode={true} />
-              ))}
+        </main>
+
+        {/* ── RIGHT SIDEBAR: INSPECTOR & PROPERTIES PANEL (Matching Image 3) ── */}
+        {!previewOnly && (
+          <aside className="w-80 sm:w-96 bg-white dark:bg-bloom-dark border-l border-slate-200 dark:border-white/10 flex flex-col shrink-0 z-10 text-slate-800 dark:text-white">
+            {/* Inspector Tabs */}
+            <div className="p-3 border-b border-slate-200 dark:border-white/10 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setRightTab('element')}
+                className={`flex-1 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                  rightTab === 'element'
+                    ? 'bg-bloom-primary text-white shadow-md'
+                    : 'text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-white/5'
+                }`}
+              >
+                <Sliders size={14} />
+                <span>Element</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setRightTab('page')}
+                className={`flex-1 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                  rightTab === 'page'
+                    ? 'bg-bloom-primary text-white shadow-md'
+                    : 'text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-white/5'
+                }`}
+              >
+                <FileText size={14} />
+                <span>Page</span>
+              </button>
             </div>
-          </div>
+
+            {/* TAB: ELEMENT INSPECTOR */}
+            {rightTab === 'element' ? (
+              selectedBlock ? (
+                <div className="flex-1 overflow-y-auto p-4 space-y-5 text-xs">
+                  {/* Selected Block Info Header */}
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-bloom-primary">
+                        {selectedBlock.category}
+                      </span>
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                        {selectedBlock.name}
+                      </h4>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => handleDuplicate(selectedIndex)}
+                        className="p-1.5 hover:text-bloom-primary rounded-lg hover:bg-slate-100 dark:hover:bg-white/10"
+                        title="Duplicate"
+                      >
+                        <Copy size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteBlock(selectedIndex)}
+                        className="p-1.5 text-rose-500 hover:text-rose-600 rounded-lg hover:bg-rose-500/10"
+                        title="Delete"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Dynamic Form Controls for this block */}
+                  {/* Title / Headline */}
+                  {selectedBlock.data.title !== undefined && (
+                    <div>
+                      <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">Headline / Title</label>
+                      <input
+                        type="text"
+                        value={selectedBlock.data.title || ''}
+                        onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'title', e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white font-bold focus:outline-none focus:border-bloom-primary"
+                      />
+                    </div>
+                  )}
+
+                  {/* Subtitle / Description */}
+                  {selectedBlock.data.subtitle !== undefined && (
+                    <div>
+                      <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">Subtitle</label>
+                      <textarea
+                        rows={2}
+                        value={selectedBlock.data.subtitle || ''}
+                        onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'subtitle', e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-slate-800 dark:text-gray-200 focus:outline-none focus:border-bloom-primary"
+                      />
+                    </div>
+                  )}
+
+                  {/* Badge Text */}
+                  {selectedBlock.data.badgeText !== undefined && (
+                    <div>
+                      <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">Eyebrow Badge Text</label>
+                      <input
+                        type="text"
+                        value={selectedBlock.data.badgeText || ''}
+                        onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'badgeText', e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-bloom-primary"
+                      />
+                    </div>
+                  )}
+
+                  {/* CTA Buttons */}
+                  {selectedBlock.data.primaryBtnText !== undefined && (
+                    <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-white/10">
+                      <span className="font-bold text-slate-700 dark:text-gray-300 block">Primary CTA Button</span>
+                      <div className="grid grid-cols-2 gap-2">
+                        <input
+                          type="text"
+                          value={selectedBlock.data.primaryBtnText || ''}
+                          onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'primaryBtnText', e.target.value)}
+                          placeholder="Button Label"
+                          className="bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-lg px-2.5 py-1.5"
+                        />
+                        <input
+                          type="text"
+                          value={selectedBlock.data.primaryBtnUrl || ''}
+                          onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'primaryBtnUrl', e.target.value)}
+                          placeholder="URL (/contact)"
+                          className="bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-lg px-2.5 py-1.5"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Quote author */}
+                  {selectedBlock.data.quote !== undefined && (
+                    <div>
+                      <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">Quote Text</label>
+                      <textarea
+                        rows={3}
+                        value={selectedBlock.data.quote || ''}
+                        onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'quote', e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-slate-800 dark:text-gray-200"
+                      />
+                    </div>
+                  )}
+
+                  {/* Image URL */}
+                  {selectedBlock.data.imageUrl !== undefined && (
+                    <div>
+                      <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">Image URL</label>
+                      <input
+                        type="text"
+                        value={selectedBlock.data.imageUrl || ''}
+                        onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'imageUrl', e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2"
+                      />
+                    </div>
+                  )}
+
+                  {/* Columns */}
+                  {selectedBlock.data.columns !== undefined && (
+                    <div>
+                      <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">Columns</label>
+                      <select
+                        value={selectedBlock.data.columns || 3}
+                        onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'columns', parseInt(e.target.value))}
+                        className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2"
+                      >
+                        <option value={2}>2 Columns</option>
+                        <option value={3}>3 Columns</option>
+                        <option value={4}>4 Columns</option>
+                      </select>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                /* No element selected empty state (matching Image 3) */
+                <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-400">
+                  <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-white/5 flex items-center justify-center mb-3 text-slate-400">
+                    <Sparkles size={24} />
+                  </div>
+                  <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-1">No Element Selected</h4>
+                  <p className="text-xs text-slate-500 max-w-xs">
+                    Click any section on the canvas to configure its contents, styling, and parameters.
+                  </p>
+                </div>
+              )
+            ) : (
+              /* TAB: PAGE LEVEL SETTINGS (Matching Image 3) */
+              <div className="flex-1 overflow-y-auto p-4 space-y-5 text-xs">
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">Page Title</label>
+                  <input
+                    type="text"
+                    value={pageData.title}
+                    onChange={(e) => setPageData({ ...pageData, title: e.target.value })}
+                    className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-slate-900 dark:text-white font-bold"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">URL Slug</label>
+                  <input
+                    type="text"
+                    value={pageData.slug}
+                    onChange={(e) => setPageData({ ...pageData, slug: generateSlug(e.target.value) })}
+                    className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-bloom-primary font-mono font-bold"
+                  />
+                  <span className="text-[11px] text-slate-400 block mt-1">/p/{pageData.slug}</span>
+                </div>
+
+                {/* Include in Navigation */}
+                <div className="p-3.5 bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 rounded-xl flex items-center justify-between">
+                  <div>
+                    <span className="font-bold text-slate-900 dark:text-white text-xs block">
+                      Include in Services Dropdown
+                    </span>
+                    <span className="text-[11px] text-slate-500 dark:text-gray-400">
+                      Shows page in main Navbar automatically.
+                    </span>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={pageData.includeInNav}
+                    onChange={(e) => setPageData({ ...pageData, includeInNav: e.target.checked })}
+                    className="w-4 h-4 rounded accent-bloom-primary cursor-pointer"
+                  />
+                </div>
+
+                {/* SEO Description */}
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">SEO Description</label>
+                  <textarea
+                    rows={3}
+                    value={pageData.seoDescription}
+                    onChange={(e) => setPageData({ ...pageData, seoDescription: e.target.value })}
+                    placeholder="Meta description for search engines..."
+                    className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-slate-800 dark:text-gray-200"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">SEO Keywords</label>
+                  <input
+                    type="text"
+                    value={pageData.seoKeywords}
+                    onChange={(e) => setPageData({ ...pageData, seoKeywords: e.target.value })}
+                    placeholder="real estate modeling, underwriting..."
+                    className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-slate-800 dark:text-gray-200"
+                  />
+                </div>
+              </div>
+            )}
+          </aside>
         )}
       </div>
 
       {/* ─────────────────────────────────────────────────────────────────── */}
-      {/* MODAL: ADD SECTION PICKER */}
-      {/* ─────────────────────────────────────────────────────────────────── */}
-      {showAddBlockModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn"
-          onClick={() => setShowAddBlockModal(false)}
-        >
-          <div
-            className="relative w-full max-w-3xl bg-bloom-dark border border-white/10 rounded-3xl overflow-hidden shadow-2xl max-h-[85vh] flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-6 border-b border-white/10 flex items-center justify-between">
-              <div>
-                <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                  <Plus className="text-bloom-primary" size={20} />
-                  Choose a Section to Add
-                </h3>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  Click any block component to insert it into your page canvas.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowAddBlockModal(false)}
-                className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <div className="p-6 overflow-y-auto grid sm:grid-cols-2 gap-4 flex-1">
-              {BLOCK_DEFINITIONS.map((def) => (
-                <div
-                  key={def.type}
-                  onClick={() => handleAddBlock(def.type)}
-                  className="p-4 bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-bloom-primary/50 rounded-2xl cursor-pointer transition-all duration-200 group flex items-start gap-4"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-bloom-primary/10 text-bloom-primary flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-bloom-primary group-hover:text-white transition-all">
-                    <Layers size={20} />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h4 className="text-sm font-bold text-white group-hover:text-bloom-primary transition-colors">
-                        {def.name}
-                      </h4>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-gray-400 font-mono">
-                        {def.category}
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-400 mt-1 leading-relaxed">
-                      {def.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ─────────────────────────────────────────────────────────────────── */}
-      {/* MODAL: PRE-BUILT TEMPLATES */}
-      {/* ─────────────────────────────────────────────────────────────────── */}
-      {showTemplatesModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn"
-          onClick={() => setShowTemplatesModal(false)}
-        >
-          <div
-            className="relative w-full max-w-2xl bg-bloom-dark border border-white/10 rounded-3xl overflow-hidden shadow-2xl p-6 sm:p-8"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                  <LayoutTemplate className="text-bloom-primary" size={20} />
-                  Pre-Built Page Templates
-                </h3>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  Instantly scaffold a complete, professionally written page structure.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowTemplatesModal(false)}
-                className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              {PAGE_TEMPLATES.map((tmpl) => (
-                <div
-                  key={tmpl.id}
-                  onClick={() => handleApplyTemplate(tmpl)}
-                  className="p-5 bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-bloom-primary/50 rounded-2xl cursor-pointer transition-all duration-200 group flex items-center justify-between"
-                >
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <h4 className="text-base font-bold text-white group-hover:text-bloom-primary transition-colors">
-                        {tmpl.name}
-                      </h4>
-                      {tmpl.badge && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-bloom-primary/20 text-bloom-primary border border-bloom-primary/30">
-                          {tmpl.badge}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-gray-400 max-w-md leading-relaxed">
-                      {tmpl.description}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    className="px-4 py-2 rounded-xl text-xs font-bold bg-white/5 group-hover:bg-bloom-primary group-hover:text-white transition-all text-gray-300"
-                  >
-                    Load
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ─────────────────────────────────────────────────────────────────── */}
-      {/* MODAL: PAGE SETTINGS & SEO */}
+      {/* SETTINGS MODAL */}
       {/* ─────────────────────────────────────────────────────────────────── */}
       {showSettingsModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fadeIn"
           onClick={() => setShowSettingsModal(false)}
         >
           <div
-            className="relative w-full max-w-xl bg-bloom-dark border border-white/10 rounded-3xl overflow-hidden shadow-2xl p-6 sm:p-8"
+            className="relative w-full max-w-lg bg-white dark:bg-bloom-dark border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl text-slate-900 dark:text-white"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                  <Settings className="text-bloom-primary" size={20} />
-                  Page Settings & SEO
-                </h3>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  Configure URL routing, metadata, and navbar presence.
-                </p>
-              </div>
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-200 dark:border-white/10">
+              <h3 className="text-xl font-bold flex items-center gap-2">
+                <Settings size={20} className="text-bloom-primary" />
+                Page Settings & SEO
+              </h3>
               <button
                 type="button"
                 onClick={() => setShowSettingsModal(false)}
-                className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl"
+                className="p-1.5 text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-lg"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
             <div className="space-y-4 text-xs">
               <div>
-                <label className="block font-semibold text-gray-300 mb-1">Page Title</label>
+                <label className="block font-bold text-slate-700 dark:text-gray-300 mb-1">Page Title</label>
                 <input
                   type="text"
                   value={pageData.title}
-                  onChange={(e) => handleTitleChange(e.target.value)}
-                  className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-bloom-primary text-sm"
+                  onChange={(e) => setPageData({ ...pageData, title: e.target.value })}
+                  className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2.5 text-sm"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-gray-300 mb-1">URL Slug</label>
-                  <input
-                    type="text"
-                    value={pageData.slug}
-                    onChange={(e) => setPageData({ ...pageData, slug: generateSlug(e.target.value) })}
-                    placeholder="e.g. debt-underwriting"
-                    className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-bloom-primary font-mono"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-gray-300 mb-1">Category</label>
-                  <select
-                    value={pageData.category}
-                    onChange={(e) => setPageData({ ...pageData, category: e.target.value })}
-                    className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-bloom-primary"
-                  >
-                    <option value="Services">Services</option>
-                    <option value="Solutions">Solutions</option>
-                    <option value="Company">Company</option>
-                    <option value="General">General</option>
-                  </select>
-                </div>
+              <div>
+                <label className="block font-bold text-slate-700 dark:text-gray-300 mb-1">URL Slug</label>
+                <input
+                  type="text"
+                  value={pageData.slug}
+                  onChange={(e) => setPageData({ ...pageData, slug: generateSlug(e.target.value) })}
+                  className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2.5 font-mono text-bloom-primary"
+                />
               </div>
 
-              {/* Include in Navigation */}
-              <div className="p-3.5 bg-white/5 border border-white/10 rounded-xl flex items-center justify-between">
+              <div className="p-3 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl flex items-center justify-between">
                 <div>
-                  <span className="font-bold text-white text-xs block">Include in Services Dropdown</span>
-                  <span className="text-[11px] text-gray-400">
-                    Automatically shows this page in the main website Navbar under Services!
-                  </span>
+                  <span className="font-bold block text-xs">Include in Services Dropdown</span>
+                  <span className="text-[11px] text-slate-500">Adds link to main navigation.</span>
                 </div>
                 <input
                   type="checkbox"
                   checked={pageData.includeInNav}
                   onChange={(e) => setPageData({ ...pageData, includeInNav: e.target.checked })}
                   className="w-4 h-4 rounded accent-bloom-primary cursor-pointer"
-                />
-              </div>
-
-              {/* Status Toggle */}
-              <div>
-                <label className="block font-semibold text-gray-300 mb-1">Publication Status</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setPageData({ ...pageData, status: 'published' })}
-                    className={`py-2 px-3 rounded-xl font-bold border transition-all ${
-                      pageData.status === 'published'
-                        ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
-                        : 'bg-white/5 text-gray-400 border-white/10'
-                    }`}
-                  >
-                    Published
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPageData({ ...pageData, status: 'draft' })}
-                    className={`py-2 px-3 rounded-xl font-bold border transition-all ${
-                      pageData.status === 'draft'
-                        ? 'bg-amber-500/20 text-amber-400 border-amber-500/40'
-                        : 'bg-white/5 text-gray-400 border-white/10'
-                    }`}
-                  >
-                    Draft Only
-                  </button>
-                </div>
-              </div>
-
-              {/* SEO Description */}
-              <div>
-                <label className="block font-semibold text-gray-300 mb-1">SEO Meta Description</label>
-                <textarea
-                  rows={2}
-                  value={pageData.seoDescription}
-                  onChange={(e) => setPageData({ ...pageData, seoDescription: e.target.value })}
-                  placeholder="Institutional-grade underwriting services for private equity sponsors..."
-                  className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-bloom-primary"
-                />
-              </div>
-
-              <div>
-                <label className="block font-semibold text-gray-300 mb-1">SEO Keywords (comma separated)</label>
-                <input
-                  type="text"
-                  value={pageData.seoKeywords}
-                  onChange={(e) => setPageData({ ...pageData, seoKeywords: e.target.value })}
-                  placeholder="real estate modeling, underwriting, financial analysis"
-                  className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-bloom-primary"
                 />
               </div>
 

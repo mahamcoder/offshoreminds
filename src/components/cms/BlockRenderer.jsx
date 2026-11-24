@@ -1,11 +1,146 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { renderIcon } from './blockIcons';
-import { ChevronDown, Check, ArrowRight, Star, ExternalLink } from 'lucide-react';
+import {
+  ChevronDown, Check, ArrowRight, Star, ExternalLink,
+  Play, Phone, Mail, MapPin, Sparkles, Building2, Send
+} from 'lucide-react';
 import Reveal from '../common/Reveal';
 
-const BlockRenderer = ({ block, previewMode = false }) => {
+const BlockRenderer = ({ block, previewMode = false, isSelected = false, onSelect = null }) => {
   const { type, data = {} } = block;
+
+  const wrapperProps = onSelect ? {
+    onClick: (e) => {
+      e.stopPropagation();
+      onSelect(block);
+    },
+    className: `relative transition-all duration-200 cursor-pointer ${
+      isSelected ? 'ring-2 ring-bloom-primary ring-offset-2 ring-offset-bloom-dark rounded-xl' : 'hover:ring-1 hover:ring-bloom-primary/40'
+    }`
+  } : {};
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // BASICS: HEADING
+  // ───────────────────────────────────────────────────────────────────────────
+  if (type === 'heading') {
+    const alignClass = data.alignment === 'center' ? 'text-center' : data.alignment === 'right' ? 'text-right' : 'text-left';
+    return (
+      <div {...wrapperProps} className={`py-6 px-4 container mx-auto max-w-5xl ${alignClass}`}>
+        {data.level === 'h1' ? (
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white mb-2">{data.text}</h1>
+        ) : data.level === 'h3' ? (
+          <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">{data.text}</h3>
+        ) : data.level === 'h4' ? (
+          <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{data.text}</h4>
+        ) : (
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-2">{data.text}</h2>
+        )}
+        {data.subtitle && (
+          <p className="text-slate-600 dark:text-gray-400 text-base sm:text-lg">{data.subtitle}</p>
+        )}
+      </div>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // BASICS: TEXT PARAGRAPH
+  // ───────────────────────────────────────────────────────────────────────────
+  if (type === 'text') {
+    const sizeClass = data.size === 'large' ? 'text-lg sm:text-xl leading-relaxed' : data.size === 'small' ? 'text-xs sm:text-sm' : 'text-base sm:text-lg leading-relaxed';
+    const alignClass = data.alignment === 'center' ? 'text-center mx-auto' : data.alignment === 'right' ? 'text-right ml-auto' : 'text-left';
+    return (
+      <div {...wrapperProps} className="py-4 px-4 container mx-auto max-w-4xl">
+        <p className={`text-slate-600 dark:text-gray-300 ${sizeClass} ${alignClass}`}>
+          {data.content}
+        </p>
+      </div>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // BASICS: BULLET / CHECKLIST
+  // ───────────────────────────────────────────────────────────────────────────
+  if (type === 'bulletList') {
+    return (
+      <div {...wrapperProps} className="py-6 px-4 container mx-auto max-w-4xl">
+        {data.title && (
+          <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-4">{data.title}</h4>
+        )}
+        <ul className="space-y-3">
+          {(data.items || []).map((item, idx) => (
+            <li key={idx} className="flex items-start gap-3">
+              <div className="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
+                <Check size={12} strokeWidth={3} />
+              </div>
+              <span className="text-sm sm:text-base text-slate-700 dark:text-gray-300">{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // BASICS: IMAGE
+  // ───────────────────────────────────────────────────────────────────────────
+  if (type === 'image') {
+    return (
+      <div {...wrapperProps} className="py-8 px-4 container mx-auto max-w-5xl">
+        <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-xl bg-slate-900">
+          <img
+            src={data.imageUrl || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop'}
+            alt={data.alt || 'Visual presentation'}
+            className="w-full h-auto max-h-[500px] object-cover"
+          />
+          {data.caption && (
+            <div className="p-3 bg-white/95 dark:bg-bloom-dark/95 border-t border-slate-200 dark:border-white/10 text-xs text-slate-500 dark:text-gray-400 text-center">
+              {data.caption}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // BASICS: BUTTON CTA
+  // ───────────────────────────────────────────────────────────────────────────
+  if (type === 'button') {
+    const alignClass = data.alignment === 'left' ? 'justify-start' : data.alignment === 'right' ? 'justify-end' : 'justify-center';
+    return (
+      <div {...wrapperProps} className={`py-6 px-4 container mx-auto max-w-4xl flex ${alignClass}`}>
+        <Link
+          to={data.url || '/contact'}
+          className="px-8 py-4 rounded-xl font-bold text-white bg-gradient-to-r from-bloom-primary to-bloom-blue hover:shadow-xl hover:shadow-bloom-primary/30 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2"
+        >
+          <span>{data.label || 'Click Here'}</span>
+          <ArrowRight size={16} />
+        </Link>
+      </div>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // BASICS: DIVIDER & SPACER
+  // ───────────────────────────────────────────────────────────────────────────
+  if (type === 'divider') {
+    return (
+      <div {...wrapperProps} className="container mx-auto max-w-5xl px-4 py-4">
+        <hr className={`border-slate-200 dark:border-white/10 ${data.style === 'dashed' ? 'border-dashed' : ''}`} />
+      </div>
+    );
+  }
+
+  if (type === 'spacer') {
+    return (
+      <div
+        {...wrapperProps}
+        style={{ height: `${data.height || 48}px` }}
+        className="w-full"
+      />
+    );
+  }
 
   // ───────────────────────────────────────────────────────────────────────────
   // HERO SECTION
@@ -13,8 +148,7 @@ const BlockRenderer = ({ block, previewMode = false }) => {
   if (type === 'hero') {
     const isCenter = data.alignment !== 'left';
     return (
-      <section className="relative pt-24 pb-20 md:pt-32 md:pb-28 overflow-hidden bg-white dark:bg-bloom-dark text-slate-900 dark:text-white transition-colors duration-300">
-        {/* Background glow effects */}
+      <section {...wrapperProps} className="relative pt-24 pb-20 md:pt-32 md:pb-28 overflow-hidden bg-white dark:bg-bloom-dark text-slate-900 dark:text-white transition-colors duration-300">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-bloom-primary/20 via-purple-500/15 to-bloom-secondary/20 rounded-full blur-[120px] pointer-events-none -z-0"></div>
         {data.bgImageUrl && (
           <div
@@ -74,21 +208,12 @@ const BlockRenderer = ({ block, previewMode = false }) => {
                   )}
 
                   {data.secondaryBtnText && (
-                    data.secondaryBtnUrl?.startsWith('#') ? (
-                      <a
-                        href={data.secondaryBtnUrl}
-                        className="px-8 py-4 rounded-xl font-bold text-slate-800 dark:text-white bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10 transition-all duration-300 flex items-center gap-2"
-                      >
-                        <span>{data.secondaryBtnText}</span>
-                      </a>
-                    ) : (
-                      <Link
-                        to={data.secondaryBtnUrl || '#'}
-                        className="px-8 py-4 rounded-xl font-bold text-slate-800 dark:text-white bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10 transition-all duration-300 flex items-center gap-2"
-                      >
-                        <span>{data.secondaryBtnText}</span>
-                      </Link>
-                    )
+                    <Link
+                      to={data.secondaryBtnUrl || '#'}
+                      className="px-8 py-4 rounded-xl font-bold text-slate-800 dark:text-white bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10 transition-all duration-300 flex items-center gap-2"
+                    >
+                      <span>{data.secondaryBtnText}</span>
+                    </Link>
                   )}
                 </div>
               </Reveal>
@@ -127,7 +252,7 @@ const BlockRenderer = ({ block, previewMode = false }) => {
         : 'sm:grid-cols-2 lg:grid-cols-3';
 
     return (
-      <section className="py-20 bg-slate-50/60 dark:bg-bloom-dark/60 text-slate-900 dark:text-white relative transition-colors duration-300">
+      <section {...wrapperProps} className="py-20 bg-slate-50/60 dark:bg-bloom-dark/60 text-slate-900 dark:text-white relative transition-colors duration-300">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center max-w-3xl mx-auto mb-14">
             {data.badgeText && (
@@ -170,25 +295,13 @@ const BlockRenderer = ({ block, previewMode = false }) => {
 
                   {item.linkText && (
                     <div className="pt-4 border-t border-slate-100 dark:border-white/5">
-                      {item.linkUrl?.startsWith('http') ? (
-                        <a
-                          href={item.linkUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-sm font-bold text-bloom-primary hover:underline"
-                        >
-                          <span>{item.linkText}</span>
-                          <ExternalLink size={14} />
-                        </a>
-                      ) : (
-                        <Link
-                          to={item.linkUrl || '/contact'}
-                          className="inline-flex items-center gap-1.5 text-sm font-bold text-bloom-primary hover:underline"
-                        >
-                          <span>{item.linkText}</span>
-                          <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                      )}
+                      <Link
+                        to={item.linkUrl || '/contact'}
+                        className="inline-flex items-center gap-1.5 text-sm font-bold text-bloom-primary hover:underline"
+                      >
+                        <span>{item.linkText}</span>
+                        <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                      </Link>
                     </div>
                   )}
                 </div>
@@ -201,11 +314,70 @@ const BlockRenderer = ({ block, previewMode = false }) => {
   }
 
   // ───────────────────────────────────────────────────────────────────────────
+  // PHOTO GALLERY GRID
+  // ───────────────────────────────────────────────────────────────────────────
+  if (type === 'photoGallery') {
+    return (
+      <section {...wrapperProps} className="py-20 bg-white dark:bg-bloom-dark text-slate-900 dark:text-white transition-colors duration-300">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            {data.badgeText && (
+              <span className="inline-block px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-bloom-primary/10 text-bloom-primary border border-bloom-primary/20 mb-3">
+                {data.badgeText}
+              </span>
+            )}
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-3">{data.title}</h2>
+            {data.subtitle && <p className="text-slate-600 dark:text-gray-400 text-base">{data.subtitle}</p>}
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {(data.images || []).map((img, idx) => (
+              <div key={idx} className="group rounded-2xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-lg relative aspect-square bg-slate-900">
+                <img src={img.url} alt={img.caption || 'Gallery'} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                {img.caption && (
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-4">
+                    <span className="text-xs text-white font-medium">{img.caption}</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // PARTNERS LOGO STRIP
+  // ───────────────────────────────────────────────────────────────────────────
+  if (type === 'partners') {
+    return (
+      <section {...wrapperProps} className="py-12 bg-slate-50/50 dark:bg-bloom-dark/50 border-y border-slate-200/80 dark:border-white/5 transition-colors duration-300">
+        <div className="container mx-auto px-4 max-w-6xl text-center">
+          {data.title && (
+            <p className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-gray-400 mb-8">
+              {data.title}
+            </p>
+          )}
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 opacity-75">
+            {(data.logos || []).map((logo, idx) => (
+              <div key={idx} className="flex items-center gap-2 text-slate-700 dark:text-gray-300 font-extrabold text-lg sm:text-xl tracking-tight">
+                <Building2 size={22} className="text-bloom-primary" />
+                <span>{logo.label || logo.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
   // STATS SECTION
   // ───────────────────────────────────────────────────────────────────────────
   if (type === 'stats') {
     return (
-      <section className="py-20 bg-white dark:bg-bloom-dark text-slate-900 dark:text-white relative border-y border-slate-200/80 dark:border-white/5 transition-colors duration-300">
+      <section {...wrapperProps} className="py-20 bg-white dark:bg-bloom-dark text-slate-900 dark:text-white relative border-y border-slate-200/80 dark:border-white/5 transition-colors duration-300">
         <div className="container mx-auto px-4 max-w-7xl">
           {(data.title || data.badgeText) && (
             <div className="text-center max-w-3xl mx-auto mb-12">
@@ -257,15 +429,145 @@ const BlockRenderer = ({ block, previewMode = false }) => {
   }
 
   // ───────────────────────────────────────────────────────────────────────────
+  // CONTACT FORM SECTION
+  // ───────────────────────────────────────────────────────────────────────────
+  if (type === 'contactForm') {
+    return (
+      <section {...wrapperProps} className="py-20 bg-slate-50/70 dark:bg-bloom-dark/70 text-slate-900 dark:text-white transition-colors duration-300">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <div className="bg-white dark:bg-white/[0.04] border border-slate-200/90 dark:border-white/10 rounded-3xl p-8 sm:p-12 shadow-2xl">
+            <div className="text-center max-w-2xl mx-auto mb-10">
+              {data.badgeText && (
+                <span className="inline-block px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-bloom-primary/10 text-bloom-primary border border-bloom-primary/20 mb-3">
+                  {data.badgeText}
+                </span>
+              )}
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-3">{data.title}</h2>
+              {data.subtitle && <p className="text-slate-600 dark:text-gray-400 text-sm sm:text-base">{data.subtitle}</p>}
+            </div>
+
+            <form onSubmit={(e) => { e.preventDefault(); alert('Inquiry submitted!'); }} className="space-y-4">
+              <div className="grid sm:grid-cols-2 gap-4">
+                <input type="text" placeholder="Your Name" required className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-bloom-primary" />
+                <input type="email" placeholder="Corporate Email" required className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-bloom-primary" />
+              </div>
+              <input type="text" placeholder="Firm / Organization" className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-bloom-primary" />
+              <textarea rows={3} placeholder="Tell us about your portfolio or deal pipeline..." className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-bloom-primary" />
+              <button type="submit" className="w-full py-4 bg-gradient-to-r from-bloom-primary to-bloom-blue text-white font-bold rounded-xl shadow-lg shadow-bloom-primary/25 hover:opacity-90 flex items-center justify-center gap-2">
+                <span>{data.submitBtnText || 'Submit Inquiry'}</span>
+                <Send size={16} />
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // CALLOUT QUOTE
+  // ───────────────────────────────────────────────────────────────────────────
+  if (type === 'quote') {
+    return (
+      <div {...wrapperProps} className="py-16 px-4 container mx-auto max-w-4xl text-center">
+        <blockquote className="text-2xl sm:text-3xl font-extrabold text-slate-800 dark:text-gray-100 leading-snug mb-4 italic">
+          "{data.quote}"
+        </blockquote>
+        {data.author && (
+          <div className="text-sm font-bold text-bloom-primary tracking-wide uppercase">
+            — {data.author}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // CALENDLY EMBED
+  // ───────────────────────────────────────────────────────────────────────────
+  if (type === 'calendly') {
+    return (
+      <section {...wrapperProps} className="py-20 bg-white dark:bg-bloom-dark text-slate-900 dark:text-white transition-colors duration-300">
+        <div className="container mx-auto px-4 max-w-4xl text-center">
+          <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">{data.title}</h2>
+          {data.subtitle && <p className="text-slate-600 dark:text-gray-400 text-base mb-8">{data.subtitle}</p>}
+          <div className="bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 rounded-3xl p-8 sm:p-12 shadow-xl">
+            <a
+              href={data.calendlyUrl || 'https://calendly.com/gyan-offshoreminds/30min'}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-white bg-bloom-primary hover:bg-bloom-primary/90 shadow-xl shadow-bloom-primary/30 hover:scale-105 transition-all"
+            >
+              <span>Open Interactive Scheduler</span>
+              <ExternalLink size={18} />
+            </a>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // NOTICE BANNER
+  // ───────────────────────────────────────────────────────────────────────────
+  if (type === 'notice') {
+    return (
+      <div {...wrapperProps} className="container mx-auto max-w-5xl px-4 py-4">
+        <div className="bg-gradient-to-r from-bloom-primary/10 via-purple-500/10 to-bloom-secondary/10 border border-bloom-primary/30 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm">
+          <div className="flex items-center gap-3">
+            <span className="px-2 py-0.5 rounded-full bg-bloom-primary text-white font-bold text-[10px] uppercase shrink-0">
+              {data.badge || 'Update'}
+            </span>
+            <span className="text-slate-800 dark:text-gray-200 font-medium">{data.message}</span>
+          </div>
+          {data.btnText && (
+            <Link to={data.btnUrl || '/contact'} className="text-bloom-primary font-bold hover:underline shrink-0 flex items-center gap-1">
+              <span>{data.btnText}</span>
+              <ArrowRight size={14} />
+            </Link>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // VIDEO PLAYER
+  // ───────────────────────────────────────────────────────────────────────────
+  if (type === 'videoPlayer') {
+    return (
+      <section {...wrapperProps} className="py-20 bg-slate-50/60 dark:bg-bloom-dark/60 text-slate-900 dark:text-white transition-colors duration-300">
+        <div className="container mx-auto px-4 max-w-5xl text-center">
+          {data.badgeText && (
+            <span className="inline-block px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-bloom-primary/10 text-bloom-primary border border-bloom-primary/20 mb-3">
+              {data.badgeText}
+            </span>
+          )}
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-3">{data.title}</h2>
+          {data.subtitle && <p className="text-slate-600 dark:text-gray-400 text-base mb-10 max-w-2xl mx-auto">{data.subtitle}</p>}
+          <div className="aspect-video w-full rounded-3xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-2xl bg-black">
+            <iframe
+              src={data.videoUrl || "https://www.youtube.com/embed/dQw4w9WgXcQ"}
+              title={data.title}
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
   // CONTENT & MEDIA SECTION
   // ───────────────────────────────────────────────────────────────────────────
   if (type === 'contentMedia') {
     const isImageLeft = data.layout === 'image-left';
     return (
-      <section className="py-20 bg-slate-50/50 dark:bg-bloom-dark/50 text-slate-900 dark:text-white transition-colors duration-300">
+      <section {...wrapperProps} className="py-20 bg-slate-50/50 dark:bg-bloom-dark/50 text-slate-900 dark:text-white transition-colors duration-300">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className={`grid lg:grid-cols-2 gap-12 lg:gap-16 items-center ${isImageLeft ? 'lg:grid-flow-dense' : ''}`}>
-            {/* Text Side */}
             <div className={isImageLeft ? 'lg:col-start-2' : ''}>
               {data.badgeText && (
                 <span className="inline-block px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-bloom-primary/10 text-bloom-primary border border-bloom-primary/20 mb-4">
@@ -307,26 +609,13 @@ const BlockRenderer = ({ block, previewMode = false }) => {
               )}
             </div>
 
-            {/* Media Side */}
             <div className={isImageLeft ? 'lg:col-start-1' : ''}>
               <div className="relative rounded-3xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-2xl bg-slate-900 group">
-                {data.mediaType === 'video' && data.mediaUrl ? (
-                  <div className="aspect-video w-full">
-                    <iframe
-                      src={data.mediaUrl}
-                      title={data.title}
-                      className="w-full h-full"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  </div>
-                ) : (
-                  <img
-                    src={data.mediaUrl || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop'}
-                    alt={data.title}
-                    className="w-full h-auto object-cover max-h-[480px] group-hover:scale-105 transition-transform duration-700"
-                  />
-                )}
+                <img
+                  src={data.mediaUrl || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop'}
+                  alt={data.title}
+                  className="w-full h-auto object-cover max-h-[480px] group-hover:scale-105 transition-transform duration-700"
+                />
                 {data.mediaCaption && (
                   <div className="p-4 bg-white/95 dark:bg-bloom-dark/95 border-t border-slate-200 dark:border-white/10 text-xs text-slate-600 dark:text-gray-400">
                     {data.mediaCaption}
@@ -345,7 +634,7 @@ const BlockRenderer = ({ block, previewMode = false }) => {
   // ───────────────────────────────────────────────────────────────────────────
   if (type === 'benefits') {
     return (
-      <section className="py-20 bg-white dark:bg-bloom-dark text-slate-900 dark:text-white transition-colors duration-300">
+      <section {...wrapperProps} className="py-20 bg-white dark:bg-bloom-dark text-slate-900 dark:text-white transition-colors duration-300">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center max-w-3xl mx-auto mb-16">
             {data.badgeText && (
@@ -401,7 +690,7 @@ const BlockRenderer = ({ block, previewMode = false }) => {
   // ───────────────────────────────────────────────────────────────────────────
   if (type === 'comparison') {
     return (
-      <section className="py-20 bg-slate-50/70 dark:bg-bloom-dark/70 text-slate-900 dark:text-white transition-colors duration-300">
+      <section {...wrapperProps} className="py-20 bg-slate-50/70 dark:bg-bloom-dark/70 text-slate-900 dark:text-white transition-colors duration-300">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center max-w-3xl mx-auto mb-14">
             {data.badgeText && (
@@ -420,7 +709,6 @@ const BlockRenderer = ({ block, previewMode = false }) => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Left Box (Traditional) */}
             <div className="bg-white dark:bg-white/[0.03] border border-rose-500/20 rounded-3xl p-8 relative">
               <div className="text-xs font-bold uppercase tracking-wider text-rose-500 mb-2">
                 Conventional
@@ -445,7 +733,6 @@ const BlockRenderer = ({ block, previewMode = false }) => {
               </ul>
             </div>
 
-            {/* Right Box (Offshore Minds) */}
             <div className="bg-gradient-to-b from-bloom-primary/10 to-bloom-blue/10 border-2 border-bloom-primary/40 rounded-3xl p-8 relative shadow-xl">
               <div className="text-xs font-bold uppercase tracking-wider text-bloom-primary dark:text-bloom-secondary mb-2 flex items-center justify-between">
                 <span>Optimized Solution</span>
@@ -481,7 +768,7 @@ const BlockRenderer = ({ block, previewMode = false }) => {
   // ───────────────────────────────────────────────────────────────────────────
   if (type === 'processSteps') {
     return (
-      <section className="py-20 bg-white dark:bg-bloom-dark text-slate-900 dark:text-white transition-colors duration-300">
+      <section {...wrapperProps} className="py-20 bg-white dark:bg-bloom-dark text-slate-900 dark:text-white transition-colors duration-300">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center max-w-3xl mx-auto mb-16">
             {data.badgeText && (
@@ -535,7 +822,7 @@ const BlockRenderer = ({ block, previewMode = false }) => {
   // FAQ ACCORDION SECTION
   // ───────────────────────────────────────────────────────────────────────────
   if (type === 'faq') {
-    return <FaqAccordionBlock data={data} />;
+    return <FaqAccordionBlock data={data} wrapperProps={wrapperProps} />;
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -543,7 +830,7 @@ const BlockRenderer = ({ block, previewMode = false }) => {
   // ───────────────────────────────────────────────────────────────────────────
   if (type === 'testimonial') {
     return (
-      <section className="py-20 bg-slate-50/60 dark:bg-bloom-dark/60 text-slate-900 dark:text-white transition-colors duration-300">
+      <section {...wrapperProps} className="py-20 bg-slate-50/60 dark:bg-bloom-dark/60 text-slate-900 dark:text-white transition-colors duration-300">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="bg-white dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-3xl p-8 sm:p-12 shadow-xl relative overflow-hidden text-center">
             <div className="flex justify-center gap-1 mb-6 text-amber-400">
@@ -589,10 +876,9 @@ const BlockRenderer = ({ block, previewMode = false }) => {
   // ───────────────────────────────────────────────────────────────────────────
   if (type === 'cta') {
     return (
-      <section className="py-20 bg-white dark:bg-bloom-dark text-white transition-colors duration-300">
+      <section {...wrapperProps} className="py-20 bg-white dark:bg-bloom-dark text-white transition-colors duration-300">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="relative rounded-3xl p-10 sm:p-16 overflow-hidden bg-gradient-to-r from-bloom-primary via-indigo-600 to-bloom-blue shadow-2xl text-center">
-            {/* Ambient glows */}
             <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
             <div className="absolute bottom-0 left-0 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -655,48 +941,33 @@ const BlockRenderer = ({ block, previewMode = false }) => {
   // ───────────────────────────────────────────────────────────────────────────
   if (type === 'embed') {
     return (
-      <section className="py-16 bg-white dark:bg-bloom-dark text-slate-900 dark:text-white transition-colors duration-300">
+      <section {...wrapperProps} className="py-16 bg-white dark:bg-bloom-dark text-slate-900 dark:text-white transition-colors duration-300">
         <div className="container mx-auto px-4 max-w-4xl">
           {data.title && (
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-                {data.title}
-              </h2>
-              {data.subtitle && (
-                <p className="text-sm text-slate-600 dark:text-gray-400">
-                  {data.subtitle}
-                </p>
-              )}
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{data.title}</h2>
+              {data.subtitle && <p className="text-sm text-slate-600 dark:text-gray-400">{data.subtitle}</p>}
             </div>
           )}
-          <div
-            className="w-full overflow-hidden"
-            dangerouslySetInnerHTML={{ __html: data.htmlCode || '' }}
-          />
+          <div className="w-full overflow-hidden" dangerouslySetInnerHTML={{ __html: data.htmlCode || '' }} />
         </div>
       </section>
     );
   }
 
   return (
-    <div className="p-8 text-center text-sm text-gray-500 bg-slate-100 dark:bg-white/5 rounded-2xl m-4 border border-dashed border-gray-400">
+    <div {...wrapperProps} className="p-8 text-center text-sm text-gray-500 bg-slate-100 dark:bg-white/5 rounded-2xl m-4 border border-dashed border-gray-400">
       Unknown block type: {type}
     </div>
   );
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Sub-component for interactive FAQ Accordion
-// ─────────────────────────────────────────────────────────────────────────────
-const FaqAccordionBlock = ({ data }) => {
+const FaqAccordionBlock = ({ data, wrapperProps = {} }) => {
   const [openIndex, setOpenIndex] = useState(0);
-
-  const toggle = (idx) => {
-    setOpenIndex((prev) => (prev === idx ? null : idx));
-  };
+  const toggle = (idx) => setOpenIndex((prev) => (prev === idx ? null : idx));
 
   return (
-    <section className="py-20 bg-slate-50/70 dark:bg-bloom-dark/70 text-slate-900 dark:text-white transition-colors duration-300">
+    <section {...wrapperProps} className="py-20 bg-slate-50/70 dark:bg-bloom-dark/70 text-slate-900 dark:text-white transition-colors duration-300">
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="text-center max-w-2xl mx-auto mb-14">
           {data.badgeText && (
@@ -704,24 +975,15 @@ const FaqAccordionBlock = ({ data }) => {
               {data.badgeText}
             </span>
           )}
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-3">
-            {data.title}
-          </h2>
-          {data.subtitle && (
-            <p className="text-base text-slate-600 dark:text-gray-400">
-              {data.subtitle}
-            </p>
-          )}
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-3">{data.title}</h2>
+          {data.subtitle && <p className="text-base text-slate-600 dark:text-gray-400">{data.subtitle}</p>}
         </div>
 
         <div className="space-y-4">
           {(data.items || []).map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
-              <div
-                key={faq.id || idx}
-                className="bg-white dark:bg-white/[0.04] border border-slate-200/90 dark:border-white/10 rounded-2xl overflow-hidden transition-all duration-300 shadow-sm"
-              >
+              <div key={faq.id || idx} className="bg-white dark:bg-white/[0.04] border border-slate-200/90 dark:border-white/10 rounded-2xl overflow-hidden transition-all duration-300 shadow-sm">
                 <button
                   type="button"
                   onClick={() => toggle(idx)}

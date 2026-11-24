@@ -1,12 +1,107 @@
 export const BLOCK_DEFINITIONS = [
+  // ───────────────────────────────────────────────────────────────────────────
+  // BASICS
+  // ───────────────────────────────────────────────────────────────────────────
+  {
+    type: 'heading',
+    name: 'Heading',
+    category: 'BASICS',
+    description: 'Custom headline with selectable size and alignment.',
+    icon: 'FileText',
+    defaultData: {
+      text: 'Section Headline',
+      level: 'h2', // h1 | h2 | h3 | h4
+      alignment: 'center', // left | center | right
+      subtitle: ''
+    }
+  },
+  {
+    type: 'text',
+    name: 'Text Paragraph',
+    category: 'BASICS',
+    description: 'Rich paragraph block for narratives, intros, or summaries.',
+    icon: 'FileText',
+    defaultData: {
+      content: 'Offshore Minds delivers Fortune-grade real estate financial analysis, underwriting, and lease administration to institutional investors globally.',
+      alignment: 'left',
+      size: 'normal' // small | normal | large
+    }
+  },
+  {
+    type: 'bulletList',
+    name: 'Bullet / Checklist',
+    category: 'BASICS',
+    description: 'Highlighted checkmark list for features, requirements, or deliverables.',
+    icon: 'CheckCircle',
+    defaultData: {
+      title: 'Key Deliverables Included:',
+      items: [
+        'Dynamic Excel DCF models with debt sizing and waterfall promotes',
+        'Standardized rent roll abstraction and lease term verification',
+        'Executive investment committee presentation decks and offering memos',
+        'Real-time sensitivity matrices across cap rates and exit multiples'
+      ]
+    }
+  },
+  {
+    type: 'image',
+    name: 'Image Showcase',
+    category: 'BASICS',
+    description: 'Standalone image with customizable caption and rounded corners.',
+    icon: 'Layers',
+    defaultData: {
+      imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop',
+      alt: 'Real Estate Analysis',
+      caption: 'Institutional real estate portfolio modeling and financial operations.',
+      alignment: 'center'
+    }
+  },
+  {
+    type: 'button',
+    name: 'Button CTA',
+    category: 'BASICS',
+    description: 'Standalone call-to-action button with destination URL.',
+    icon: 'ArrowRight',
+    defaultData: {
+      label: 'Schedule a Consultation',
+      url: '/contact',
+      variant: 'primary', // primary | outline | ghost
+      alignment: 'center'
+    }
+  },
+  {
+    type: 'divider',
+    name: 'Thin Line / Divider',
+    category: 'BASICS',
+    description: 'Subtle horizontal separation line between content sections.',
+    icon: 'Minus',
+    defaultData: {
+      style: 'solid', // solid | dashed
+      spacing: 'medium' // small | medium | large
+    }
+  },
+  {
+    type: 'spacer',
+    name: 'Spacer / Gap',
+    category: 'BASICS',
+    description: 'Adjustable vertical spacing between blocks.',
+    icon: 'ArrowRight',
+    defaultData: {
+      height: 48 // px
+    }
+  },
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // SECTIONS
+  // ───────────────────────────────────────────────────────────────────────────
   {
     type: 'hero',
-    name: 'Hero Header',
-    category: 'Headers',
-    description: 'Prominent top section with heading, badge, description, and action buttons.',
+    name: 'Top Banner (Hero)',
+    category: 'SECTIONS',
+    description: 'Prominent top header with badge, headline, description, and action buttons.',
     icon: 'Sparkles',
     defaultData: {
-      badgeText: 'New Capability',
+      badgeText: 'Strategic Intelligence',
       badgeIcon: 'Sparkles',
       title: 'Accelerate Your Real Estate Intelligence',
       subtitle: 'Unlock institutional-grade underwriting, automated data extraction, and dedicated analysts at scale.',
@@ -14,8 +109,8 @@ export const BLOCK_DEFINITIONS = [
       primaryBtnUrl: '/contact',
       secondaryBtnText: 'Explore Solutions',
       secondaryBtnUrl: '#features',
-      alignment: 'center', // center | left
-      style: 'glow', // glow | gradient | minimal | media
+      alignment: 'center',
+      style: 'glow',
       bgImageUrl: '',
       showStats: true,
       stats: [
@@ -27,16 +122,16 @@ export const BLOCK_DEFINITIONS = [
   },
   {
     type: 'featureGrid',
-    name: 'Feature & Service Cards',
-    category: 'Content',
-    description: 'Multi-column grid showcasing service capabilities, tools, or benefits with icons.',
+    name: 'Cards Grid',
+    category: 'SECTIONS',
+    description: 'Multi-column cards grid showcasing capabilities, tools, or service tiers.',
     icon: 'Layers',
     defaultData: {
       badgeText: 'Core Capabilities',
       title: 'End-to-End Specialized Solutions',
       subtitle: 'Engineered specifically for private equity sponsors, lenders, brokers, and asset managers.',
-      columns: 3, // 2 | 3 | 4
-      cardStyle: 'glass', // glass | bordered | glow
+      columns: 3,
+      cardStyle: 'glass',
       items: [
         {
           id: 'feat-1',
@@ -69,57 +164,114 @@ export const BLOCK_DEFINITIONS = [
     }
   },
   {
+    type: 'photoGallery',
+    name: 'Photo Gallery Grid',
+    category: 'SECTIONS',
+    description: 'Grid of portfolio photos, asset pictures, or facility snapshots.',
+    icon: 'Layers',
+    defaultData: {
+      badgeText: 'Visual Showcase',
+      title: 'Asset Portfolios Evaluated',
+      subtitle: 'Commercial properties, multifamily communities, and industrial logistics facilities analyzed.',
+      images: [
+        { url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop', caption: 'Commercial Towers - Manhattan, NY' },
+        { url: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=800&auto=format&fit=crop', caption: 'Multifamily Portfolio - Austin, TX' },
+        { url: 'https://images.unsplash.com/photo-1577495508048-b635879837f1?q=80&w=800&auto=format&fit=crop', caption: 'Logistics Center - Chicago, IL' },
+        { url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop', caption: 'Headquarters Deal Pods - Global Hub' }
+      ]
+    }
+  },
+  {
+    type: 'faq',
+    name: 'FAQ Accordion',
+    category: 'SECTIONS',
+    description: 'Interactive collapsible accordion addressing common customer inquiries.',
+    icon: 'HelpCircle',
+    defaultData: {
+      badgeText: 'Frequently Asked Questions',
+      title: 'Everything You Need to Know',
+      subtitle: 'Transparent answers regarding onboarding speed, security, and analyst qualifications.',
+      items: [
+        {
+          id: 'faq-1',
+          question: 'How quickly can our dedicated analyst pod start?',
+          answer: 'Client deal pods are matched, calibrated, and operational within 48 to 72 hours following initial template review.'
+        },
+        {
+          id: 'faq-2',
+          question: 'How do you safeguard proprietary deal and financial data?',
+          answer: 'We employ bank-grade security protocols: strict bilateral NDAs, encrypted virtual environments, and continuous compliance checks.'
+        },
+        {
+          id: 'faq-3',
+          question: 'Can your team work directly inside our proprietary Excel models?',
+          answer: 'Yes, 100%. Our analysts master custom Excel templates, Argus Enterprise, Yardi, RealPage, and bespoke waterfall frameworks.'
+        }
+      ]
+    }
+  },
+  {
+    type: 'cta',
+    name: 'Call to Action',
+    category: 'SECTIONS',
+    description: 'High-converting banner with glowing gradients and direct meeting booking links.',
+    icon: 'Rocket',
+    defaultData: {
+      badgeText: 'Ready to Expand?',
+      title: 'Supercharge Your Real Estate Capabilities Today',
+      description: 'Schedule a 30-minute discovery call to review your pipeline and explore custom analyst deployment.',
+      primaryBtnText: 'Book a 30-Min Strategy Call',
+      primaryBtnUrl: 'https://calendly.com/gyan-offshoreminds/30min',
+      secondaryBtnText: 'Contact Deal Desk',
+      secondaryBtnUrl: '/contact',
+      style: 'gradient'
+    }
+  },
+  {
+    type: 'partners',
+    name: 'Partner Logos Strip',
+    category: 'SECTIONS',
+    description: 'Institutional client and partner trust badges strip.',
+    icon: 'Building2',
+    defaultData: {
+      title: 'Trusted by Institutional Leaders Worldwide',
+      logos: [
+        { name: 'Brookfield', label: 'Brookfield' },
+        { name: 'JLL', label: 'JLL' },
+        { name: 'CBRE', label: 'CBRE' },
+        { name: 'Berkadia', label: 'Berkadia' },
+        { name: 'Greysteel', label: 'Greysteel' }
+      ]
+    }
+  },
+  {
     type: 'stats',
-    name: 'Metrics & Stats Counter',
-    category: 'Social Proof',
-    description: 'Highlight key statistics, achievements, volumes, and metrics in high-impact counters.',
+    name: 'Stats / Metrics',
+    category: 'SECTIONS',
+    description: 'Highlight key statistics, deal volumes, and precision ratings in bold counters.',
     icon: 'BarChart2',
     defaultData: {
       badgeText: 'Track Record',
       title: 'Measurable Impact, Delivered Globally',
       subtitle: 'Our numbers speak for our precision, scalability, and long-term client trust.',
       items: [
-        { id: 'stat-1', value: '15k+', label: 'Deals Analyzed', subtext: 'Multifamily, Retail, Office, Industrial', icon: 'BarChart2' },
+        { id: 'stat-1', value: '15k+', label: 'Deals Analyzed', subtext: 'Multifamily, Retail, Industrial', icon: 'BarChart2' },
         { id: 'stat-2', value: '70%', label: 'Cost Optimization', subtext: 'Compared to local in-house hiring', icon: 'DollarSign' },
-        { id: 'stat-3', value: '24h', label: 'Fast Turnaround', subtext: 'Sprint deliveries across time zones', icon: 'Clock' },
+        { id: 'stat-3', value: '24h', label: 'Fast Turnaround', subtext: 'Overnight execution advantage', icon: 'Clock' },
         { id: 'stat-4', value: '99.8%', label: 'Quality Precision', subtext: 'Multi-tier verification checklist', icon: 'Award' }
       ]
     }
   },
   {
-    type: 'contentMedia',
-    name: 'Rich Text & Media Split',
-    category: 'Content',
-    description: 'Side-by-side section featuring detailed storytelling, bullet checklists, and an image or video.',
-    icon: 'FileText',
-    defaultData: {
-      badgeText: 'How It Operates',
-      title: 'Seamless Extension of Your In-House Deal Team',
-      text: 'We embed senior analysts directly into your workflows. Using your firm\'s proprietary templates or industry best-practice standards, our analysts work overnight so your models are ready before the market opens.',
-      bullets: [
-        'Dedicated senior analysts trained in US, UK & European real estate markets',
-        'Direct Slack, Teams, and email communication seamlessly embedded',
-        'Strict SOC-compliant data security, NDA protection, and encrypted vaults',
-        'Zero setup friction — scalable from 1 analyst to full deal pods'
-      ],
-      layout: 'image-right', // image-right | image-left
-      mediaType: 'image', // image | video
-      mediaUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop',
-      mediaCaption: 'Fortune-grade financial modeling and institutional underwriting in action.',
-      btnText: 'Schedule Technical Discussion',
-      btnUrl: '/contact'
-    }
-  },
-  {
     type: 'benefits',
-    name: 'Key Advantages / Why Us',
-    category: 'Content',
-    description: 'Highlight competitive advantages with clean checkmarks and highlighted badges.',
+    name: 'Feature / Benefit List',
+    category: 'SECTIONS',
+    description: 'Domain specialization cards with bullet points and checkmarks.',
     icon: 'Award',
     defaultData: {
       badgeText: 'Why Offshore Minds',
       title: 'The Advantage of Elite Domain Specialization',
-      subtitle: 'We are not generalist virtual assistants — our teams are credentialed real estate financial specialists.',
+      subtitle: 'We are credentialed real estate financial specialists, not generalist virtual assistants.',
       items: [
         {
           id: 'ben-1',
@@ -146,10 +298,98 @@ export const BLOCK_DEFINITIONS = [
     }
   },
   {
+    type: 'processSteps',
+    name: 'Process Steps',
+    category: 'SECTIONS',
+    description: 'Step-by-step engagement roadmap showing onboarding and delivery milestones.',
+    icon: 'Target',
+    defaultData: {
+      badgeText: 'Engagement Roadmap',
+      title: 'From Discovery to Full Deployment in 3 Days',
+      subtitle: 'A straightforward, hassle-free onboarding procedure built for busy executives.',
+      steps: [
+        { stepNumber: '01', title: 'Discovery & Workflow Alignment', description: 'We review your deal pipeline, financial templates, and operational preferences.', icon: 'Search', duration: 'Day 1' },
+        { stepNumber: '02', title: 'Analyst Matching & Calibration', description: 'We assign dedicated certified analysts calibrated specifically to your asset class.', icon: 'Users', duration: 'Day 2' },
+        { stepNumber: '03', title: 'Pilot Task & Model Benchmark', description: 'Complete a live pilot model together to establish baseline formatting and speed.', icon: 'Cpu', duration: 'Day 3' },
+        { stepNumber: '04', title: 'Full Continuous Execution', description: 'Your offshore deal pod operates seamlessly with daily standups and sprint reviews.', icon: 'Rocket', duration: 'Ongoing' }
+      ]
+    }
+  },
+  {
+    type: 'testimonial',
+    name: 'Testimonials',
+    category: 'SECTIONS',
+    description: 'Executive client review quote card with avatar, rating stars, and verified deal badge.',
+    icon: 'MessageSquare',
+    defaultData: {
+      quote: 'Offshore Minds has fundamentally transformed how quickly our acquisitions team can underwrite incoming offerings. What used to take our analysts two days is now waiting in our inbox when we arrive in the morning.',
+      authorName: 'David Sterling',
+      authorRole: 'Managing Director, Acquisitions',
+      company: 'Institutional Real Estate Partners',
+      avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300&auto=format&fit=crop',
+      rating: 5,
+      verifiedDeal: '$450M Portfolio Underwritten'
+    }
+  },
+  {
+    type: 'contactForm',
+    name: 'Form / Contact Card',
+    category: 'SECTIONS',
+    description: 'Interactive consultation request form directly embedded on the page.',
+    icon: 'Phone',
+    defaultData: {
+      badgeText: 'Direct Inquiry',
+      title: 'Schedule a Consultation with our Deal Desk',
+      subtitle: 'Tell us about your portfolio volume and our principals will get back within 2 business hours.',
+      submitBtnText: 'Submit Inquiry',
+      phoneText: '+1 (800) 555-0199',
+      emailText: 'info@offshoreminds.com'
+    }
+  },
+  {
+    type: 'quote',
+    name: 'Callout Quote',
+    category: 'SECTIONS',
+    description: 'Prominent, minimalist callout statement for mission statements or slogans.',
+    icon: 'MessageSquare',
+    defaultData: {
+      quote: 'Precision is not an accident. In commercial real estate valuation, precision is the difference between winning a transaction and missing the market.',
+      author: 'Offshore Minds Executive Committee'
+    }
+  },
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // ADVANCED
+  // ───────────────────────────────────────────────────────────────────────────
+  {
+    type: 'contentMedia',
+    name: '2-Column Split (Media + Text)',
+    category: 'ADVANCED',
+    description: 'Side-by-side section featuring detailed storytelling, bullet checklists, and an image or video.',
+    icon: 'FileText',
+    defaultData: {
+      badgeText: 'How It Operates',
+      title: 'Seamless Extension of Your In-House Deal Team',
+      text: 'We embed senior analysts directly into your workflows. Using your firm\'s proprietary templates or industry standards, our analysts work overnight so your models are ready before the market opens.',
+      bullets: [
+        'Dedicated senior analysts trained in US, UK & European real estate markets',
+        'Direct Slack, Teams, and email communication seamlessly embedded',
+        'Strict SOC-compliant data security, NDA protection, and encrypted vaults',
+        'Zero setup friction — scalable from 1 analyst to full deal pods'
+      ],
+      layout: 'image-right',
+      mediaType: 'image',
+      mediaUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop',
+      mediaCaption: 'Fortune-grade financial modeling and institutional underwriting in action.',
+      btnText: 'Schedule Technical Discussion',
+      btnUrl: '/contact'
+    }
+  },
+  {
     type: 'comparison',
     name: 'Comparison Matrix',
-    category: 'Conversion',
-    description: 'Side-by-side comparison showing traditional in-house hurdles vs Offshore Minds advantages.',
+    category: 'ADVANCED',
+    description: 'Side-by-side comparison matrix showing traditional hiring hurdles vs Offshore Minds advantages.',
     icon: 'Shield',
     defaultData: {
       badgeText: 'Strategic Comparison',
@@ -176,124 +416,55 @@ export const BLOCK_DEFINITIONS = [
     }
   },
   {
-    type: 'processSteps',
-    name: 'How It Works / Process',
-    category: 'Content',
-    description: 'Step-by-step roadmap demonstrating onboarding, collaboration, and delivery stages.',
-    icon: 'Target',
+    type: 'videoPlayer',
+    name: 'Video Showcase',
+    category: 'ADVANCED',
+    description: 'Full-width cinematic video showcase player with play button overlay.',
+    icon: 'Play',
     defaultData: {
-      badgeText: 'Engagement Roadmap',
-      title: 'From Discovery to Full Deployment in 3 Days',
-      subtitle: 'A straightforward, hassle-free onboarding procedure built for busy executives.',
-      steps: [
-        {
-          stepNumber: '01',
-          title: 'Discovery & Workflow Alignment',
-          description: 'We review your deal pipeline, financial templates, and operational preferences.',
-          icon: 'Search',
-          duration: 'Day 1'
-        },
-        {
-          stepNumber: '02',
-          title: 'Analyst Matching & Calibration',
-          description: 'We assign dedicated certified analysts calibrated specifically to your asset class.',
-          icon: 'Users',
-          duration: 'Day 2'
-        },
-        {
-          stepNumber: '03',
-          title: 'Pilot Task & Model Benchmark',
-          description: 'Complete a live pilot model together to establish baseline formatting and speed.',
-          icon: 'Cpu',
-          duration: 'Day 3'
-        },
-        {
-          stepNumber: '04',
-          title: 'Full Continuous Execution',
-          description: 'Your offshore deal pod operates seamlessly with daily standups and sprint reviews.',
-          icon: 'Rocket',
-          duration: 'Ongoing'
-        }
-      ]
+      badgeText: 'Watch Video Presentation',
+      title: 'Inside Our Real Estate Underwriting Pods',
+      subtitle: 'See how our financial modelers construct institutional waterfall models in real-time.',
+      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      coverImage: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop'
     }
   },
   {
-    type: 'faq',
-    name: 'Interactive FAQ Accordion',
-    category: 'Content',
-    description: 'Collapsible accordion answering frequent client questions with sleek animations.',
-    icon: 'HelpCircle',
+    type: 'calendly',
+    name: 'Calendly Scheduler',
+    category: 'ADVANCED',
+    description: 'Embedded 30-minute consultation booking calendar for direct client scheduling.',
+    icon: 'Clock',
     defaultData: {
-      badgeText: 'Frequently Asked Questions',
-      title: 'Everything You Need to Know',
-      subtitle: 'Clear answers to common questions regarding security, onboarding, and collaboration.',
-      items: [
-        {
-          id: 'faq-1',
-          question: 'How quickly can our dedicated analyst team start?',
-          answer: 'Most client deal pods are onboarded and operational within 48 to 72 hours following the initial discovery call and template calibration.'
-        },
-        {
-          id: 'faq-2',
-          question: 'How do you safeguard proprietary deal and financial data?',
-          answer: 'We employ enterprise-grade security protocols: strict non-disclosure agreements, encrypted cloud workspaces, role-based access permissions, and continuous compliance checks.'
-        },
-        {
-          id: 'faq-3',
-          question: 'Can your team work directly inside our proprietary Excel models?',
-          answer: 'Yes, 100%. Our analysts are masters in custom real estate models, Argus Enterprise, Yardi, RealPage, MRI Software, and bespoke waterfall frameworks.'
-        },
-        {
-          id: 'faq-4',
-          question: 'What happens if deal volume temporarily slows down?',
-          answer: 'Our contracts offer flexible engagement terms that allow you to adjust team hours or scale capacity up and down with reasonable notice.'
-        }
-      ]
+      title: 'Schedule a 30-Minute Strategy Session',
+      subtitle: 'Select an available time directly on our partners\' calendar.',
+      calendlyUrl: 'https://calendly.com/gyan-offshoreminds/30min'
     }
   },
   {
-    type: 'testimonial',
-    name: 'Client Testimonial & Quote',
-    category: 'Social Proof',
-    description: 'Prominent social proof quote card with executive author details, company, and star rating.',
-    icon: 'MessageSquare',
+    type: 'notice',
+    name: 'Notice / Announcement Banner',
+    category: 'ADVANCED',
+    description: 'Prominent notification ribbon for announcements, special offers, or alerts.',
+    icon: 'Sparkles',
     defaultData: {
-      quote: 'Offshore Minds has fundamentally transformed how quickly our acquisitions team can underwrite incoming offerings. What used to take our analysts two days is now waiting in our inbox when we arrive in the morning.',
-      authorName: 'David Sterling',
-      authorRole: 'Managing Director, Acquisitions',
-      company: 'Institutional Real Estate Partners',
-      avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300&auto=format&fit=crop',
-      rating: 5,
-      verifiedDeal: '$450M Portfolio Underwritten'
-    }
-  },
-  {
-    type: 'cta',
-    name: 'Call to Action Banner',
-    category: 'Conversion',
-    description: 'High-converting banner with glowing gradients, compelling heading, and direct meeting links.',
-    icon: 'Rocket',
-    defaultData: {
-      badgeText: 'Ready to Expand?',
-      title: 'Supercharge Your Real Estate Capabilities Today',
-      description: 'Schedule a 30-minute discovery call to review your pipeline and explore custom analyst deployment.',
-      primaryBtnText: 'Book a 30-Min Strategy Call',
-      primaryBtnUrl: 'https://calendly.com/gyan-offshoreminds/30min',
-      secondaryBtnText: 'Contact Deal Desk',
-      secondaryBtnUrl: '/contact',
-      style: 'gradient' // gradient | mesh | minimal
+      badge: 'Announcement',
+      message: 'Now expanding dedicated underwriting pods for European and UK logistics portfolios.',
+      btnText: 'Learn More',
+      btnUrl: '/contact',
+      variant: 'purple' // purple | blue | emerald
     }
   },
   {
     type: 'embed',
-    name: 'Embed Code / Widget',
-    category: 'Advanced',
-    description: 'Custom embed code for Calendly scheduling widgets, YouTube video players, or forms.',
+    name: 'Custom Embed / Code',
+    category: 'ADVANCED',
+    description: 'Raw HTML / iFrame / Widget container for custom third-party integrations.',
     icon: 'Code',
     defaultData: {
-      title: 'Interactive Schedule Embed',
-      subtitle: 'Select an available time slot directly with our senior partners.',
-      htmlCode: '<div style="padding: 40px; text-align: center; border: 2px dashed rgba(255,255,255,0.2); border-radius: 1rem;"><p style="font-weight: bold; margin-bottom: 8px;">Calendly / Custom Widget Embed Area</p><p style="color: #94a3b8; font-size: 14px;">Paste your iframe, Calendly embed script, or form HTML code here.</p></div>'
+      title: 'Custom Widget Container',
+      subtitle: '',
+      htmlCode: '<div style="padding: 40px; text-align: center; border: 2px dashed rgba(255,255,255,0.2); border-radius: 1rem;"><p style="font-weight: bold; margin-bottom: 8px;">Interactive Widget Area</p><p style="color: #94a3b8; font-size: 14px;">Paste iframe, embed script, or custom HTML here.</p></div>'
     }
   }
 ];

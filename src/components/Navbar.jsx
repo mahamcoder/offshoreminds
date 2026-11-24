@@ -5,8 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, Sparkles } from 'lucide-react';
 import { servicesData } from '../data/services';
 import ThemeToggle from './common/ThemeToggle';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '../firebase';
+import { getAllPages } from '../utils/pageStorage';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,11 +17,9 @@ const Navbar = () => {
   useEffect(() => {
     const fetchNavPages = async () => {
       try {
-        const q = query(collection(db, 'pages'), where('includeInNav', '==', true), where('status', '==', 'published'));
-        const snap = await getDocs(q);
-        if (!snap.empty) {
-          setNavPages(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-        }
+        const all = await getAllPages();
+        const nav = all.filter(p => p && p.includeInNav && p.status === 'published');
+        setNavPages(nav);
       } catch (_) {
         // fail silently if offline or rules
       }

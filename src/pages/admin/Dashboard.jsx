@@ -1,21 +1,22 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { collection, getDocs, deleteDoc, doc, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, query, orderBy, addDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { db, auth } from '../../firebase';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import {
     Plus, Edit2, Trash2, LogOut, Search, Eye, FileText,
     Briefcase, RefreshCw, Share2, Copy, Check, BookOpen, X, Link2,
-    Layers, Globe
+    Layers, Globe, Zap, ArrowRight, Settings, ExternalLink
 } from 'lucide-react';
 import BlogEditor from '../../components/admin/BlogEditor';
 import JobEditor from '../../components/admin/JobEditor';
 import PageBuilder from '../../components/admin/PageBuilder';
+import CreatePageModal from '../../components/cms/CreatePageModal';
+import { getAllPages, savePage, deletePage } from '../../utils/pageStorage';
 import { blogsData } from '../../data/blogs';
 import { jobsData } from '../../data/jobs';
 import { caseStudiesData } from '../../data/caseStudies';
-import { serverTimestamp, addDoc } from 'firebase/firestore';
 import { generateSlug } from '../../utils/slug';
 
 const Dashboard = ({ portal }) => {
@@ -30,12 +31,14 @@ const Dashboard = ({ portal }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [currentItem, setCurrentItem] = useState(null);
     const [showAccessModal, setShowAccessModal] = useState(false);
+    const [showCreatePageModal, setShowCreatePageModal] = useState(false);
+    const [showNavManageModal, setShowNavManageModal] = useState(false);
     const [copiedLink, setCopiedLink] = useState('');
     const navigate = useNavigate();
 
     // ── portal titles ──────────────────────────────────────────────────────────
     const portalConfig = {
-        'pages': { title: 'CMS Page Builder Portal', subtitle: 'Design, structure, and publish custom website pages.', icon: <Layers size={22} /> },
+        'pages': { title: 'CMS Visual Page Builder Portal', subtitle: 'Design, structure, and publish custom website pages.', icon: <Layers size={22} /> },
         'blogs': { title: 'Blog Publishing Portal', subtitle: 'Manage your blog articles.', icon: <FileText size={22} /> },
         'jobs': { title: 'Job Postings Portal', subtitle: 'Manage your job listings.', icon: <Briefcase size={22} /> },
         'case-studies': { title: 'Case Studies Portal', subtitle: 'Manage your case studies.', icon: <BookOpen size={22} /> },
@@ -47,29 +50,11 @@ const Dashboard = ({ portal }) => {
     const fetchPages = async () => {
         setLoading(true);
         try {
-            const q = query(collection(db, "pages"), orderBy("updatedAt", "desc"));
-            const querySnapshot = await getDocs(q);
-            const firestorePages = querySnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data(),
-                isDynamic: true
-            }));
-            setPages(firestorePages);
+            const list = await getAllPages();
+            setPages(list);
         } catch (error) {
             console.error("Error fetching pages:", error);
-            // Fallback: fetch without orderBy if index is building
-            try {
-                const snap = await getDocs(collection(db, "pages"));
-                const firestorePages = snap.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                    isDynamic: true
-                }));
-                setPages(firestorePages);
-            } catch (err) {
-                console.error("Fallback page fetch error:", err);
-                setPages([]);
-            }
+            setPages([]);
         } finally {
             setLoading(false);
         }
@@ -162,13 +147,16 @@ const Dashboard = ({ portal }) => {
 
         if (window.confirm(`Are you sure you want to delete this ${itemType}? This action cannot be undone.`)) {
             try {
-                await deleteDoc(doc(db, collectionName, item.id));
                 if (collectionName === 'pages') {
+                    await deletePage(item.id);
                     setPages(prev => prev.filter(p => p.id !== item.id));
-                } else if (collectionName === 'blogs') {
-                    setBlogs(prev => prev.filter(blog => blog.id !== item.id));
                 } else {
-                    setJobs(prev => prev.filter(job => job.id !== item.id));
+                    await deleteDoc(doc(db, collectionName, item.id));
+                    if (collectionName === 'blogs') {
+                        setBlogs(prev => prev.filter(blog => blog.id !== item.id));
+                    } else {
+                        setJobs(prev => prev.filter(job => job.id !== item.id));
+                    }
                 }
                 toast.success(`${itemType.charAt(0).toUpperCase() + itemType.slice(1)} deleted successfully!`);
             } catch (error) {
@@ -184,8 +172,43 @@ const Dashboard = ({ portal }) => {
     };
 
     const handleCreate = () => {
-        setCurrentItem(null);
-        setIsEditing(true);
+        if (activeTab === 'pages') {
+            setShowCreatePageModal(true);
+        } else {
+            setCurrentItem(null);
+            setIsEditing(true);
+        }
+    };
+
+    const handleCreatePageSubmit = async (newPageData) => {
+        setShowCreatePageModal(false);
+        try {
+            const result = await savePage(newPageData);
+            setPages(prev => [result.page, ...prev.filter(p => p.id !== result.page.id)]);
+            if (result.isCloudSynced) {
+                toast.success('Page created! Opening visual studio editor...');
+            } else {
+                toast.success('Page created & saved! Opening visual studio editor...');
+            }
+            setCurrentItem(result.page);
+            setIsEditing(true);
+        } catch (err) {
+            console.error('Failed to create page:', err);
+            toast.error(`Failed to create page: ${err.message || 'Unknown error'}`);
+        }
+    };
+
+    const handleToggleNavPresence = async (pageId, currentVal) => {
+        try {
+            await updateDoc(doc(db, 'pages', pageId), {
+                includeInNav: !currentVal,
+                updatedAt: serverTimestamp()
+            });
+            setPages(prev => prev.map(p => p.id === pageId ? { ...p, includeInNav: !currentVal } : p));
+            toast.success(`Navigation updated!`);
+        } catch (err) {
+            toast.error('Failed to update navigation.');
+        }
     };
 
     const handleCloseEditor = () => {
@@ -341,6 +364,69 @@ const Dashboard = ({ portal }) => {
                         </button>
                     </div>
                 </header>
+
+                {/* ── WORKSPACE MODULES CARD (Matching Image 1) ───────────────── */}
+                {activeTab === 'pages' && (
+                    <div className="mb-10 animate-fadeIn">
+                        <div className="flex items-center gap-2 text-xs font-bold text-amber-400 mb-3 uppercase tracking-wider">
+                            <Zap size={16} />
+                            <span>Workspace Modules</span>
+                        </div>
+                        <div className="bg-white/5 border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-xl relative overflow-hidden group hover:border-bloom-primary/30 transition-all shadow-2xl">
+                            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                                <div className="flex items-start gap-5">
+                                    <div className="w-16 h-16 rounded-2xl bg-bloom-primary/10 border border-bloom-primary/30 text-bloom-primary flex items-center justify-center shrink-0 shadow-lg shadow-bloom-primary/10">
+                                        <Layers size={32} />
+                                    </div>
+                                    <div>
+                                        <div className="flex items-center gap-3 mb-1.5 flex-wrap">
+                                            <h3 className="text-xl sm:text-2xl font-extrabold text-white flex items-center gap-2 group-hover:text-bloom-blue transition-colors">
+                                                <span>CMS Visual Page Builder</span>
+                                                <ExternalLink size={16} className="text-bloom-primary" />
+                                            </h3>
+                                            <span className="text-xs font-bold px-3 py-1 rounded-full bg-bloom-primary/20 text-bloom-primary border border-bloom-primary/30">
+                                                {pages.length} Pages
+                                            </span>
+                                        </div>
+                                        <p className="text-xs sm:text-sm text-gray-400 max-w-2xl leading-relaxed">
+                                            Drag-and-drop visual studio with 20+ responsive blocks (Top Banner, Cards Grid, FAQs, Process Steps, Video, Testimonials) and live style controls.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-wrap items-center gap-3 shrink-0">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            if (pages.length > 0) handleEdit(pages[0]);
+                                            else setShowCreatePageModal(true);
+                                        }}
+                                        className="px-6 py-3 rounded-full font-bold text-white bg-slate-900 border border-white/10 hover:border-bloom-primary/50 hover:bg-slate-800 transition-all text-xs sm:text-sm flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95"
+                                    >
+                                        <span>Open CMS Builder</span>
+                                        <ArrowRight size={15} />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowCreatePageModal(true)}
+                                        className="px-5 py-3 rounded-full font-bold text-white bg-bloom-primary hover:bg-bloom-primary/90 transition-all text-xs sm:text-sm flex items-center gap-1.5 shadow-lg shadow-bloom-primary/20 hover:scale-105 active:scale-95"
+                                    >
+                                        <Plus size={16} />
+                                        <span>New Page</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowNavManageModal(true)}
+                                        className="px-4 py-3 rounded-full font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs sm:text-sm flex items-center gap-1.5"
+                                    >
+                                        <Settings size={15} />
+                                        <span>Navigation</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Tabs & Actions Bar */}
                 <div className="space-y-6 mb-10">
@@ -578,7 +664,7 @@ const Dashboard = ({ portal }) => {
                         <h3 className="text-xl font-bold text-white mb-2">No {activeTab === 'pages' ? 'pages' : activeTab === 'case-studies' ? 'case studies' : activeTab} found</h3>
                         <p className="text-gray-500 mb-8 max-w-sm text-center">
                             {activeTab === 'pages'
-                                ? 'Create your first custom landing or service page with the visual block builder.'
+                                ? 'Create your first custom landing or service page with the visual studio block builder.'
                                 : activeTab === 'case-studies'
                                     ? 'Case studies are managed from the codebase.'
                                     : `It looks like you haven't added any ${activeTab === 'blogs' ? 'blog posts' : 'jobs'} yet. Get started by creating one.`}
@@ -594,6 +680,78 @@ const Dashboard = ({ portal }) => {
                     </div>
                 )}
             </div>
+
+            {/* ── CREATE NEW PAGE WIZARD MODAL ──────────────────────────────────── */}
+            <CreatePageModal
+                isOpen={showCreatePageModal}
+                onClose={() => setShowCreatePageModal(false)}
+                onCreate={handleCreatePageSubmit}
+            />
+
+            {/* ── NAVIGATION MANAGER MODAL ──────────────────────────────────────── */}
+            {showNavManageModal && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn"
+                    onClick={() => setShowNavManageModal(false)}
+                >
+                    <div
+                        className="relative w-full max-w-lg bg-bloom-dark border border-white/10 rounded-3xl overflow-hidden shadow-2xl p-6 sm:p-8"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+                            <div>
+                                <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                                    <Settings className="text-bloom-primary" size={20} />
+                                    Navbar Navigation Manager
+                                </h3>
+                                <p className="text-xs text-gray-400 mt-0.5">Toggle which CMS pages show up in the Services dropdown</p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setShowNavManageModal(false)}
+                                className="p-1.5 text-gray-400 hover:text-white rounded-lg"
+                            >
+                                <X size={18} />
+                            </button>
+                        </div>
+
+                        <div className="space-y-3 max-h-96 overflow-y-auto">
+                            {pages.map((p) => (
+                                <div
+                                    key={p.id}
+                                    className="p-3.5 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-between"
+                                >
+                                    <div>
+                                        <h4 className="text-sm font-bold text-white">{p.title}</h4>
+                                        <span className="text-xs text-gray-400 font-mono">/p/{p.slug}</span>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleToggleNavPresence(p.id, p.includeInNav)}
+                                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                                            p.includeInNav
+                                                ? 'bg-bloom-primary text-white'
+                                                : 'bg-white/5 text-gray-400 hover:text-white'
+                                        }`}
+                                    >
+                                        {p.includeInNav ? '✓ In Navbar' : '+ Add to Nav'}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="pt-4 mt-6 border-t border-white/10 flex justify-end">
+                            <button
+                                type="button"
+                                onClick={() => setShowNavManageModal(false)}
+                                className="px-6 py-2.5 bg-bloom-primary text-white font-bold rounded-xl text-xs"
+                            >
+                                Done
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* ── Access Management Modal ───────────────────────────────────────── */}
             {showAccessModal && (
