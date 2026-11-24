@@ -5,12 +5,30 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, Sparkles } from 'lucide-react';
 import { servicesData } from '../data/services';
 import ThemeToggle from './common/ThemeToggle';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [navPages, setNavPages] = useState([]);
   const location = useLocation();
   const isHome = location.pathname === '/';
+
+  useEffect(() => {
+    const fetchNavPages = async () => {
+      try {
+        const q = query(collection(db, 'pages'), where('includeInNav', '==', true), where('status', '==', 'published'));
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+          setNavPages(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        }
+      } catch (_) {
+        // fail silently if offline or rules
+      }
+    };
+    fetchNavPages();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -80,6 +98,18 @@ const Navbar = () => {
                       {service.title}
                     </Link>
                   ))}
+                  {navPages.map((pg) => (
+                    <Link
+                      key={pg.id}
+                      to={`/p/${pg.slug}`}
+                      className="flex items-center justify-between px-4 py-2.5 text-sm text-slate-800 dark:text-gray-200 bg-bloom-primary/5 hover:bg-indigo-50 dark:bg-white/5 dark:hover:bg-white/10 hover:text-bloom-primary dark:hover:text-white rounded-xl border border-bloom-primary/20 hover:border-bloom-primary/40 dark:border-white/5 dark:hover:border-white/20 transition-all duration-200 outline-none font-medium hover:shadow-sm"
+                    >
+                      <span className="truncate pr-2">{pg.title}</span>
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-bloom-primary/20 text-bloom-primary shrink-0">
+                        New
+                      </span>
+                    </Link>
+                  ))}
                 </div>
               </div>
             </div>
@@ -143,6 +173,17 @@ const Navbar = () => {
                   className="block py-2 pl-8 pr-4 text-sm text-slate-600 dark:text-gray-300 hover:text-bloom-primary dark:hover:text-white"
                 >
                   {service.title}
+                </Link>
+              ))}
+              {navPages.map((pg) => (
+                <Link
+                  key={pg.id}
+                  to={`/p/${pg.slug}`}
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center justify-between py-2 pl-8 pr-4 text-sm text-bloom-primary dark:text-bloom-secondary hover:underline"
+                >
+                  <span className="truncate">{pg.title}</span>
+                  <span className="text-[9px] font-bold px-1.5 py-0.2 bg-bloom-primary/20 rounded">CMS</span>
                 </Link>
               ))}
             </div>

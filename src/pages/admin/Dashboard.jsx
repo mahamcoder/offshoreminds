@@ -6,10 +6,12 @@ import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import {
     Plus, Edit2, Trash2, LogOut, Search, Eye, FileText,
-    Briefcase, RefreshCw, Share2, Copy, Check, BookOpen, X, Link2
+    Briefcase, RefreshCw, Share2, Copy, Check, BookOpen, X, Link2,
+    Layers, Globe
 } from 'lucide-react';
 import BlogEditor from '../../components/admin/BlogEditor';
 import JobEditor from '../../components/admin/JobEditor';
+import PageBuilder from '../../components/admin/PageBuilder';
 import { blogsData } from '../../data/blogs';
 import { jobsData } from '../../data/jobs';
 import { caseStudiesData } from '../../data/caseStudies';
@@ -17,8 +19,9 @@ import { serverTimestamp, addDoc } from 'firebase/firestore';
 import { generateSlug } from '../../utils/slug';
 
 const Dashboard = ({ portal }) => {
-    const availableTabs = portal ? [portal] : ['blogs', 'jobs', 'case-studies'];
-    const [activeTab, setActiveTab] = useState(portal || 'blogs');
+    const availableTabs = portal ? [portal] : ['pages', 'blogs', 'jobs', 'case-studies'];
+    const [activeTab, setActiveTab] = useState(portal || 'pages');
+    const [pages, setPages] = useState([]);
     const [blogs, setBlogs] = useState([]);
     const [jobs, setJobs] = useState([]);
     const [caseStudies, setCaseStudies] = useState([]);
@@ -32,14 +35,46 @@ const Dashboard = ({ portal }) => {
 
     // ── portal titles ──────────────────────────────────────────────────────────
     const portalConfig = {
+        'pages': { title: 'CMS Page Builder Portal', subtitle: 'Design, structure, and publish custom website pages.', icon: <Layers size={22} /> },
         'blogs': { title: 'Blog Publishing Portal', subtitle: 'Manage your blog articles.', icon: <FileText size={22} /> },
         'jobs': { title: 'Job Postings Portal', subtitle: 'Manage your job listings.', icon: <Briefcase size={22} /> },
         'case-studies': { title: 'Case Studies Portal', subtitle: 'Manage your case studies.', icon: <BookOpen size={22} /> },
     };
     const dashTitle = portal ? portalConfig[portal]?.title : 'Admin Dashboard';
-    const dashSubtitle = portal ? portalConfig[portal]?.subtitle : 'Manage your articles, jobs, and case studies.';
+    const dashSubtitle = portal ? portalConfig[portal]?.subtitle : 'Manage your custom pages, articles, jobs, and case studies.';
 
     // ── data fetchers ──────────────────────────────────────────────────────────
+    const fetchPages = async () => {
+        setLoading(true);
+        try {
+            const q = query(collection(db, "pages"), orderBy("updatedAt", "desc"));
+            const querySnapshot = await getDocs(q);
+            const firestorePages = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                isDynamic: true
+            }));
+            setPages(firestorePages);
+        } catch (error) {
+            console.error("Error fetching pages:", error);
+            // Fallback: fetch without orderBy if index is building
+            try {
+                const snap = await getDocs(collection(db, "pages"));
+                const firestorePages = snap.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                    isDynamic: true
+                }));
+                setPages(firestorePages);
+            } catch (err) {
+                console.error("Fallback page fetch error:", err);
+                setPages([]);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const fetchBlogs = async () => {
         setLoading(true);
         try {
@@ -106,7 +141,8 @@ const Dashboard = ({ portal }) => {
     };
 
     useEffect(() => {
-        if (activeTab === 'blogs') fetchBlogs();
+        if (activeTab === 'pages') fetchPages();
+        else if (activeTab === 'blogs') fetchBlogs();
         else if (activeTab === 'jobs') fetchJobs();
         else if (activeTab === 'case-studies') fetchCaseStudies();
     }, [activeTab]);
@@ -117,7 +153,7 @@ const Dashboard = ({ portal }) => {
     };
 
     const handleDelete = async (item, collectionName) => {
-        const itemType = collectionName === 'blogs' ? 'blog' : 'job';
+        const itemType = collectionName === 'pages' ? 'page' : collectionName === 'blogs' ? 'blog' : 'job';
 
         if (item.isDynamic === false) {
             toast.error(`This is a sample ${itemType}. To edit or delete it, please click 'Import Data' first.`);
@@ -127,7 +163,9 @@ const Dashboard = ({ portal }) => {
         if (window.confirm(`Are you sure you want to delete this ${itemType}? This action cannot be undone.`)) {
             try {
                 await deleteDoc(doc(db, collectionName, item.id));
-                if (collectionName === 'blogs') {
+                if (collectionName === 'pages') {
+                    setPages(prev => prev.filter(p => p.id !== item.id));
+                } else if (collectionName === 'blogs') {
                     setBlogs(prev => prev.filter(blog => blog.id !== item.id));
                 } else {
                     setJobs(prev => prev.filter(job => job.id !== item.id));
@@ -153,7 +191,8 @@ const Dashboard = ({ portal }) => {
     const handleCloseEditor = () => {
         setIsEditing(false);
         setCurrentItem(null);
-        if (activeTab === 'blogs') fetchBlogs();
+        if (activeTab === 'pages') fetchPages();
+        else if (activeTab === 'blogs') fetchBlogs();
         else if (activeTab === 'jobs') fetchJobs();
     };
 
@@ -214,6 +253,7 @@ const Dashboard = ({ portal }) => {
 
     // ── derived data ───────────────────────────────────────────────────────────
     const getActiveItems = () => {
+        if (activeTab === 'pages') return pages;
         if (activeTab === 'blogs') return blogs;
         if (activeTab === 'jobs') return jobs;
         if (activeTab === 'case-studies') return caseStudies;
@@ -221,13 +261,16 @@ const Dashboard = ({ portal }) => {
     };
 
     const filteredItems = getActiveItems().filter(item =>
-        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.category && item.category.toLowerCase().includes(searchTerm.toLowerCase()))
+        item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.category && item.category.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.slug && item.slug.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     // ── editor redirect ────────────────────────────────────────────────────────
     if (isEditing) {
-        if (activeTab === 'blogs') {
+        if (activeTab === 'pages') {
+            return <PageBuilder existingPage={currentItem} onClose={handleCloseEditor} />;
+        } else if (activeTab === 'blogs') {
             return <BlogEditor existingBlog={currentItem} onClose={handleCloseEditor} />;
         } else if (activeTab === 'jobs') {
             return <JobEditor existingJob={currentItem} onClose={handleCloseEditor} />;
@@ -236,6 +279,7 @@ const Dashboard = ({ portal }) => {
 
     // ── access management portals ──────────────────────────────────────────────
     const portalLinks = [
+        { label: 'CMS Page Builder Portal', path: '/admin/pages', desc: 'Custom website page creator & CMS', icon: <Layers size={18} /> },
         { label: 'Blog Writer Portal', path: '/admin/blogs', desc: 'Only blog management visible', icon: <FileText size={18} /> },
         { label: 'Job Recruiter Portal', path: '/admin/jobs', desc: 'Only job listings visible', icon: <Briefcase size={18} /> },
         { label: 'Case Studies Portal', path: '/admin/case-studies', desc: 'Only case studies visible', icon: <BookOpen size={18} /> },
@@ -244,6 +288,7 @@ const Dashboard = ({ portal }) => {
 
     // ── tab config ─────────────────────────────────────────────────────────────
     const tabConfig = [
+        { key: 'pages', label: 'Pages (CMS)', icon: <Layers size={18} /> },
         { key: 'blogs', label: 'Blogs', icon: <FileText size={18} /> },
         { key: 'jobs', label: 'Jobs', icon: <Briefcase size={18} /> },
         { key: 'case-studies', label: 'Case Studies', icon: <BookOpen size={18} /> },
@@ -300,14 +345,13 @@ const Dashboard = ({ portal }) => {
                 {/* Tabs & Actions Bar */}
                 <div className="space-y-6 mb-10">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 p-4 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-md shadow-xl">
-                        {/* Only show tab switcher if not in portal mode (or show single selected tab) */}
                         {!portal ? (
-                            <div className="flex p-1 bg-black/40 rounded-xl self-start md:self-auto">
+                            <div className="flex flex-wrap p-1 bg-black/40 rounded-xl self-start md:self-auto gap-1">
                                 {tabConfig.map(tab => (
                                     <button
                                         key={tab.key}
                                         onClick={() => setActiveTab(tab.key)}
-                                        className={`px-6 py-3 rounded-lg font-bold transition-all flex items-center gap-2 ${activeTab === tab.key ? 'bg-bloom-primary text-white shadow-lg shadow-bloom-primary/20' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                                        className={`px-5 py-2.5 rounded-lg font-bold transition-all flex items-center gap-2 text-sm ${activeTab === tab.key ? 'bg-bloom-primary text-white shadow-lg shadow-bloom-primary/20' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
                                     >
                                         {tab.icon} {tab.label}
                                     </button>
@@ -327,7 +371,7 @@ const Dashboard = ({ portal }) => {
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
                                 <input
                                     type="text"
-                                    placeholder={`Search ${activeTab === 'case-studies' ? 'case studies' : activeTab}...`}
+                                    placeholder={`Search ${activeTab === 'pages' ? 'custom pages' : activeTab}...`}
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     className="w-full bg-bloom-dark/50 border border-white/10 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:border-bloom-primary/50 focus:ring-1 focus:ring-bloom-primary/50 transition-colors text-white placeholder-gray-500"
@@ -338,7 +382,7 @@ const Dashboard = ({ portal }) => {
                                     onClick={handleCreate}
                                     className="bg-gradient-to-r from-bloom-primary to-bloom-blue text-white font-bold px-6 py-3 rounded-xl hover:shadow-lg hover:shadow-bloom-primary/25 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 whitespace-nowrap"
                                 >
-                                    <Plus size={20} /> Add New
+                                    <Plus size={20} /> {activeTab === 'pages' ? 'Create New Page' : 'Add New'}
                                 </button>
                             )}
                         </div>
@@ -358,8 +402,8 @@ const Dashboard = ({ portal }) => {
                                 <thead>
                                     <tr className="bg-white/5 text-gray-400 text-xs uppercase tracking-wider font-semibold border-b border-white/5">
                                         <th className="p-6">Content Details</th>
-                                        <th className="p-6">{activeTab === 'case-studies' ? 'Category' : 'Category / Level'}</th>
-                                        <th className="p-6">{activeTab === 'case-studies' ? 'Location' : 'Last Updated'}</th>
+                                        <th className="p-6">{activeTab === 'pages' ? 'Status & Nav' : activeTab === 'case-studies' ? 'Category' : 'Category / Level'}</th>
+                                        <th className="p-6">{activeTab === 'pages' ? 'URL Slug' : activeTab === 'case-studies' ? 'Location' : 'Last Updated'}</th>
                                         <th className="p-6 text-right">Actions</th>
                                     </tr>
                                 </thead>
@@ -368,6 +412,11 @@ const Dashboard = ({ portal }) => {
                                         <tr key={item.id} className="group hover:bg-white/[0.04] transition-colors relative">
                                             <td className="p-6">
                                                 <div className="flex items-center gap-5">
+                                                    {activeTab === 'pages' && (
+                                                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-bloom-primary/20 to-purple-500/20 flex items-center justify-center text-bloom-primary shrink-0 border border-bloom-primary/30">
+                                                            <Layers size={22} />
+                                                        </div>
+                                                    )}
                                                     {activeTab === 'blogs' && (
                                                         <div className="w-16 h-16 rounded-xl overflow-hidden bg-bloom-dark/50 shrink-0 border border-white/10">
                                                             {item.image ? (
@@ -397,7 +446,9 @@ const Dashboard = ({ portal }) => {
                                                     )}
                                                     <div>
                                                         <div className="flex items-center gap-2 mb-1">
-                                                            <h3 className="font-bold text-white text-lg line-clamp-1 group-hover:text-bloom-blue transition-colors">{item.title}</h3>
+                                                            <h3 className="font-bold text-white text-lg line-clamp-1 group-hover:text-bloom-blue transition-colors">
+                                                                {item.title}
+                                                            </h3>
                                                             {item.isDynamic === false && (
                                                                 <span className="px-1.5 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-500 border border-amber-500/20 font-bold uppercase tracking-wider">
                                                                     {activeTab === 'case-studies' ? 'Static' : 'Example'}
@@ -405,31 +456,76 @@ const Dashboard = ({ portal }) => {
                                                             )}
                                                         </div>
                                                         <p className="text-gray-500 text-sm line-clamp-1">
-                                                            {activeTab === 'blogs' ? item.excerpt
-                                                                : activeTab === 'jobs' ? `${item.location} • ${item.type}`
-                                                                : item.challenge || item.atGlance || ''}
+                                                            {activeTab === 'pages'
+                                                                ? `${item.blocks?.length || 0} sections • ${item.category || 'General'}`
+                                                                : activeTab === 'blogs'
+                                                                    ? item.excerpt
+                                                                    : activeTab === 'jobs'
+                                                                        ? `${item.location} • ${item.type}`
+                                                                        : item.challenge || item.atGlance || ''}
                                                         </p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="p-6">
-                                                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border ${
-                                                    activeTab === 'blogs' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20'
-                                                    : activeTab === 'jobs' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                                                    : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                                                }`}>
-                                                    {activeTab === 'blogs' ? item.category
-                                                        : activeTab === 'jobs' ? item.level
-                                                        : item.category}
-                                                </span>
+                                                {activeTab === 'pages' ? (
+                                                    <div className="flex items-center gap-2">
+                                                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border ${
+                                                            item.status === 'published'
+                                                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                                                                : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                                                        }`}>
+                                                            {item.status || 'published'}
+                                                        </span>
+                                                        {item.includeInNav && (
+                                                            <span className="text-[10px] px-2 py-0.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full font-bold">
+                                                                In Nav
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border ${
+                                                        activeTab === 'blogs' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20'
+                                                        : activeTab === 'jobs' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                                        : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                                                    }`}>
+                                                        {activeTab === 'blogs' ? item.category
+                                                            : activeTab === 'jobs' ? item.level
+                                                            : item.category}
+                                                    </span>
+                                                )}
                                             </td>
                                             <td className="p-6 text-sm text-gray-500 font-mono">
-                                                {activeTab === 'case-studies'
-                                                    ? (item.location || 'N/A')
-                                                    : (item.updatedAt?.seconds ? new Date(item.updatedAt.seconds * 1000).toLocaleDateString() : (item.date || 'N/A'))}
+                                                {activeTab === 'pages' ? (
+                                                    <code className="text-xs text-bloom-blue bg-white/5 px-2 py-1 rounded">
+                                                        /p/{item.slug}
+                                                    </code>
+                                                ) : activeTab === 'case-studies' ? (
+                                                    item.location || 'N/A'
+                                                ) : (
+                                                    item.updatedAt?.seconds ? new Date(item.updatedAt.seconds * 1000).toLocaleDateString() : (item.date || 'N/A')
+                                                )}
                                             </td>
                                             <td className="p-6">
                                                 <div className="flex justify-end items-center gap-3 opacity-60 group-hover:opacity-100 transition-opacity">
+                                                    {activeTab === 'pages' && (
+                                                        <>
+                                                            <button
+                                                                onClick={() => window.open(`/p/${item.slug}`, '_blank')}
+                                                                className="p-2.5 text-blue-400 hover:bg-blue-400/10 rounded-xl transition-all hover:scale-110"
+                                                                title="View Live Page"
+                                                            >
+                                                                <Eye size={18} />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleCopyLink(`${window.location.origin}/p/${item.slug}`, item.title)}
+                                                                className="p-2.5 text-gray-300 hover:bg-white/10 rounded-xl transition-all hover:scale-110"
+                                                                title="Copy URL"
+                                                            >
+                                                                <Copy size={18} />
+                                                            </button>
+                                                        </>
+                                                    )}
                                                     {activeTab === 'blogs' && (
                                                         <button
                                                             onClick={() => navigate(`/blogs/${item.slug || generateSlug(item.title) || item.id}`)}
@@ -477,20 +573,22 @@ const Dashboard = ({ portal }) => {
                 ) : (
                     <div className="flex flex-col items-center justify-center py-32 bg-white/5 rounded-3xl border border-white/5 border-dashed">
                         <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 text-gray-600">
-                            {activeTab === 'blogs' ? <FileText size={32} /> : activeTab === 'jobs' ? <Briefcase size={32} /> : <BookOpen size={32} />}
+                            {activeTab === 'pages' ? <Layers size={32} /> : activeTab === 'blogs' ? <FileText size={32} /> : activeTab === 'jobs' ? <Briefcase size={32} /> : <BookOpen size={32} />}
                         </div>
-                        <h3 className="text-xl font-bold text-white mb-2">No {activeTab === 'case-studies' ? 'case studies' : activeTab} found</h3>
+                        <h3 className="text-xl font-bold text-white mb-2">No {activeTab === 'pages' ? 'pages' : activeTab === 'case-studies' ? 'case studies' : activeTab} found</h3>
                         <p className="text-gray-500 mb-8 max-w-sm text-center">
-                            {activeTab === 'case-studies'
-                                ? 'Case studies are managed from the codebase.'
-                                : `It looks like you haven't added any ${activeTab === 'blogs' ? 'blog posts' : 'jobs'} yet. Get started by creating one.`}
+                            {activeTab === 'pages'
+                                ? 'Create your first custom landing or service page with the visual block builder.'
+                                : activeTab === 'case-studies'
+                                    ? 'Case studies are managed from the codebase.'
+                                    : `It looks like you haven't added any ${activeTab === 'blogs' ? 'blog posts' : 'jobs'} yet. Get started by creating one.`}
                         </p>
                         {activeTab !== 'case-studies' && (
                             <button
                                 onClick={handleCreate}
                                 className="bg-bloom-primary text-bloom-dark font-bold px-8 py-3 rounded-full hover:bg-white transition-all shadow-lg shadow-bloom-primary/20"
                             >
-                                Create {activeTab === 'blogs' ? 'Blog Post' : 'Job'}
+                                Create {activeTab === 'pages' ? 'Custom Page' : activeTab === 'blogs' ? 'Blog Post' : 'Job'}
                             </button>
                         )}
                     </div>

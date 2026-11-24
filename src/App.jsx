@@ -23,6 +23,7 @@ const Disclaimers = lazy(() => import('./pages/Disclaimers'));
 const Login = lazy(() => import('./pages/admin/Login'));
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const OffshoreMindsAI = lazy(() => import('./pages/OffshoreMindsAI'));
+const DynamicPage = lazy(() => import('./pages/DynamicPage'));
 
 const router = createBrowserRouter([
   {
@@ -52,12 +53,15 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <Navigate to="dashboard" replace /> },
           { path: "dashboard", element: <Dashboard /> },
+          { path: "pages", element: <Dashboard portal="pages" /> },
           { path: "blogs", element: <Dashboard portal="blogs" /> },
           { path: "jobs", element: <Dashboard portal="jobs" /> },
           { path: "case-studies", element: <Dashboard portal="case-studies" /> },
         ]
       },
       { path: "admin/login", element: <Login /> },
+      { path: "p/:slug", element: <DynamicPage /> },
+      { path: "page/:slug", element: <DynamicPage /> },
       { path: "privacy-policy", element: <PrivacyPolicy /> },
       { path: "terms-and-conditions", element: <Terms /> },
       { path: "disclaimers", element: <Disclaimers /> },
