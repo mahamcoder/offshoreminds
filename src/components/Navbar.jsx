@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, Sparkles } from 'lucide-react';
 import { servicesData } from '../data/services';
 import ThemeToggle from './common/ThemeToggle';
-import { getAllPages } from '../utils/pageStorage';
+import { getAllPages, getPageUrl } from '../utils/pageStorage';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -98,7 +98,7 @@ const Navbar = () => {
                   {navPages.map((pg) => (
                     <Link
                       key={pg.id}
-                      to={`/p/${pg.slug}`}
+                      to={getPageUrl(pg)}
                       className="flex items-center justify-between px-4 py-2.5 text-sm text-slate-800 dark:text-gray-200 bg-bloom-primary/5 hover:bg-indigo-50 dark:bg-white/5 dark:hover:bg-white/10 hover:text-bloom-primary dark:hover:text-white rounded-xl border border-bloom-primary/20 hover:border-bloom-primary/40 dark:border-white/5 dark:hover:border-white/20 transition-all duration-200 outline-none font-medium hover:shadow-sm"
                     >
                       <span className="truncate pr-2">{pg.title}</span>
@@ -175,7 +175,7 @@ const Navbar = () => {
               {navPages.map((pg) => (
                 <Link
                   key={pg.id}
-                  to={`/p/${pg.slug}`}
+                  to={getPageUrl(pg)}
                   onClick={() => setIsOpen(false)}
                   className="flex items-center justify-between py-2 pl-8 pr-4 text-sm text-bloom-primary dark:text-bloom-secondary hover:underline"
                 >

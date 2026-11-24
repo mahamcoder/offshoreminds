@@ -7,7 +7,7 @@ import {
 import { generateSlug } from '../../utils/slug';
 import { BLOCK_DEFINITIONS, createDefaultBlock } from '../cms/blockTypes';
 import BlockRenderer from '../cms/BlockRenderer';
-import { savePage } from '../../utils/pageStorage';
+import { savePage, getPageUrl } from '../../utils/pageStorage';
 import {
   ArrowLeft, Save, Eye, Settings, Plus, Sparkles, Smartphone,
   Monitor, Tablet, Check, X, ExternalLink, Layers, Globe, Shield,
@@ -37,12 +37,13 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
   const [pageData, setPageData] = useState({
     title: existingPage?.title || 'New Real Estate Advisory Service',
     slug: existingPage?.slug || 'new-advisory-service',
+    urlPrefix: existingPage?.urlPrefix !== undefined ? existingPage.urlPrefix : 'services/',
     status: existingPage?.status || 'published', // 'published' | 'draft'
     category: existingPage?.category || 'Services',
-    includeInNav: existingPage?.includeInNav || false,
+    includeInNav: existingPage?.includeInNav !== undefined ? existingPage.includeInNav : true,
     seoTitle: existingPage?.seoTitle || '',
     seoDescription: existingPage?.seoDescription || '',
-    seoKeywords: existingPage?.seoKeywords ? existingPage.seoKeywords.join(', ') : '',
+    seoKeywords: existingPage?.seoKeywords ? (Array.isArray(existingPage.seoKeywords) ? existingPage.seoKeywords.join(', ') : existingPage.seoKeywords) : '',
     ogImage: existingPage?.ogImage || '',
     blocks: existingPage?.blocks || []
   });
@@ -274,8 +275,17 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
                 {pageData.title}
               </span>
             </div>
-            <div className="text-[11px] text-slate-400 font-mono">
-              /p/{generateSlug(pageData.slug || pageData.title)}
+            <div className="text-[11px] text-bloom-primary font-mono font-medium flex items-center gap-1.5">
+              <span>{getPageUrl(pageData)}</span>
+              <a
+                href={getPageUrl(pageData)}
+                target="_blank"
+                rel="noreferrer"
+                className="text-slate-400 hover:text-bloom-primary transition-colors"
+                title="Open live URL in new tab"
+              >
+                <ExternalLink size={11} />
+              </a>
             </div>
           </div>
         </div>
@@ -877,6 +887,23 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
                   />
                 </div>
 
+                {/* Page Location & Prefix Selector */}
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">
+                    Website Section / Location
+                  </label>
+                  <select
+                    value={pageData.urlPrefix !== undefined ? pageData.urlPrefix : 'services/'}
+                    onChange={(e) => setPageData({ ...pageData, urlPrefix: e.target.value })}
+                    className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white"
+                  >
+                    <option value="services/">💼 Services Section (/services/...)</option>
+                    <option value="">🌐 Website Root (Direct /...)</option>
+                    <option value="p/">📄 Pages Directory (/p/...)</option>
+                    <option value="about/">🏢 Company & About (/about/...)</option>
+                  </select>
+                </div>
+
                 <div>
                   <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">URL Slug</label>
                   <input
@@ -885,7 +912,10 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
                     onChange={(e) => setPageData({ ...pageData, slug: generateSlug(e.target.value) })}
                     className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-bloom-primary font-mono font-bold"
                   />
-                  <span className="text-[11px] text-slate-400 block mt-1">/p/{pageData.slug}</span>
+                  <div className="flex items-center gap-1.5 mt-1.5 text-[11px] font-mono text-bloom-primary bg-bloom-primary/10 border border-bloom-primary/20 px-2 py-1 rounded-lg">
+                    <Globe size={11} className="shrink-0" />
+                    <span className="truncate">{getPageUrl(pageData)}</span>
+                  </div>
                 </div>
 
                 {/* Include in Navigation */}
@@ -972,6 +1002,22 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
               </div>
 
               <div>
+                <label className="block font-bold text-slate-700 dark:text-gray-300 mb-1">
+                  Website Section / Location
+                </label>
+                <select
+                  value={pageData.urlPrefix !== undefined ? pageData.urlPrefix : 'services/'}
+                  onChange={(e) => setPageData({ ...pageData, urlPrefix: e.target.value })}
+                  className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white"
+                >
+                  <option value="services/">💼 Services Section (/services/...)</option>
+                  <option value="">🌐 Website Root (Direct /...)</option>
+                  <option value="p/">📄 Pages Directory (/p/...)</option>
+                  <option value="about/">🏢 Company & About (/about/...)</option>
+                </select>
+              </div>
+
+              <div>
                 <label className="block font-bold text-slate-700 dark:text-gray-300 mb-1">URL Slug</label>
                 <input
                   type="text"
@@ -979,6 +1025,10 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
                   onChange={(e) => setPageData({ ...pageData, slug: generateSlug(e.target.value) })}
                   className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2.5 font-mono text-bloom-primary"
                 />
+                <div className="flex items-center gap-1.5 mt-1.5 text-xs font-mono text-bloom-primary bg-bloom-primary/10 border border-bloom-primary/20 px-2.5 py-1.5 rounded-lg">
+                  <Globe size={13} className="shrink-0" />
+                  <span className="truncate">{getPageUrl(pageData)}</span>
+                </div>
               </div>
 
               <div className="p-3 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl flex items-center justify-between">

@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { servicesData } from '../data/services';
+import DynamicPage from './DynamicPage';
 import ServiceOverview from '../components/services/ServiceOverview';
 import SubServicesGrid from '../components/services/SubServicesGrid';
 import TechStack from '../components/services/TechStack';
@@ -14,16 +15,9 @@ const ServiceDetail = () => {
   const { serviceId } = useParams();
   const service = servicesData.find(s => s.id === serviceId);
 
+  // If not a static service, seamlessly check for a CMS Dynamic Page
   if (!service) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-bloom-dark text-white">
-        <SEO title="Service Not Found" description="The requested service page was not found." path={`/services/${serviceId}`} />
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Service Not Found</h2>
-          <Link to="/services" className="text-bloom-blue hover:text-white transition-colors">Back to Services</Link>
-        </div>
-      </div>
-    );
+    return <DynamicPage customSlug={serviceId} />;
   }
 
   const serviceSchema = {

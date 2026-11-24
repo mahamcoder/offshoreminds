@@ -6,15 +6,18 @@ import BlockRenderer from '../components/cms/BlockRenderer';
 import WhatsAppButton from '../components/WhatsAppButton';
 import { ArrowLeft, Home, ChevronRight, Layers, AlertCircle } from 'lucide-react';
 
-const DynamicPage = () => {
-  const { slug } = useParams();
+const DynamicPage = ({ customSlug }) => {
+  const { slug: routeSlug } = useParams();
   const [page, setPage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Use customSlug if provided, otherwise route param, otherwise window pathname
+  const activeSlug = customSlug || routeSlug || window.location.pathname.replace(/^\//, '');
+
   useEffect(() => {
     const fetchPage = async () => {
-      if (!slug) {
+      if (!activeSlug) {
         setLoading(false);
         return;
       }
@@ -22,7 +25,7 @@ const DynamicPage = () => {
       setError(null);
 
       try {
-        const found = await getPageBySlugOrId(slug);
+        const found = await getPageBySlugOrId(activeSlug);
         if (found) {
           setPage(found);
         } else {
@@ -37,7 +40,7 @@ const DynamicPage = () => {
     };
 
     fetchPage();
-  }, [slug]);
+  }, [activeSlug]);
 
   if (loading) {
     return (

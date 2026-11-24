@@ -62,10 +62,12 @@ const router = createBrowserRouter([
       { path: "admin/login", element: <Login /> },
       { path: "p/:slug", element: <DynamicPage /> },
       { path: "page/:slug", element: <DynamicPage /> },
+      { path: "about/:slug", element: <DynamicPage /> },
       { path: "privacy-policy", element: <PrivacyPolicy /> },
       { path: "terms-and-conditions", element: <Terms /> },
       { path: "disclaimers", element: <Disclaimers /> },
       { path: "offshoreminds-ai", element: <OffshoreMindsAI /> },
+      { path: ":slug", element: <DynamicPage /> },
     ],
   },
 ]);

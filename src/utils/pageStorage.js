@@ -28,6 +28,20 @@ export const sanitizeData = (obj) => {
 };
 
 /**
+ * Helper to compute the full website URL path for a page based on its urlPrefix and slug
+ * e.g. urlPrefix="services/", slug="commercial-underwriting" -> "/services/commercial-underwriting"
+ * e.g. urlPrefix="", slug="special-page" -> "/special-page"
+ * e.g. urlPrefix="p/", slug="my-page" -> "/p/my-page"
+ */
+export const getPageUrl = (page) => {
+  if (!page) return '/';
+  const prefix = page.urlPrefix !== undefined ? page.urlPrefix : 'services/';
+  const cleanPrefix = prefix ? (prefix.endsWith('/') ? prefix : `${prefix}/`) : '';
+  const cleanSlug = (page.slug || '').replace(/^\//, '');
+  return `/${cleanPrefix}${cleanSlug}`;
+};
+
+/**
  * Fetch pages from Firestore and merge with any locally created pages
  */
 export const getAllPages = async () => {
@@ -157,34 +171,51 @@ export const deletePage = async (pageId) => {
 
 /**
  * Get a single page by slug or id (checks Firestore, then local storage)
+ * Matches by slug, prefix+slug, fullPath, or id
  */
 export const getPageBySlugOrId = async (slugOrId) => {
   if (!slugOrId) return null;
 
-  // 1. Try Firestore by slug
+  const target = slugOrId.replace(/^\//, '').toLowerCase();
+
+  const isMatch = (data, docId) => {
+    if (!data) return false;
+    const pageSlug = (data.slug || '').replace(/^\//, '').toLowerCase();
+    const prefix = (data.urlPrefix || '').replace(/^\//, '').toLowerCase();
+    const fullPath = `${prefix}${pageSlug}`;
+
+    return (
+      docId === slugOrId ||
+      data.id === slugOrId ||
+      pageSlug === target ||
+      fullPath === target ||
+      target.endsWith(`/${pageSlug}`) ||
+      target === `services/${pageSlug}` ||
+      target === `p/${pageSlug}` ||
+      target === `page/${pageSlug}`
+    );
+  };
+
+  // 1. Try Firestore
   try {
     const q = query(collection(db, 'pages'), orderBy('updatedAt', 'desc'));
     const snap = await getDocs(q);
-    const found = snap.docs.find(d => {
-      const data = d.data();
-      return data.slug === slugOrId || d.id === slugOrId;
-    });
+    const found = snap.docs.find(d => isMatch(d.data(), d.id));
     if (found) {
       return { id: found.id, ...found.data(), isCloudSynced: true };
     }
   } catch (_) {
-    // try direct getDoc
     try {
-      const dRef = doc(db, 'pages', slugOrId);
-      const dSnap = await getDoc(dRef);
-      if (dSnap.exists()) {
-        return { id: dSnap.id, ...dSnap.data(), isCloudSynced: true };
+      const snap = await getDocs(collection(db, 'pages'));
+      const found = snap.docs.find(d => isMatch(d.data(), d.id));
+      if (found) {
+        return { id: found.id, ...found.data(), isCloudSynced: true };
       }
     } catch (__) {}
   }
 
   // 2. Fallback to local storage
   const localList = getLocalPages();
-  const localFound = localList.find(p => p.slug === slugOrId || p.id === slugOrId);
+  const localFound = localList.find(p => isMatch(p, p.id));
   return localFound || null;
 };

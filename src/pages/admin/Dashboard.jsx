@@ -13,7 +13,7 @@ import BlogEditor from '../../components/admin/BlogEditor';
 import JobEditor from '../../components/admin/JobEditor';
 import PageBuilder from '../../components/admin/PageBuilder';
 import CreatePageModal from '../../components/cms/CreatePageModal';
-import { getAllPages, savePage, deletePage } from '../../utils/pageStorage';
+import { getAllPages, savePage, deletePage, getPageUrl } from '../../utils/pageStorage';
 import { blogsData } from '../../data/blogs';
 import { jobsData } from '../../data/jobs';
 import { caseStudiesData } from '../../data/caseStudies';
@@ -584,7 +584,7 @@ const Dashboard = ({ portal }) => {
                                             <td className="p-6 text-sm text-gray-500 font-mono">
                                                 {activeTab === 'pages' ? (
                                                     <code className="text-xs text-bloom-blue bg-white/5 px-2 py-1 rounded">
-                                                        /p/{item.slug}
+                                                        {getPageUrl(item)}
                                                     </code>
                                                 ) : activeTab === 'case-studies' ? (
                                                     item.location || 'N/A'
@@ -597,14 +597,14 @@ const Dashboard = ({ portal }) => {
                                                     {activeTab === 'pages' && (
                                                         <>
                                                             <button
-                                                                onClick={() => window.open(`/p/${item.slug}`, '_blank')}
+                                                                onClick={() => window.open(getPageUrl(item), '_blank')}
                                                                 className="p-2.5 text-blue-400 hover:bg-blue-400/10 rounded-xl transition-all hover:scale-110"
                                                                 title="View Live Page"
                                                             >
                                                                 <Eye size={18} />
                                                             </button>
                                                             <button
-                                                                onClick={() => handleCopyLink(`${window.location.origin}/p/${item.slug}`, item.title)}
+                                                                onClick={() => handleCopyLink(`${window.location.origin}${getPageUrl(item)}`, item.title)}
                                                                 className="p-2.5 text-gray-300 hover:bg-white/10 rounded-xl transition-all hover:scale-110"
                                                                 title="Copy URL"
                                                             >

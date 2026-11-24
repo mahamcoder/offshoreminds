@@ -3,8 +3,47 @@ import { generateSlug } from '../../utils/slug';
 import { PAGE_TEMPLATES } from './templates';
 import {
   FileText, Sparkles, Layers, Building2, Check,
-  X, Image as ImageIcon, ArrowRight, Upload, Calendar, Phone, Award
+  X, Image as ImageIcon, ArrowRight, Upload, Calendar, Phone, Award, Globe, Compass, ChevronDown
 } from 'lucide-react';
+
+// Predefined Website URL Locations
+const URL_LOCATIONS = [
+  {
+    id: 'services/',
+    label: '💼 Under Services (/services/)',
+    badge: 'Recommended for Services',
+    prefix: 'services/',
+    hint: 'e.g. offshoreminds.com/services/commercial-underwriting'
+  },
+  {
+    id: '',
+    label: '🌐 Direct Website Root (/)',
+    badge: 'Short & Clean URL',
+    prefix: '',
+    hint: 'e.g. offshoreminds.com/commercial-underwriting'
+  },
+  {
+    id: 'p/',
+    label: '📄 Custom Pages Directory (/p/)',
+    badge: 'Standard CMS',
+    prefix: 'p/',
+    hint: 'e.g. offshoreminds.com/p/commercial-underwriting'
+  },
+  {
+    id: 'about/',
+    label: '🏢 About & Company (/about/)',
+    badge: 'Company Section',
+    prefix: 'about/',
+    hint: 'e.g. offshoreminds.com/about/commercial-underwriting'
+  },
+  {
+    id: 'custom',
+    label: '✍️ Custom Section Folder...',
+    badge: 'Custom Prefix',
+    prefix: 'custom',
+    hint: 'Type your own custom folder name'
+  }
+];
 
 const STARTER_TEMPLATES = [
   {
@@ -62,6 +101,9 @@ const CreatePageModal = ({ isOpen, onClose, onCreate }) => {
   const [selectedTemplate, setSelectedTemplate] = useState('services-solutions');
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
+  const [urlLocation, setUrlLocation] = useState('services/');
+  const [customPrefix, setCustomPrefix] = useState('');
+  const [includeInNav, setIncludeInNav] = useState(true);
   const [includeBanner, setIncludeBanner] = useState(true);
   const [eyebrow, setEyebrow] = useState('Strategic Financial Leadership');
   const [description, setDescription] = useState('Comprehensive institutional underwriting and portfolio management tailored to your investment thesis.');
@@ -72,6 +114,10 @@ const CreatePageModal = ({ isOpen, onClose, onCreate }) => {
   const [secondaryBtnUrl, setSecondaryBtnUrl] = useState('/services');
 
   if (!isOpen) return null;
+
+  const effectivePrefix = urlLocation === 'custom'
+    ? (customPrefix.trim() ? (customPrefix.trim().endsWith('/') ? customPrefix.trim() : `${customPrefix.trim()}/`) : '')
+    : urlLocation;
 
   const handleTitleChange = (val) => {
     setTitle(val);
@@ -208,9 +254,10 @@ const CreatePageModal = ({ isOpen, onClose, onCreate }) => {
     onCreate({
       title: title.trim(),
       slug: slug.trim() || generateSlug(title),
+      urlPrefix: effectivePrefix,
       status: 'published',
-      category: 'Services',
-      includeInNav: false,
+      category: effectivePrefix === 'services/' ? 'Services' : effectivePrefix === 'about/' ? 'Company' : 'Pages',
+      includeInNav: includeInNav,
       seoTitle: title.trim(),
       seoDescription: description.trim(),
       seoKeywords: ['real estate underwriting', 'financial analysis', 'offshore minds'],
@@ -314,24 +361,105 @@ const CreatePageModal = ({ isOpen, onClose, onCreate }) => {
               <p className="text-[11px] text-slate-400 mt-1">Used as the main page name and public page title.</p>
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-gray-300 mb-1.5">
-                URL Slug <span className="text-rose-500">*</span>
-              </label>
-              <div className="flex items-center bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden px-4">
-                <span className="text-xs font-mono text-slate-400 dark:text-gray-500 select-none">
-                  offshoreminds.com/p/
-                </span>
-                <input
-                  type="text"
-                  required
-                  value={slug}
-                  onChange={(e) => setSlug(generateSlug(e.target.value))}
-                  placeholder="commercial-underwriting"
-                  className="w-full bg-transparent py-3 px-1 text-sm text-bloom-primary font-mono font-bold focus:outline-none"
-                />
+            {/* URL Location Dropdown & Slug Generator */}
+            <div className="p-4 bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 rounded-2xl space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* 1. Website Section / Route Prefix Dropdown */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-gray-300 mb-1.5 flex items-center justify-between">
+                    <span>Website Section / URL Prefix</span>
+                    <span className="text-[10px] text-bloom-primary font-semibold">Choose where page lives</span>
+                  </label>
+                  <select
+                    value={urlLocation}
+                    onChange={(e) => setUrlLocation(e.target.value)}
+                    className="w-full bg-white dark:bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-bloom-primary"
+                  >
+                    {URL_LOCATIONS.map((loc) => (
+                      <option key={loc.id} value={loc.id}>
+                        {loc.label}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-[11px] text-slate-500 dark:text-gray-400 mt-1">
+                    {URL_LOCATIONS.find((l) => l.id === urlLocation)?.hint}
+                  </p>
+                </div>
+
+                {/* 2. Custom prefix input (only if custom is selected) */}
+                {urlLocation === 'custom' ? (
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-gray-300 mb-1.5">
+                      Custom Folder Prefix
+                    </label>
+                    <input
+                      type="text"
+                      value={customPrefix}
+                      onChange={(e) => setCustomPrefix(e.target.value.toLowerCase().replace(/[^a-z0-9\-_/]/g, ''))}
+                      placeholder="e.g. solutions/ or lp/"
+                      className="w-full bg-white dark:bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs font-mono text-bloom-primary focus:outline-none"
+                    />
+                    <p className="text-[11px] text-slate-400 mt-1">Custom route path before slug</p>
+                  </div>
+                ) : (
+                  /* 3. Navigation Placement Toggle */
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-gray-300 mb-1.5">
+                      Navbar Integration
+                    </label>
+                    <label className="flex items-center gap-2.5 bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl p-2.5 cursor-pointer hover:border-bloom-primary/50 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={includeInNav}
+                        onChange={(e) => setIncludeInNav(e.target.checked)}
+                        className="w-4 h-4 rounded accent-bloom-primary cursor-pointer"
+                      />
+                      <div className="text-xs">
+                        <span className="font-bold text-slate-800 dark:text-gray-200 block">
+                          Add to Services Dropdown
+                        </span>
+                        <span className="text-[10px] text-slate-400">
+                          Automatically list in website header
+                        </span>
+                      </div>
+                    </label>
+                  </div>
+                )}
               </div>
-              <p className="text-[11px] text-slate-400 mt-1">Only lowercase letters, numbers, and hyphens.</p>
+
+              {/* URL Slug Input with dynamic prefix */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-gray-300 mb-1.5">
+                  Page URL Slug <span className="text-rose-500">*</span>
+                </label>
+                <div className="flex items-center bg-white dark:bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl overflow-hidden px-3.5 focus-within:border-bloom-primary shadow-sm">
+                  <span className="text-xs font-mono text-slate-400 dark:text-gray-500 select-none shrink-0 font-medium">
+                    offshoreminds.com/{effectivePrefix}
+                  </span>
+                  <input
+                    type="text"
+                    required
+                    value={slug}
+                    onChange={(e) => setSlug(generateSlug(e.target.value))}
+                    placeholder="commercial-underwriting"
+                    className="w-full bg-transparent py-2.5 px-1 text-xs text-bloom-primary font-mono font-bold focus:outline-none"
+                  />
+                </div>
+                
+                {/* Live Full URL Preview Banner */}
+                <div className="mt-2 flex items-center justify-between px-3 py-2 bg-bloom-primary/5 dark:bg-bloom-primary/10 border border-bloom-primary/20 rounded-xl text-xs">
+                  <div className="flex items-center gap-1.5 font-mono text-[11px] text-slate-700 dark:text-gray-300 truncate">
+                    <Globe size={13} className="text-bloom-primary shrink-0" />
+                    <span className="text-slate-400">Live URL:</span>
+                    <span className="font-bold text-bloom-primary truncate">
+                      https://offshoreminds.com/{effectivePrefix}{slug || 'page-slug'}
+                    </span>
+                  </div>
+                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-bloom-primary/20 text-bloom-primary shrink-0">
+                    {effectivePrefix ? `/${effectivePrefix.replace(/\/$/, '')}` : 'Root /'}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
