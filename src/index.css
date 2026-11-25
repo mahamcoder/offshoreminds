@@ -489,3 +489,30 @@ html:not(.dark) .service-card:hover .service-desc {
 .edit-media-btn:hover {
     background-color: #4b49c7 !important;
 }
+
+/* Custom visible scrollbar for Page Builder Studio Canvas */
+.custom-studio-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(93, 92, 222, 0.5) rgba(0, 0, 0, 0.2);
+}
+
+.custom-studio-scrollbar::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.custom-studio-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+}
+
+.custom-studio-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(93, 92, 222, 0.45);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.custom-studio-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(93, 92, 222, 0.85);
+}

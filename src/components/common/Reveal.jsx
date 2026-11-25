@@ -23,7 +23,13 @@ const Reveal = ({ children, delay = 0, width = "fit-content", height, className 
             observer.observe(ref.current);
         }
 
+        // Safety timeout so elements are never permanently hidden if observer is delayed in nested containers
+        const fallbackTimer = setTimeout(() => {
+            setIsVisible(true);
+        }, 1200);
+
         return () => {
+            clearTimeout(fallbackTimer);
             if (ref.current) {
                 observer.unobserve(ref.current);
             }

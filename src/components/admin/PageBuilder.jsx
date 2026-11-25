@@ -73,6 +73,15 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
     setHistoryIndex(prev => prev + 1);
   };
 
+  const scrollToBlock = (blockId) => {
+    setTimeout(() => {
+      const el = document.getElementById(`block-wrapper-${blockId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 60);
+  };
+
   const handleUndo = () => {
     if (historyIndex > 0) {
       const prevBlocks = history[historyIndex - 1];
@@ -111,6 +120,7 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
     });
     setSelectedBlockId(newBlock.id);
     setRightTab('element');
+    scrollToBlock(newBlock.id);
     toast.success(`Added ${newBlock.name}`);
   };
 
@@ -418,7 +428,7 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
       {/* ─────────────────────────────────────────────────────────────────── */}
       {/* 3-COLUMN STUDIO LAYOUT */}
       {/* ─────────────────────────────────────────────────────────────────── */}
-      <div className="flex-1 flex overflow-hidden relative">
+      <div className="flex-1 min-h-0 flex overflow-hidden relative">
         {/* ── LEFT SIDEBAR: BLOCKS LIBRARY & OUTLINE ─────────────────────── */}
         {!previewOnly && (
           <aside className="w-72 sm:w-80 bg-white dark:bg-bloom-dark border-r border-slate-200 dark:border-white/10 flex flex-col shrink-0 z-10 text-slate-800 dark:text-white">
@@ -512,7 +522,10 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
                   return (
                     <div
                       key={b.id || idx}
-                      onClick={() => handleSelectBlock(b)}
+                      onClick={() => {
+                        handleSelectBlock(b);
+                        scrollToBlock(b.id);
+                      }}
                       className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
                         isSelected
                           ? 'bg-bloom-primary/10 border-bloom-primary text-bloom-primary dark:text-white'
@@ -557,13 +570,13 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
         )}
 
         {/* ── CENTER: INTERACTIVE LIVE CANVAS ─────────────────────────────── */}
-        <main className="flex-1 bg-slate-100 dark:bg-black/60 overflow-y-auto flex flex-col items-center p-4 sm:p-8 relative">
+        <main className="flex-1 min-h-0 h-full bg-slate-100 dark:bg-black/60 overflow-y-auto overflow-x-hidden flex flex-col items-center p-4 sm:p-8 pb-48 relative custom-studio-scrollbar">
           {/* Canvas Top Status Bar */}
           <div className="mb-4 flex items-center justify-between w-full max-w-5xl px-2 text-xs text-slate-500 dark:text-gray-400">
             <div className="flex items-center gap-2">
               <span className="font-bold text-slate-700 dark:text-gray-300">{pageData.title}</span>
               <span>•</span>
-              <span>{pageData.blocks.length} Sections</span>
+              <span className="font-mono text-bloom-primary font-bold">{pageData.blocks.length} Sections</span>
             </div>
             <div className="flex items-center gap-2 font-mono">
               <span>Zoom: {zoomLevel}%</span>
@@ -571,6 +584,7 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
                 type="button"
                 onClick={() => setZoomLevel(prev => Math.max(50, prev - 15))}
                 className="p-1 hover:text-slate-800 dark:hover:text-white"
+                title="Zoom Out"
               >
                 <ZoomOut size={13} />
               </button>
@@ -578,6 +592,7 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
                 type="button"
                 onClick={() => setZoomLevel(100)}
                 className="p-1 hover:text-slate-800 dark:hover:text-white text-[10px]"
+                title="Reset Zoom"
               >
                 Reset
               </button>
@@ -585,6 +600,7 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
                 type="button"
                 onClick={() => setZoomLevel(prev => Math.min(125, prev + 15))}
                 className="p-1 hover:text-slate-800 dark:hover:text-white"
+                title="Zoom In"
               >
                 <ZoomIn size={13} />
               </button>
@@ -603,77 +619,126 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
             }`}
           >
             {pageData.blocks && pageData.blocks.length > 0 ? (
-              pageData.blocks.map((block, idx) => {
-                const isSelected = block.id === selectedBlockId;
-                return (
-                  <div
-                    key={block.id || idx}
-                    className={`relative group/section transition-all duration-200 ${
-                      isSelected
-                        ? 'ring-2 ring-bloom-primary ring-inset'
-                        : 'hover:ring-1 hover:ring-bloom-primary/40'
-                    }`}
-                    onClick={() => handleSelectBlock(block)}
-                  >
-                    {/* Hover Floating Action Bar */}
-                    <div className="absolute top-2 right-2 z-30 opacity-0 group-hover/section:opacity-100 transition-opacity bg-slate-900/90 text-white backdrop-blur-md px-2.5 py-1 rounded-xl shadow-xl flex items-center gap-1.5 text-xs">
-                      <span className="font-bold text-[10px] text-bloom-primary mr-1">{block.name}</span>
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); handleMoveUp(idx); }}
-                        disabled={idx === 0}
-                        className="p-1 hover:text-bloom-primary disabled:opacity-30"
-                        title="Move Up"
-                      >
-                        <MoveUp size={13} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); handleMoveDown(idx); }}
-                        disabled={idx === pageData.blocks.length - 1}
-                        className="p-1 hover:text-bloom-primary disabled:opacity-30"
-                        title="Move Down"
-                      >
-                        <MoveDown size={13} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); handleDuplicate(idx); }}
-                        className="p-1 hover:text-bloom-primary"
-                        title="Duplicate Section"
-                      >
-                        <Copy size={13} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); handleDeleteBlock(idx); }}
-                        className="p-1 text-rose-400 hover:text-rose-300"
-                        title="Delete Section"
-                      >
-                        <Trash2 size={13} />
-                      </button>
-                    </div>
+              <>
+                {pageData.blocks.map((block, idx) => {
+                  const isSelected = block.id === selectedBlockId;
+                  return (
+                    <div
+                      key={block.id || idx}
+                      id={`block-wrapper-${block.id}`}
+                      className={`relative group/section transition-all duration-200 ${
+                        isSelected
+                          ? 'ring-2 ring-bloom-primary ring-inset shadow-inner'
+                          : 'hover:ring-1 hover:ring-bloom-primary/40'
+                      }`}
+                      onClick={() => handleSelectBlock(block)}
+                    >
+                      {/* Floating Action Bar */}
+                      <div className="absolute top-3 right-3 z-30 opacity-90 group-hover/section:opacity-100 transition-opacity bg-slate-900/90 text-white backdrop-blur-md px-3 py-1.5 rounded-xl shadow-xl flex items-center gap-1.5 text-xs border border-white/10">
+                        <span className="font-bold text-[10px] text-bloom-primary mr-1.5">
+                          {block.name || block.type}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); handleMoveUp(idx); }}
+                          disabled={idx === 0}
+                          className="p-1 hover:text-bloom-primary disabled:opacity-30 rounded hover:bg-white/10"
+                          title="Move Up"
+                        >
+                          <MoveUp size={13} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); handleMoveDown(idx); }}
+                          disabled={idx === pageData.blocks.length - 1}
+                          className="p-1 hover:text-bloom-primary disabled:opacity-30 rounded hover:bg-white/10"
+                          title="Move Down"
+                        >
+                          <MoveDown size={13} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); handleDuplicate(idx); }}
+                          className="p-1 hover:text-bloom-primary rounded hover:bg-white/10"
+                          title="Duplicate Section"
+                        >
+                          <Copy size={13} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); handleDeleteBlock(idx); }}
+                          className="p-1 text-rose-400 hover:text-rose-300 rounded hover:bg-white/10"
+                          title="Delete Section"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
 
-                    {/* Section Component Render */}
-                    <BlockRenderer block={block} isSelected={isSelected} />
+                      {/* Section Component Render */}
+                      <BlockRenderer block={block} isSelected={isSelected} />
 
-                    {/* Quick + Add Section Beneath Button */}
-                    <div className="opacity-0 group-hover/section:opacity-100 transition-opacity flex justify-center -my-3 relative z-30">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleAddBlock('featureGrid', idx);
-                        }}
-                        className="px-3 py-1 bg-bloom-primary text-white rounded-full text-[10px] font-bold shadow-md hover:scale-105 transition-all flex items-center gap-1"
-                      >
-                        <Plus size={11} />
-                        <span>Add Section Beneath</span>
-                      </button>
+                      {/* In-Between Insert Divider */}
+                      <div className="relative group/insert py-2 flex items-center justify-center my-0.5 z-20">
+                        <div className="absolute inset-x-6 h-px bg-slate-200 dark:bg-white/10 group-hover/insert:bg-bloom-primary/40 transition-colors"></div>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddBlock('featureGrid', idx);
+                          }}
+                          className="relative z-10 px-3 py-1 bg-white dark:bg-bloom-dark text-slate-600 dark:text-gray-300 hover:text-white hover:bg-bloom-primary border border-slate-200 dark:border-white/15 rounded-full text-[10px] font-bold shadow-sm hover:shadow-md hover:scale-105 transition-all flex items-center gap-1 opacity-70 group-hover/insert:opacity-100"
+                          title="Insert Section Below"
+                        >
+                          <Plus size={11} />
+                          <span>Insert Below</span>
+                        </button>
+                      </div>
                     </div>
+                  );
+                })}
+
+                {/* Prominent Bottom Add Section Banner */}
+                <div className="p-8 border-t-2 border-dashed border-slate-200 dark:border-white/10 bg-slate-50/70 dark:bg-white/[0.02] flex flex-col items-center justify-center text-center">
+                  <div className="w-10 h-10 rounded-2xl bg-bloom-primary/10 text-bloom-primary flex items-center justify-center mb-2.5 shadow-sm">
+                    <Plus size={22} />
                   </div>
-                );
-              })
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">
+                    Add Next Section
+                  </h4>
+                  <p className="text-xs text-slate-500 dark:text-gray-400 mb-4 max-w-sm">
+                    Select a section below to add it at the bottom of your landing page:
+                  </p>
+
+                  {/* Quick One-Click Pills */}
+                  <div className="flex flex-wrap items-center justify-center gap-2 max-w-2xl">
+                    {[
+                      { type: 'featureGrid', label: '+ Cards Grid' },
+                      { type: 'text', label: '+ Text Paragraph' },
+                      { type: 'heading', label: '+ Heading' },
+                      { type: 'faq', label: '+ FAQ Accordion' },
+                      { type: 'processSteps', label: '+ Process Steps' },
+                      { type: 'contactForm', label: '+ Contact Form' },
+                      { type: 'stats', label: '+ Stats Grid' },
+                      { type: 'cta', label: '+ Call To Action' },
+                      { type: 'image', label: '+ Image Showcase' },
+                      { type: 'bulletList', label: '+ Checklist' },
+                      { type: 'video', label: '+ Video Player' },
+                      { type: 'testimonial', label: '+ Testimonial' },
+                      { type: 'calendly', label: '+ Calendly' },
+                      { type: 'divider', label: '+ Thin Line' }
+                    ].map(item => (
+                      <button
+                        key={item.type}
+                        type="button"
+                        onClick={() => handleAddBlock(item.type)}
+                        className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-bloom-primary hover:text-bloom-primary transition-all shadow-sm hover:scale-105 active:scale-95"
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </>
             ) : (
               /* Empty Canvas Drop Target */
               <div className="p-16 text-center border-2 border-dashed border-slate-300 dark:border-white/10 m-6 rounded-2xl">
@@ -758,6 +823,94 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
                   </div>
 
                   {/* Dynamic Form Controls for this block */}
+                  {/* Paragraph Content (for text block) */}
+                  {selectedBlock.data.content !== undefined && (
+                    <div>
+                      <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">
+                        Paragraph Text Content
+                      </label>
+                      <textarea
+                        rows={6}
+                        value={selectedBlock.data.content || ''}
+                        onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'content', e.target.value)}
+                        placeholder="Type paragraph text here..."
+                        className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-slate-800 dark:text-gray-200 focus:outline-none focus:border-bloom-primary text-xs leading-relaxed"
+                      />
+                    </div>
+                  )}
+
+                  {/* Headline / Button Text (for heading, button, etc.) */}
+                  {selectedBlock.data.text !== undefined && (
+                    <div>
+                      <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">
+                        {selectedBlock.type === 'button' ? 'Button Label Text' : 'Headline Text'}
+                      </label>
+                      <input
+                        type="text"
+                        value={selectedBlock.data.text || ''}
+                        onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'text', e.target.value)}
+                        placeholder="Enter text..."
+                        className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white font-bold focus:outline-none focus:border-bloom-primary"
+                      />
+                    </div>
+                  )}
+
+                  {/* Heading Level (h1, h2, h3, h4) */}
+                  {selectedBlock.data.level !== undefined && (
+                    <div>
+                      <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">Heading Size Level</label>
+                      <select
+                        value={selectedBlock.data.level || 'h2'}
+                        onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'level', e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2"
+                      >
+                        <option value="h1">H1 — Main Banner Title</option>
+                        <option value="h2">H2 — Section Header</option>
+                        <option value="h3">H3 — Sub-header</option>
+                        <option value="h4">H4 — Small Headline</option>
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Alignment (left | center | right) */}
+                  {selectedBlock.data.alignment !== undefined && (
+                    <div>
+                      <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">Text Alignment</label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {['left', 'center', 'right'].map((align) => (
+                          <button
+                            key={align}
+                            type="button"
+                            onClick={() => handleUpdateBlockData(selectedBlock.id, 'alignment', align)}
+                            className={`py-1.5 rounded-lg text-xs font-bold capitalize border transition-all ${
+                              (selectedBlock.data.alignment || 'left') === align
+                                ? 'bg-bloom-primary text-white border-bloom-primary'
+                                : 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-600 dark:text-gray-300'
+                            }`}
+                          >
+                            {align}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Size (small | normal | large) */}
+                  {selectedBlock.data.size !== undefined && (
+                    <div>
+                      <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">Font Scale</label>
+                      <select
+                        value={selectedBlock.data.size || 'normal'}
+                        onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'size', e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2"
+                      >
+                        <option value="small">Small Body</option>
+                        <option value="normal">Normal Body</option>
+                        <option value="large">Large / Lead Intro</option>
+                      </select>
+                    </div>
+                  )}
+
                   {/* Title / Headline */}
                   {selectedBlock.data.title !== undefined && (
                     <div>
@@ -784,7 +937,7 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
                     </div>
                   )}
 
-                  {/* Badge Text */}
+                  {/* Eyebrow Badge Text */}
                   {selectedBlock.data.badgeText !== undefined && (
                     <div>
                       <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">Eyebrow Badge Text</label>
@@ -794,6 +947,108 @@ const PageBuilder = ({ existingPage = null, onClose = null }) => {
                         onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'badgeText', e.target.value)}
                         className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-bloom-primary"
                       />
+                    </div>
+                  )}
+
+                  {/* Checklist Items Editor */}
+                  {selectedBlock.data.items !== undefined && Array.isArray(selectedBlock.data.items) && (
+                    <div className="space-y-2">
+                      <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">Checklist Items</label>
+                      {selectedBlock.data.items.map((item, iIdx) => (
+                        <div key={iIdx} className="flex items-center gap-1.5">
+                          <input
+                            type="text"
+                            value={typeof item === 'string' ? item : (item.title || '')}
+                            onChange={(e) => {
+                              const newItems = [...selectedBlock.data.items];
+                              if (typeof item === 'string') {
+                                newItems[iIdx] = e.target.value;
+                              } else {
+                                newItems[iIdx] = { ...item, title: e.target.value };
+                              }
+                              handleUpdateBlockData(selectedBlock.id, 'items', newItems);
+                            }}
+                            className="flex-1 bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-lg px-2.5 py-1.5 text-xs"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newItems = selectedBlock.data.items.filter((_, idx) => idx !== iIdx);
+                              handleUpdateBlockData(selectedBlock.id, 'items', newItems);
+                            }}
+                            className="p-1.5 text-rose-500 hover:text-rose-600 rounded"
+                          >
+                            <Trash2 size={12} />
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newItems = [...selectedBlock.data.items, 'New item detail'];
+                          handleUpdateBlockData(selectedBlock.id, 'items', newItems);
+                        }}
+                        className="w-full py-1.5 text-xs text-bloom-primary border border-dashed border-bloom-primary/30 rounded-lg hover:bg-bloom-primary/5 font-semibold"
+                      >
+                        + Add Bullet Item
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Video / External Embed URL */}
+                  {(selectedBlock.data.videoUrl !== undefined || selectedBlock.data.calendlyUrl !== undefined) && (
+                    <div>
+                      <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">
+                        {selectedBlock.data.videoUrl !== undefined ? 'Video URL (YouTube/Vimeo/MP4)' : 'Calendly Booking URL'}
+                      </label>
+                      <input
+                        type="text"
+                        value={selectedBlock.data.videoUrl || selectedBlock.data.calendlyUrl || ''}
+                        onChange={(e) => {
+                          const key = selectedBlock.data.videoUrl !== undefined ? 'videoUrl' : 'calendlyUrl';
+                          handleUpdateBlockData(selectedBlock.id, key, e.target.value);
+                        }}
+                        placeholder="https://..."
+                        className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-mono text-bloom-primary"
+                      />
+                    </div>
+                  )}
+
+                  {/* Form Submit Button Label */}
+                  {selectedBlock.data.submitBtnText !== undefined && (
+                    <div>
+                      <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">Form Submit Button</label>
+                      <input
+                        type="text"
+                        value={selectedBlock.data.submitBtnText || ''}
+                        onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'submitBtnText', e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2"
+                      />
+                    </div>
+                  )}
+
+                  {/* Testimonial Author Details */}
+                  {selectedBlock.data.authorName !== undefined && (
+                    <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-white/10">
+                      <div>
+                        <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">Author Name</label>
+                        <input
+                          type="text"
+                          value={selectedBlock.data.authorName || ''}
+                          onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'authorName', e.target.value)}
+                          className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-semibold text-slate-700 dark:text-gray-300 mb-1">Role & Company</label>
+                        <input
+                          type="text"
+                          value={selectedBlock.data.authorRole || ''}
+                          onChange={(e) => handleUpdateBlockData(selectedBlock.id, 'authorRole', e.target.value)}
+                          placeholder="Managing Director, Investment Partners"
+                          className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2"
+                        />
+                      </div>
                     </div>
                   )}
 
